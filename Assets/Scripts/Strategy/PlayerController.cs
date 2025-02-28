@@ -1,5 +1,19 @@
 using UnityEngine;
 
+/**
+ * PlayerController class -- manages the player-controlled characters.
+ 
+ * NOTE: this class should not be used for gameplay design. Ideally,
+ * this class only contains player information and the rest is
+ * handled by the GameManager.
+
+ * Functionality to add:
+ * - track when turn has been completed
+ * - set player sprite
+ * - set player stats (from JSON eventually)
+ */
+*/
+
 public class PlayerController : MonoBehaviour
 {
     private BoardManager boardManager;

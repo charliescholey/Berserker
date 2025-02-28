@@ -1,7 +1,18 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
+/**
+* BoardManager class -- manages the game board.
 
+* NOTE: this class should not be used for gameplay design. Ideally,
+* this class only contains board information and the rest is
+* handled by the GameManager.
+
+* Functionality to add:
+* - collision/map tracking
+* - pathfinding?
+* - tilemap interactions
+*/
 public class BoardManager : MonoBehaviour
 {
     public Tilemap gameTilemap;
