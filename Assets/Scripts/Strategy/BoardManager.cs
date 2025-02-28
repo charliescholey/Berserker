@@ -16,7 +16,7 @@ public class BoardManager : MonoBehaviour
     void Start()
     {
         player = Instantiate(playerPrefab);
-        player.spawn(this, new Vector2Int(width/2, height/2));
+        player.spawn(this, new Vector2Int(0, 0));
         cellSize = gameTilemap.cellSize.x;
     }
 
