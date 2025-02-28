@@ -27,6 +27,13 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //move character when clicked (TO BE MOVED ELSEWHERE... EVENTUALLY)
+        Vector3 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+        if (Input.GetMouseButtonDown(0)){
+            Vector2Int cell = boardManager.clickToCell(worldPoint);
+            moveToCell(cell);
+        }
         
     }
 }
