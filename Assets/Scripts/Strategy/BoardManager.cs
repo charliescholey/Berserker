@@ -22,7 +22,7 @@ public class BoardManager : MonoBehaviour
     public PlayerController playerPrefab;
     private PlayerController player;
     private float cellSize;
-
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -31,10 +31,14 @@ public class BoardManager : MonoBehaviour
         cellSize = gameTilemap.cellSize.x;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
+    // detectSelected returns whatever the current cell has in it.
+    // If the player is in the cell, it returns the player, otherwise it returns null.
+    public PlayerController detectSelected(Vector2Int cell){
+        if (player.getGridPosition() == cell) {
+            return player;
+        }
         
+        return null;
     }
 
     //Given a cell x,y, return the world position of the center of that cell

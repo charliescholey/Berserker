@@ -12,35 +12,49 @@ using UnityEngine;
  * - set player sprite
  * - set player stats (from JSON eventually)
  */
-*/
 
 public class PlayerController : MonoBehaviour
 {
     private BoardManager boardManager;
     private Vector2Int gridPosition;
+    private SpriteRenderer m_SpriteRenderer;
+    private bool isSelected = false;
 
     public void spawn(BoardManager bm, Vector2Int cell)
     {
+
         boardManager = bm;
         moveToCell(cell);
+        //DON'T. ASK. IDK. WHY. THIS. WORKS.
+        gridPosition.y -= 1;
     }
 
-    private void moveToCell(Vector2Int cell)
+    public void moveToCell(Vector2Int cell)
     {
         gridPosition = cell;
         transform.position = boardManager.cellToWorld(cell);
     }
 
-    // Update is called once per frame
-    void Update()
+    public Vector2Int getGridPosition()
     {
-        //move character when clicked (TO BE MOVED ELSEWHERE... EVENTUALLY)
-        Vector3 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        return gridPosition;
+    }
 
-        if (Input.GetMouseButtonDown(0)){
-            Vector2Int cell = boardManager.clickToCell(worldPoint);
-            moveToCell(cell);
+    public void toggleHighlight(){
+        if(isSelected){
+            m_SpriteRenderer.color = Color.cyan;
+        }else{
+            m_SpriteRenderer.color = Color.white;
         }
-        
+    }
+
+    public void setSelected(bool selected){
+        isSelected = selected;
+        toggleHighlight();
+    }
+
+    void Start()
+    {
+        m_SpriteRenderer = GetComponent<SpriteRenderer>();
     }
 }
