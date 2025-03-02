@@ -2,15 +2,14 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private float speed = 2f;
-    private Rigidbody2D rb;
+    [SerializeField] private float playerSpeed = 2f;
+    private Rigidbody2D rigidBody;
     private Vector2 movementDirection;
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
+        rigidBody = GetComponent<Rigidbody2D>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         movementDirection = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
@@ -19,6 +18,6 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        rb.linearVelocity = movementDirection * speed;
+        rigidBody.linearVelocity = movementDirection * playerSpeed;
     }
 }
