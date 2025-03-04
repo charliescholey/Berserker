@@ -6,8 +6,11 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    //tracks whether the player has an object selected
     private bool hasSelected = false;
+    //link to boardmanager
     public BoardManager boardManager;
+    //tracks active player
     private PlayerController player;
 
 
@@ -15,7 +18,7 @@ public class GameManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        //currently empty
     }
 
     // Update is called once per frame
@@ -36,7 +39,6 @@ public class GameManager : MonoBehaviour
                 Vector2Int cell = boardManager.clickToCell(worldPoint);
                 player = boardManager.detectSelected(cell);
                 if(player != null){
-                    Debug.Log("Player Selected");
                     hasSelected = true;
                     player.setSelected(true);
                 }

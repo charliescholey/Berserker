@@ -15,11 +15,11 @@ using UnityEngine.Tilemaps;
 */
 public class BoardManager : MonoBehaviour
 {
+    //tracks the underlying tilemap that we work from
     public Tilemap gameTilemap;
-
-    public int width;
-    public int height;
+    //tracks the player prefab for spawning
     public PlayerController playerPrefab;
+    //tracks the players in the game
     public PlayerController[] players;
     private float cellSize;
     
@@ -57,6 +57,7 @@ public class BoardManager : MonoBehaviour
         Vector3 cellCenter = gameTilemap.GetCellCenterWorld(cellPos);
         float x = cellCenter.x;
         float y = cellCenter.y;
+        //z-level is offset to ensure player is above the tilemap
         return new Vector3(x, y, -2);
     }
 
@@ -72,5 +73,18 @@ public class BoardManager : MonoBehaviour
     {
         Vector3Int cell = gameTilemap.WorldToCell(click);
         return new Vector2Int((int) cell.x, (int) cell.y);
+    }
+
+    //isTurnComplete returns true if all players have completed their turn
+    public bool isTurnComplete(){
+        for(int i = 0; i < players.Length; i++){
+            if(players[i] == null){
+                continue;
+            }
+            if(!players[i].isTurnComplete()){
+                return false;
+            }
+        }
+        return true;
     }
 }
