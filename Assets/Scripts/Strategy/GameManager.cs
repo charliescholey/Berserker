@@ -25,7 +25,6 @@ public class GameManager : MonoBehaviour
         Vector3 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if(Input.GetMouseButtonDown(0)){
             if(hasSelected){
-                Debug.Log("hasSelected == true");
                 //if a player is selected, move them to the clicked cell
                 Vector2Int cell = boardManager.clickToCell(worldPoint);
                 player.moveToCell(cell);
@@ -34,7 +33,6 @@ public class GameManager : MonoBehaviour
                 player = null;
             }else{
                 //if no player is selected, select the player in the clicked cell
-                Debug.Log("hasSelected == false");
                 Vector2Int cell = boardManager.clickToCell(worldPoint);
                 player = boardManager.detectSelected(cell);
                 if(player != null){

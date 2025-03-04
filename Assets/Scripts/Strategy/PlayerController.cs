@@ -19,20 +19,38 @@ public class PlayerController : MonoBehaviour
     private Vector2Int gridPosition;
     private SpriteRenderer m_SpriteRenderer;
     private bool isSelected = false;
+    private bool hasMoved = false;
+    private int moveRange = 3;
 
     public void spawn(BoardManager bm, Vector2Int cell)
     {
-
         boardManager = bm;
-        moveToCell(cell);
-        //DON'T. ASK. IDK. WHY. THIS. WORKS.
-        gridPosition.y -= 1;
+        gridPosition = cell;
+        transform.position = boardManager.cellToWorld(cell);
+    }
+
+    public bool isTurnComplete()
+    {   //temp solve until combat is implemented
+        return hasMoved;
     }
 
     public void moveToCell(Vector2Int cell)
     {
+        if(getDist(cell) > moveRange){
+            return;
+        }
+        if(gridPosition.x == cell.x && gridPosition.y == cell.y){
+            return;
+        }
         gridPosition = cell;
         transform.position = boardManager.cellToWorld(cell);
+        hasMoved = true;
+    }
+
+    public int getDist(Vector2Int cell)
+    {
+        //return manhattan distance from provided cell
+        return Mathf.Abs(cell.x - gridPosition.x) + Mathf.Abs(cell.y - gridPosition.y);
     }
 
     public Vector2Int getGridPosition()
