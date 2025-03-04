@@ -20,7 +20,7 @@ public class BoardManager : MonoBehaviour
     public int width;
     public int height;
     public PlayerController playerPrefab;
-    private PlayerController[] players;
+    public PlayerController[] players;
     private float cellSize;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -30,16 +30,14 @@ public class BoardManager : MonoBehaviour
         //spawn the players
         players[0] = Instantiate(playerPrefab);
         players[0].spawn(this, new Vector2Int(0, 0));
-        //players[1] = Instantiate(playerPrefab);
-        //players[1].spawn(this, new Vector2Int(1, 3));
+        players[1] = Instantiate(playerPrefab);
+        players[1].spawn(this, new Vector2Int(1, 3));
         cellSize = gameTilemap.cellSize.x;
-        Debug.Log("cell size: " + cellSize);
     }
 
     // detectSelected returns whatever the current cell has in it.
     // If a player is in the cell, it returns the player, otherwise it returns null.
     public PlayerController detectSelected(Vector2Int cell){
-        Debug.Log("click on " + cell);
         for(int i = 0; i < players.Length; i++){
             if(players[i]  == null){
                 continue;
