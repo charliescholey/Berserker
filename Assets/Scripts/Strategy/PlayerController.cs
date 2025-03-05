@@ -12,35 +12,67 @@ using UnityEngine;
  * - set player sprite
  * - set player stats (from JSON eventually)
  */
-*/
 
 public class PlayerController : MonoBehaviour
 {
     private BoardManager boardManager;
     private Vector2Int gridPosition;
+    private SpriteRenderer m_SpriteRenderer;
+    private bool isSelected = false;
+    private bool hasMoved = false;
+    private int moveRange = 3;
 
     public void spawn(BoardManager bm, Vector2Int cell)
     {
         boardManager = bm;
-        moveToCell(cell);
-    }
-
-    private void moveToCell(Vector2Int cell)
-    {
         gridPosition = cell;
         transform.position = boardManager.cellToWorld(cell);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        //move character when clicked (TO BE MOVED ELSEWHERE... EVENTUALLY)
-        Vector3 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+    public bool isTurnComplete()
+    {   //temp solve until combat is implemented
+        return hasMoved;
+    }
 
-        if (Input.GetMouseButtonDown(0)){
-            Vector2Int cell = boardManager.clickToCell(worldPoint);
-            moveToCell(cell);
+    public void moveToCell(Vector2Int cell)
+    {
+        if(getDist(cell) > moveRange){
+            return;
         }
-        
+        if(gridPosition.x == cell.x && gridPosition.y == cell.y){
+            return;
+        }
+        gridPosition = cell;
+        transform.position = boardManager.cellToWorld(cell);
+        hasMoved = true;
+    }
+
+    public int getDist(Vector2Int cell)
+    {
+        //return manhattan distance from provided cell
+        return Mathf.Abs(cell.x - gridPosition.x) + Mathf.Abs(cell.y - gridPosition.y);
+    }
+
+    public Vector2Int getGridPosition()
+    {
+        return gridPosition;
+    }
+
+    public void toggleHighlight(){
+        if(isSelected){
+            m_SpriteRenderer.color = Color.cyan;
+        }else{
+            m_SpriteRenderer.color = Color.white;
+        }
+    }
+
+    public void setSelected(bool selected){
+        isSelected = selected;
+        toggleHighlight();
+    }
+
+    void Start()
+    {
+        m_SpriteRenderer = GetComponent<SpriteRenderer>();
     }
 }
