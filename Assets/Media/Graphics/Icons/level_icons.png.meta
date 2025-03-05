@@ -1,10 +1,19 @@
 fileFormatVersion: 2
-guid: f6b2671ee63304a06bac19d1f741bedb
+guid: f94e8ca404a9e4e06b74639aa6477a19
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5119980863986964875
-    second: castle_0
+      213: 3311686938078076659
+    second: level_icons_0
+  - first:
+      213: 8371267333861058033
+    second: level_icons_1
+  - first:
+      213: 2757969559025206618
+    second: level_icons_2
+  - first:
+      213: -2292698533589896919
+    second: level_icons_3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -47,8 +56,8 @@ TextureImporter:
   lightmap: 0
   compressionQuality: 50
   spriteMode: 2
-  spriteExtrude: 1
-  spriteMeshType: 1
+  spriteExtrude: 0
+  spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
@@ -100,23 +109,89 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: castle_0
+      name: level_icons_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
-        width: 256
-        height: 256
+        y: 5
+        width: 250
+        height: 243
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 5766241f78c22f8b0800000000000000
-      internalID: -5119980863986964875
+      spriteID: 3fed17f59b975fd20800000000000000
+      internalID: 3311686938078076659
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_icons_1
+      rect:
+        serializedVersion: 2
+        x: 246
+        y: 14
+        width: 250
+        height: 236
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1f5ae9a8947bc2470800000000000000
+      internalID: 8371267333861058033
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_icons_2
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 0
+        width: 250
+        height: 250
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a55c90b93b6464620800000000000000
+      internalID: 2757969559025206618
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_icons_3
+      rect:
+        serializedVersion: 2
+        x: 749
+        y: 0
+        width: 250
+        height: 250
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 921b058b4d2be20e0800000000000000
+      internalID: -2292698533589896919
       vertices: []
       indices: 
       edges: []
@@ -125,7 +200,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 2cbcc40d5852b44daa51da0b2643df8b
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +210,10 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      castle_0: -5119980863986964875
+      level_icons_0: 3311686938078076659
+      level_icons_1: 8371267333861058033
+      level_icons_2: 2757969559025206618
+      level_icons_3: -2292698533589896919
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
