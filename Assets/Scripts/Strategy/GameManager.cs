@@ -10,15 +10,28 @@ public class GameManager : MonoBehaviour
     private bool hasSelected = false;
     //link to boardmanager
     public BoardManager boardManager;
+    //link to action database
+    public ActionDatabase actionDatabase;
     //tracks active player
     private PlayerController player;
+
+    //tracks the player prefab for spawning
+    public PlayerController playerPrefab;
+    //tracks the players in the game
+    public PlayerController[] players;
 
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        //currently empty
+        players = new PlayerController[2];
+        //spawn the players
+        players[0] = Instantiate(playerPrefab);
+        players[0].spawn(boardManager, new Vector2Int(0, 0));
+        players[1] = Instantiate(playerPrefab);
+        players[1].spawn(boardManager, new Vector2Int(1, 3));
+
     }
 
     // Update is called once per frame
@@ -37,7 +50,7 @@ public class GameManager : MonoBehaviour
             }else{
                 //if no player is selected, select the player in the clicked cell
                 Vector2Int cell = boardManager.clickToCell(worldPoint);
-                player = boardManager.detectSelected(cell);
+                player = boardManager.detectSelected(cell, players);
                 if(player != null){
                     hasSelected = true;
                     player.setSelected(true);

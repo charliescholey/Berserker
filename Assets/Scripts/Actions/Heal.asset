@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 240b4eb4fdad143c39fec8187f01e5c0, type: 3}
   m_Name: Heal
   m_EditorClassIdentifier: 
-  actionName: 
-  description: 
-  totalUses: 0
-  type: 0
+  actionName: Heal
+  description: Simple self-heal
+  totalUses: 5
+  type: 2
   effect: 0
-  effectChance: 0
-  power: 0
+  effectChance: 0.1
+  power: 25
   target: 0
   range: 0

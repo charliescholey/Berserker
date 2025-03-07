@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 240b4eb4fdad143c39fec8187f01e5c0, type: 3}
   m_Name: Gun
   m_EditorClassIdentifier: 
-  actionName: 
-  description: 
-  totalUses: 0
-  type: 0
+  actionName: Gun Attack
+  description: (very much a placeholder)
+  totalUses: 10
+  type: 1
   effect: 0
   effectChance: 0.1
-  power: 0
-  target: 0
-  range: 0
+  power: 25
+  target: 2
+  range: 2

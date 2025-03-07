@@ -20,24 +20,17 @@ public class BoardManager : MonoBehaviour
     //tracks the player prefab for spawning
     public PlayerController playerPrefab;
     //tracks the players in the game
-    public PlayerController[] players;
     private float cellSize;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        players = new PlayerController[2];
-        //spawn the players
-        players[0] = Instantiate(playerPrefab);
-        players[0].spawn(this, new Vector2Int(0, 0));
-        players[1] = Instantiate(playerPrefab);
-        players[1].spawn(this, new Vector2Int(1, 3));
         cellSize = gameTilemap.cellSize.x;
     }
 
     // detectSelected returns whatever the current cell has in it.
     // If a player is in the cell, it returns the player, otherwise it returns null.
-    public PlayerController detectSelected(Vector2Int cell){
+    public PlayerController detectSelected(Vector2Int cell, PlayerController[] players){
         for(int i = 0; i < players.Length; i++){
             if(players[i]  == null){
                 continue;
@@ -76,7 +69,8 @@ public class BoardManager : MonoBehaviour
     }
 
     //isTurnComplete returns true if all players have completed their turn
-    public bool isTurnComplete(){
+    //TODO move into gameManager
+    /*public bool isTurnComplete(){
         for(int i = 0; i < players.Length; i++){
             if(players[i] == null){
                 continue;
@@ -86,5 +80,5 @@ public class BoardManager : MonoBehaviour
             }
         }
         return true;
-    }
+    }*/
 }
