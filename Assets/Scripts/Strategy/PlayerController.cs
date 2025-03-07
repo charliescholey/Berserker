@@ -21,12 +21,22 @@ public class PlayerController : MonoBehaviour
     private bool isSelected = false;
     private bool hasMoved = false;
     private int moveRange = 3;
+    public int hp = 100;
+    private Action[] actions;
 
     public void spawn(BoardManager bm, Vector2Int cell)
     {
         boardManager = bm;
         gridPosition = cell;
         transform.position = boardManager.cellToWorld(cell);
+    }
+
+    public void spawn(BoardManager bm, Vector2Int cell, Action[] acts)
+    {
+        boardManager = bm;
+        gridPosition = cell;
+        transform.position = boardManager.cellToWorld(cell);
+        actions = acts;
     }
 
     public bool isTurnComplete()
