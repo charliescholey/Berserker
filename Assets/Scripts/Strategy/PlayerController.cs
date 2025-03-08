@@ -55,11 +55,6 @@ public class PlayerController : OrderedCharacter
         hasMoved = true;
     }
 
-    public Vector2Int getGridPosition()
-    {
-        return gridPosition;
-    }
-
     public void toggleHighlight(){
         if(isSelected){
             m_SpriteRenderer.color = Color.cyan;

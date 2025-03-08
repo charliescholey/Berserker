@@ -3,7 +3,6 @@ using UnityEngine;
 public class EnemyController : OrderedCharacter
 {
     int moveRange = 2;
-    private bool hasMoved = false;
 
     public override void spawn(BoardManager bm, Vector2Int cell)
     {
@@ -27,7 +26,6 @@ public class EnemyController : OrderedCharacter
         }
         gridPosition = cell;
         transform.position = boardManager.cellToWorld(cell);
-        hasMoved = true;
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

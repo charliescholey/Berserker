@@ -19,4 +19,9 @@ public abstract class OrderedCharacter : MonoBehaviour
         return Mathf.Abs(cell.x - gridPosition.x) + Mathf.Abs(cell.y - gridPosition.y);
     }
 
+    public Vector2Int getGridPosition()
+    {
+        return gridPosition;
+    }
+
 }
