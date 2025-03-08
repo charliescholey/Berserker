@@ -11,20 +11,18 @@ using UnityEngine;
  * - track when turn has been completed
  * - set player sprite
  * - set player stats (from JSON eventually)
+ * - attacking & all other actions
  */
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : OrderedCharacter
 {
-    private BoardManager boardManager;
-    private Vector2Int gridPosition;
     private SpriteRenderer m_SpriteRenderer;
     private bool isSelected = false;
     private bool hasMoved = false;
     private int moveRange = 3;
-    public int hp = 100;
     private Action[] actions;
 
-    public void spawn(BoardManager bm, Vector2Int cell)
+    public override void spawn(BoardManager bm, Vector2Int cell)
     {
         boardManager = bm;
         gridPosition = cell;
@@ -39,12 +37,12 @@ public class PlayerController : MonoBehaviour
         actions = acts;
     }
 
-    public bool isTurnComplete()
+    public override bool isTurnComplete()
     {   //temp solve until combat is implemented
         return hasMoved;
     }
 
-    public void moveToCell(Vector2Int cell)
+    public override void moveToCell(Vector2Int cell)
     {
         if(getDist(cell) > moveRange){
             return;
@@ -55,12 +53,6 @@ public class PlayerController : MonoBehaviour
         gridPosition = cell;
         transform.position = boardManager.cellToWorld(cell);
         hasMoved = true;
-    }
-
-    public int getDist(Vector2Int cell)
-    {
-        //return manhattan distance from provided cell
-        return Mathf.Abs(cell.x - gridPosition.x) + Mathf.Abs(cell.y - gridPosition.y);
     }
 
     public Vector2Int getGridPosition()
@@ -84,5 +76,6 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         m_SpriteRenderer = GetComponent<SpriteRenderer>();
+        hp = 100;
     }
 }

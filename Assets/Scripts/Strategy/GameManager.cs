@@ -17,11 +17,13 @@ public class GameManager : MonoBehaviour
 
     //tracks the player prefab for spawning
     public PlayerController playerPrefab;
+    //tracks the enemy prefab for spawning
+    public EnemyController enemyPrefab;
     //tracks the players in the game
     public PlayerController[] players;
 
 
-
+    private EnemyController enemy;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -31,6 +33,9 @@ public class GameManager : MonoBehaviour
         players[0].spawn(boardManager, new Vector2Int(0, 0));
         players[1] = Instantiate(playerPrefab);
         players[1].spawn(boardManager, new Vector2Int(1, 3));
+
+        enemy = Instantiate(enemyPrefab);
+        enemy.spawn(boardManager, new Vector2Int(3, 3));
 
     }
 
@@ -47,6 +52,7 @@ public class GameManager : MonoBehaviour
                 hasSelected = false;
                 player.setSelected(false);
                 player = null;
+                enemy.moveToCell(new Vector2Int(enemy.gridPosition.x + 1, enemy.gridPosition.y));
             }else{
                 //if no player is selected, select the player in the clicked cell
                 Vector2Int cell = boardManager.clickToCell(worldPoint);
