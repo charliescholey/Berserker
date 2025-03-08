@@ -17,20 +17,25 @@ public class GameManager : MonoBehaviour
 
     //tracks the player prefab for spawning
     public PlayerController playerPrefab;
+    //tracks the enemy prefab for spawning
+    public EnemyController enemyPrefab;
     //tracks the players in the game
-    public PlayerController[] players;
+    public OrderedCharacter[] characters;
 
 
-
+    private EnemyController enemy;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        players = new PlayerController[2];
+        characters = new OrderedCharacter[3];
         //spawn the players
-        players[0] = Instantiate(playerPrefab);
-        players[0].spawn(boardManager, new Vector2Int(0, 0));
-        players[1] = Instantiate(playerPrefab);
-        players[1].spawn(boardManager, new Vector2Int(1, 3));
+        characters[0] = Instantiate(playerPrefab);
+        characters[0].spawn(boardManager, new Vector2Int(0, 0));
+        characters[1] = Instantiate(playerPrefab);
+        characters[1].spawn(boardManager, new Vector2Int(1, 3));
+
+        characters[2] = Instantiate(enemyPrefab);
+        characters[2].spawn(boardManager, new Vector2Int(3, 0));
 
     }
 
@@ -47,13 +52,21 @@ public class GameManager : MonoBehaviour
                 hasSelected = false;
                 player.setSelected(false);
                 player = null;
+                //move enemy
+                characters[2].moveToCell(new Vector2Int(characters[2].gridPosition.x + 1, characters[2].gridPosition.y));
             }else{
                 //if no player is selected, select the player in the clicked cell
                 Vector2Int cell = boardManager.clickToCell(worldPoint);
-                player = boardManager.detectSelected(cell, players);
+                player = (PlayerController) boardManager.detectSelected(cell, characters);
                 if(player != null){
-                    hasSelected = true;
-                    player.setSelected(true);
+                    if(player.GetType() == typeof(PlayerController)){
+                        //player is selected
+                        hasSelected = true;
+                        player.setSelected(true);
+                    }else{
+                        //right now, enemy would be the one clicked
+                        player = null;
+                    }
                 }
             }
         }

@@ -30,7 +30,7 @@ public class BoardManager : MonoBehaviour
 
     // detectSelected returns whatever the current cell has in it.
     // If a player is in the cell, it returns the player, otherwise it returns null.
-    public PlayerController detectSelected(Vector2Int cell, PlayerController[] players){
+    public OrderedCharacter detectSelected(Vector2Int cell, OrderedCharacter[] players){
         for(int i = 0; i < players.Length; i++){
             if(players[i]  == null){
                 continue;
