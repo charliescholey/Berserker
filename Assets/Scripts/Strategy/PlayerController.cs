@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour
     private int moveRange = 3;
     public int hp = 100;
     private Action[] actions;
+    
 
     public void spawn(BoardManager bm, Vector2Int cell)
     {
