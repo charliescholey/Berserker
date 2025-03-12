@@ -40,6 +40,7 @@ public class MapManagerScript : MonoBehaviour
     public void levelClicked(LevelDescription ld) {
         clicked = true;
 
+        // If you have clicked on the icon for the level the info box is opened for, close the info box
         if(levelNameText.text == ld.levelName && infoBox.activeSelf) {
             hideInfo(ld);
             return;
@@ -52,9 +53,12 @@ public class MapManagerScript : MonoBehaviour
             objectivesText.text = objectivesText.text + o + System.Environment.NewLine;
         }
         infoBox.SetActive(true);
+
+        // Make the play button load the correct level.
         playButton.onClick.RemoveAllListeners();
         playButton.onClick.AddListener(() => MapLoader.LoadLevel(ld.sceneToLoad)); //SceneManager.LoadScene(ld.sceneToLoad));
         
+        // Colour the stars to reflect the level difficulty
         Array.ForEach(stars, x => x.color = Color.white);
         
         switch(ld.place) {

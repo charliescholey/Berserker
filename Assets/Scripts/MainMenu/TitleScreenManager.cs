@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/*
+Opens the Main Menu when the player clicks enter
+*/
 public class TitleScreenManager : MonoBehaviour
 {
     public GameObject mainMenu;

@@ -37,6 +37,7 @@ public class StoreUI : MonoBehaviour
 
     void Update()
     {
+        // Once the Store is active in the hierarchy, the information about the first character is displayed
         if(init && this.gameObject.activeInHierarchy) {
             SelectCharacter(this.transform.Find("Character Image (1)").GetComponent<CharacterImageScript>().character);
             UpdateSelectedCharacter();
