@@ -6,19 +6,42 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Rendering;
 using System;
 using UnityEngine.Audio;
+using System.Linq;
+
+/*
+Manages the music and sound effects for the game
+*/
+
+/*
+To add a sound effect:
+In the inspector, under the Audio game object add a sound to the array of sounds.
+Give it a name, drag in its audio clip from assets, and select sound effect.
+Use the playSoundByName function to play the sound in the game.
+*/
 
 public class MusicScript : MonoBehaviour
 {
     [SerializeField] Sound[] sounds;
     [SerializeField] AudioMixerGroup soundEffectsMixerGroup;
     [SerializeField] AudioMixerGroup musicMixerGroup;
+
+    // This is an array of all the scene names where all the buttons will make a "tick" sound when clicked
+    string[] scenesWithButtonClicks = {"MainMenu", "WorldMap"};
     
     void Start()
     {
         DontDestroyOnLoad(gameObject); // Allow this object to persist across scenes
+
+        // Sounds are added in the Inspector with their name, audio clip, and type (music, sound effect)
+        // Loop through all of these sounds and create audio sources for them
         foreach(Sound s in sounds) {
             s.audioSource = gameObject.AddComponent<AudioSource>();
             s.audioSource.clip = s.audioClip;
+
+            // If a sound is music, make it play when the game starts and on a loop
+            // If a sound is a sound effect, make it not play when the game starts and not play on a loop
+            // Set the audio mixing group depending on the type of sound - this will allow us to change the volume 
+            // of all sounds of a certain type at the same time.
             switch(s.type) {
                 case Sound.AudioType.music:
                     s.audioSource.loop = true;
@@ -31,25 +54,28 @@ public class MusicScript : MonoBehaviour
                     s.audioSource.outputAudioMixerGroup = soundEffectsMixerGroup;
                     break;
             }
+
+            // Start to play any sounds that are meant to play when the game starts
             if(s.audioSource.playOnAwake) {
                 s.audioSource.Play();
             }
 
         }
+
         updateButtonClicks();
         SceneManager.sceneLoaded += OnSceneLoaded; // Makes OnSceneLoaded method called whenever a new scene is loaded
     }
     
     public void playSoundByName(string soundName) {
-        Debug.Log("playSoundByName");
-
         Sound sound = Array.Find(sounds, s => s.soundName == soundName);
         sound.audioSource.Play();
     }
 
     // This method is triggered when a new scene is loaded
     void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
-        updateButtonClicks(); // Updates button click event listeners
+        if(scenesWithButtonClicks.Contains(scene.name)) {
+            updateButtonClicks(); // Updates button click event listeners
+        }
     }
 
     // Finds all buttons in the scene and adds the buttonPress method as a listener to their onClick event

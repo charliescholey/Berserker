@@ -13,9 +13,10 @@ public class MapManagerScript : MonoBehaviour
     public static MapManagerScript Instance;
     public GameObject infoBox;
     public Button playButton;
-    public GameObject star;
+    public Image[] stars;
     public TextMeshProUGUI levelNameText, objectivesText;
     Boolean clicked = false;
+    Color starColour = new Color32(255, 175, 0, 255);
     
     void Start()
     {
@@ -52,20 +53,24 @@ public class MapManagerScript : MonoBehaviour
         }
         infoBox.SetActive(true);
         playButton.onClick.RemoveAllListeners();
-        playButton.onClick.AddListener(() => SceneManager.LoadScene(ld.sceneToLoad));
-        /*
+        playButton.onClick.AddListener(() => MapLoader.LoadLevel(ld.sceneToLoad)); //SceneManager.LoadScene(ld.sceneToLoad));
+        
+        Array.ForEach(stars, x => x.color = Color.white);
+        
         switch(ld.place) {
             case LevelDescription.type.Base:
-                GameObject s = Instantiate(star, ld.transform.position + new Vector3(0, -40), Quaternion.identity, infoBox.transform);  
+                stars[0].color = starColour;
                 break;
             case LevelDescription.type.Village:
-                break;
+                stars[1].color = starColour;
+                goto case LevelDescription.type.Base;
             case LevelDescription.type.City:
-                break;
+                stars[2].color = starColour;
+                goto case LevelDescription.type.Village;
             case LevelDescription.type.Capital:
                 break;
         }
-        */
+        
 
         // Move the info box below the clicked icon
         Vector3 iconPosition = ld.transform.position;
