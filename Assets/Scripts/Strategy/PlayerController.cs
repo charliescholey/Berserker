@@ -13,14 +13,23 @@ using UnityEngine;
  * - set player stats (from JSON eventually)
  * - attacking & all other actions
  */
-
 public class PlayerController : OrderedCharacter
 {
     private SpriteRenderer m_SpriteRenderer;
     private bool isSelected = false;
     private bool hasMoved = false;
     private int moveRange = 3;
-    private Action[] actions;
+    private Action[3] actions;
+    //basic stats of a character that can be changed 
+    public int baseHealth;
+    public int baseAttack;
+    public int baseDefense;
+    public int baseMovementRange;
+    public int currentHealth;
+    //this is for if we decide to have class specific chcaracters
+    public string characterClass; 
+    // One unique ability specific to each character
+    public string uniqueAbility;
 
     public override void spawn(BoardManager bm, Vector2Int cell)
     {
@@ -73,4 +82,19 @@ public class PlayerController : OrderedCharacter
         m_SpriteRenderer = GetComponent<SpriteRenderer>();
         hp = 100;
     }
+
+     public void TakeDamage(int damage)
+    {
+        int finalDamage = Mathf.Max(damage - baseDefense, 1);
+        currentHealth -= finalDamage;
+
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+    }
+
+    //not sure how we are going to go about having thr characters die but here is a function for it
+    private void Die()
+    { }
 }
