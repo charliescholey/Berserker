@@ -47,6 +47,12 @@ public class PlayerController : OrderedCharacter
         actions = acts;
     }
 
+    public void resetTurn(){
+        hasMoved = false;
+        hasActed = false;
+        isSelected = false;
+    }
+
     public override bool isTurnComplete()
     {   //temp solve until combat is implemented
         return hasMoved && hasActed;
