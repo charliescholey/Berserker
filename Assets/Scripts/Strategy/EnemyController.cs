@@ -27,9 +27,20 @@ public class EnemyController : OrderedCharacter
         gridPosition = cell;
         transform.position = boardManager.cellToWorld(cell);
     }
+
+    public override void takeAction(Action action)
+    {
+        
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         hp = 20;
+    }
+
+    private void Die()
+    {
+        Destroy(gameObject);
     }
 }

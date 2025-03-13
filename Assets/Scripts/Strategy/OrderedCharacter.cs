@@ -12,6 +12,8 @@ public abstract class OrderedCharacter : MonoBehaviour
 
     public abstract void moveToCell(Vector2Int cell);
 
+    public abstract void takeAction(Action action);
+
 
     public int getDist(Vector2Int cell)
     {

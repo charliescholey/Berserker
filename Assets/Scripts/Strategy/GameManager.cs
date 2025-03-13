@@ -15,6 +15,10 @@ public class GameManager : MonoBehaviour
     //tracks active player
     private PlayerController player;
 
+    //canvas for overlay rendering
+    public Canvas UI;
+    public GameObject HPTextPrefab;
+
     //tracks the player prefab for spawning
     public PlayerController playerPrefab;
     //tracks the enemy prefab for spawning
@@ -22,8 +26,6 @@ public class GameManager : MonoBehaviour
     //tracks the players in the game
     public OrderedCharacter[] characters;
 
-
-    private EnemyController enemy;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -36,6 +38,11 @@ public class GameManager : MonoBehaviour
 
         characters[2] = Instantiate(enemyPrefab);
         characters[2].spawn(boardManager, new Vector2Int(3, 0));
+
+        //TEMP HP TEXT
+        GameObject newhptext = Instantiate(HPTextPrefab);
+        newhptext.transform.SetParent(UI.transform);
+        newhptext.GetComponent<HPTextController>().setCharacter(characters[0]);
 
     }
 

@@ -18,8 +18,9 @@ public class PlayerController : OrderedCharacter
     private SpriteRenderer m_SpriteRenderer;
     private bool isSelected = false;
     private bool hasMoved = false;
+    private bool hasActed = false;
     private int moveRange = 3;
-    private Action[3] actions;
+    private Action[] actions;
     //basic stats of a character that can be changed 
     public int baseHealth;
     public int baseAttack;
@@ -48,7 +49,15 @@ public class PlayerController : OrderedCharacter
 
     public override bool isTurnComplete()
     {   //temp solve until combat is implemented
-        return hasMoved;
+        return hasMoved && hasActed;
+    }
+
+    public override void takeAction(Action action)
+    {
+        if(hasActed){
+            return;
+        }
+        hasActed = true;
     }
 
     public override void moveToCell(Vector2Int cell)
@@ -77,14 +86,12 @@ public class PlayerController : OrderedCharacter
         toggleHighlight();
     }
 
-    void Start()
-    {
+    void Start(){
         m_SpriteRenderer = GetComponent<SpriteRenderer>();
         hp = 100;
     }
 
-     public void TakeDamage(int damage)
-    {
+    public void TakeDamage(int damage){
         int finalDamage = Mathf.Max(damage - baseDefense, 1);
         currentHealth -= finalDamage;
 
@@ -95,6 +102,7 @@ public class PlayerController : OrderedCharacter
     }
 
     //not sure how we are going to go about having thr characters die but here is a function for it
-    private void Die()
-    { }
+    private void Die(){ 
+
+    }
 }
