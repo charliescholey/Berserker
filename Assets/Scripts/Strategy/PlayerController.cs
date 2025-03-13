@@ -17,8 +17,8 @@ public class PlayerController : OrderedCharacter
 {
     private SpriteRenderer m_SpriteRenderer;
     private bool isSelected = false;
-    private bool hasMoved = false;
-    private bool hasActed = false;
+    public bool hasMoved = false;
+    public bool hasActed = false;
     private int moveRange = 3;
     private Action[] actions;
     //basic stats of a character that can be changed 
@@ -55,15 +55,16 @@ public class PlayerController : OrderedCharacter
 
     public override bool isTurnComplete()
     {   //temp solve until combat is implemented
-        return hasMoved && hasActed;
+        if(hasMoved && hasActed){
+            return true;
+        }
+        return false;
     }
 
     public override void takeAction(Action action)
     {
-        if(hasActed){
-            return;
-        }
         hasActed = true;
+        Debug.Log("Player has taken action: " + action.name);
     }
 
     public override void moveToCell(Vector2Int cell)
@@ -74,6 +75,9 @@ public class PlayerController : OrderedCharacter
         if(gridPosition.x == cell.x && gridPosition.y == cell.y){
             return;
         }
+        if(hasMoved){
+            return;
+        }
         gridPosition = cell;
         transform.position = boardManager.cellToWorld(cell);
         hasMoved = true;
@@ -81,7 +85,11 @@ public class PlayerController : OrderedCharacter
 
     public void toggleHighlight(){
         if(isSelected){
-            m_SpriteRenderer.color = Color.cyan;
+            if(hasMoved){
+                m_SpriteRenderer.color = Color.red;
+            }else{
+                m_SpriteRenderer.color = Color.cyan;
+            }
         }else{
             m_SpriteRenderer.color = Color.white;
         }
