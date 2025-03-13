@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     //link to action database
     public ActionDatabase actionDatabase;
     //tracks active player
-    private PlayerController player;
+    private CharacterController player;
 
     public ActionBTNController actionBTNPrefab;
     private ActionBTNController actionBTNController;
@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
     public GameObject HPTextPrefab;
 
     //tracks the player prefab for spawning
-    public PlayerController playerPrefab;
+    public CharacterController playerPrefab;
     //tracks the enemy prefab for spawning
     public EnemyController enemyPrefab;
     //tracks the players in the game
@@ -70,9 +70,9 @@ public class GameManager : MonoBehaviour
             }else{
                 //if no player is selected, select the player in the clicked cell
                 Vector2Int cell = boardManager.clickToCell(worldPoint);
-                player = (PlayerController) boardManager.detectSelected(cell, characters);
+                player = (CharacterController) boardManager.detectSelected(cell, characters);
                 if(player != null){
-                    if(player.GetType() == typeof(PlayerController)){
+                    if(player.GetType() == typeof(CharacterController)){
                         //player is selected
                         hasSelected = true;
                         player.setSelected(true);
@@ -100,11 +100,11 @@ public class GameManager : MonoBehaviour
         }
 
         //list characters to end turn
-        PlayerController[] players = new PlayerController[] { (PlayerController) characters[0], (PlayerController) characters[1] };
+        CharacterController[] players = new CharacterController[] { (CharacterController) characters[0], (CharacterController) characters[1] };
         processEndTurn(players);
     }
 
-    void processEndTurn(PlayerController[] players){
+    void processEndTurn(CharacterController[] players){
         for(int i = 0; i < players.Length; i++){
             if(!players[i].isTurnComplete()){
                 Debug.Log("Player " + i + " has not completed their turn");

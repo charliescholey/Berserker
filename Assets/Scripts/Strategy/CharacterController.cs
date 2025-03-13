@@ -13,7 +13,7 @@ using UnityEngine;
  * - set player stats (from JSON eventually)
  * - attacking & all other actions
  */
-public class PlayerController : OrderedCharacter
+public class CharacterController : OrderedCharacter
 {
     private SpriteRenderer m_SpriteRenderer;
     private bool isSelected = false;

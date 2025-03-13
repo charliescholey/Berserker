@@ -7,7 +7,7 @@ public class ActionBTNController : MonoBehaviour
 {
     private TextMeshProUGUI textMeshPro;
     public Action action;
-    public PlayerController player;
+    public CharacterController player;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -17,7 +17,7 @@ public class ActionBTNController : MonoBehaviour
         button.onClick.AddListener(clicked);
     }
 
-    public void setAction(Action action, PlayerController player)
+    public void setAction(Action action, CharacterController player)
     {
         this.action = action;
         this.player = player;
