@@ -14,6 +14,7 @@ public class HPTextController : MonoBehaviour
     public void setCharacter(OrderedCharacter character)
     {
         this.character = character;
+        UpdateHPText();
     }
 
     // Update is called once per frame
@@ -23,12 +24,19 @@ public class HPTextController : MonoBehaviour
         {
             return;
         }
-        textMeshPro.text = character.hp.ToString();
+        UpdateHPText();
+
         textMeshPro.transform.position = Camera.main.WorldToScreenPoint(character.transform.position) + new Vector3(0, 0.25f, 0);
 
         if(character.hp <= 0)
         {
             Destroy(gameObject);
         }
+    }
+
+    // Public method to update the displayed HP
+    public void UpdateHPText()
+    {
+        textMeshPro.text = "HP: " + character.hp.ToString();
     }
 }

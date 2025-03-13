@@ -131,4 +131,63 @@ public class GameManager : MonoBehaviour
             characters[2].moveToCell(new Vector2Int(enemyPos.x, enemyPos.y - 1));
         }
     }
+
+    //Executes the attack action.
+    public void ExecuteAttack(CharacterController attacker, Action attackAction)
+    {
+        // Determine damage from the action's power defaulting to 10 if no action is provided.
+        int damage = attackAction != null ? attackAction.power : 10;
+
+        Vector2Int attackerPos = attacker.gridPosition;
+
+        Vector2Int[] adjacentCells = GetAdjacentCells(attackerPos);
+
+        // Loop through all characters in the game.
+        foreach (OrderedCharacter oc in characters)
+        {
+            if (!(oc is EnemyController))
+                continue;
+
+            bool isAdjacent = false;
+
+            foreach (Vector2Int cell in adjacentCells)
+            {
+                if (oc.gridPosition == cell)
+                {
+                    isAdjacent = true;
+                    break;
+                }
+            }
+
+            // If the enemy is adjacent, apply damage and log the event.
+            if (isAdjacent)
+            {
+                oc.TakeDamage(damage);
+                //this my best attempt at logging 
+                Debug.Log(oc.gameObject.name + " took " + damage + " damage from " + attacker.gameObject.name);
+            }
+        }
+
+        // Mark the attacker as having taken their action.
+        attacker.hasActed = true;
+    }
+
+
+    //Helper method to get the four adjacent cells.
+   Vector2Int[] GetAdjacentCells(Vector2Int center)
+    {
+        return new Vector2Int[]
+        {
+            new Vector2Int(center.x + 1, center.y),       // East
+            new Vector2Int(center.x - 1, center.y),       // West
+            new Vector2Int(center.x, center.y + 1),       // North
+            new Vector2Int(center.x, center.y - 1),       // South
+            new Vector2Int(center.x + 1, center.y + 1),   // Northeast
+            new Vector2Int(center.x + 1, center.y - 1),   // Southeast
+            new Vector2Int(center.x - 1, center.y + 1),   // Northwest
+            new Vector2Int(center.x - 1, center.y - 1)    // Southwest
+        };
+    }
+
 }
+

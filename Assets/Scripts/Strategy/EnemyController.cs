@@ -2,7 +2,11 @@ using UnityEngine;
 
 public class EnemyController : OrderedCharacter
 {
-    int moveRange = 2;
+    public int moveRange = 2;
+    public int baseHealth;
+    public int baseAttack;
+    public int baseDefense;
+    public int currentHealth;
 
     public override void spawn(BoardManager bm, Vector2Int cell)
     {
@@ -38,9 +42,22 @@ public class EnemyController : OrderedCharacter
     {
         hp = 20;
     }
-
-    private void Die()
+       public override void TakeDamage(int damage)
     {
+        hp -= damage;
+        {
+            hpTextController.UpdateHPText();
+        }
+
+        if (hp <= 0)
+        {
+            Die();
+        }
+    }
+    public override void Die()
+     {
+        // to deal with dying, again not sure how we are dealing with it
+        Debug.Log($"{gameObject.name} died.");
         Destroy(gameObject);
     }
 }
