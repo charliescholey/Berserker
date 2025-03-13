@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6467644702699487793}
   - component: {fileID: 3326620287297583562}
+  - component: {fileID: 9159905902385111533}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -17,21 +18,25 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &6467644702699487793
-Transform:
+--- !u!224 &6467644702699487793
+RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6937903902755466034}
-  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.48245966, y: -0.9579903, z: -1.0491575}
+  m_LocalPosition: {x: 0, y: 0, z: -1.0491575}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -3.0315075, y: 0.8306273}
+  m_SizeDelta: {x: 1, y: 1}
+  m_Pivot: {x: -0, y: 1}
 --- !u!212 &3326620287297583562
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -87,3 +92,17 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &9159905902385111533
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6937903902755466034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 484b46e9a25e541ee96aa675b761a8b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridPosition: {x: 0, y: 0}
+  hp: 0

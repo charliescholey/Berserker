@@ -17,9 +17,10 @@ public class PlayerController : OrderedCharacter
 {
     private SpriteRenderer m_SpriteRenderer;
     private bool isSelected = false;
-    private bool hasMoved = false;
+    public bool hasMoved = false;
+    public bool hasActed = false;
     private int moveRange = 3;
-    private Action[3] actions;
+    private Action[] actions;
     //basic stats of a character that can be changed 
     public int baseHealth;
     public int baseAttack;
@@ -46,9 +47,24 @@ public class PlayerController : OrderedCharacter
         actions = acts;
     }
 
+    public void resetTurn(){
+        hasMoved = false;
+        hasActed = false;
+        isSelected = false;
+    }
+
     public override bool isTurnComplete()
     {   //temp solve until combat is implemented
-        return hasMoved;
+        if(hasMoved && hasActed){
+            return true;
+        }
+        return false;
+    }
+
+    public override void takeAction(Action action)
+    {
+        hasActed = true;
+        Debug.Log("Player has taken action: " + action.name);
     }
 
     public override void moveToCell(Vector2Int cell)
@@ -59,6 +75,9 @@ public class PlayerController : OrderedCharacter
         if(gridPosition.x == cell.x && gridPosition.y == cell.y){
             return;
         }
+        if(hasMoved){
+            return;
+        }
         gridPosition = cell;
         transform.position = boardManager.cellToWorld(cell);
         hasMoved = true;
@@ -66,7 +85,11 @@ public class PlayerController : OrderedCharacter
 
     public void toggleHighlight(){
         if(isSelected){
-            m_SpriteRenderer.color = Color.cyan;
+            if(hasMoved){
+                m_SpriteRenderer.color = Color.red;
+            }else{
+                m_SpriteRenderer.color = Color.cyan;
+            }
         }else{
             m_SpriteRenderer.color = Color.white;
         }
@@ -77,14 +100,12 @@ public class PlayerController : OrderedCharacter
         toggleHighlight();
     }
 
-    void Start()
-    {
+    void Start(){
         m_SpriteRenderer = GetComponent<SpriteRenderer>();
         hp = 100;
     }
 
-     public void TakeDamage(int damage)
-    {
+    public void TakeDamage(int damage){
         int finalDamage = Mathf.Max(damage - baseDefense, 1);
         currentHealth -= finalDamage;
 
@@ -95,6 +116,7 @@ public class PlayerController : OrderedCharacter
     }
 
     //not sure how we are going to go about having thr characters die but here is a function for it
-    private void Die()
-    { }
+    private void Die(){ 
+
+    }
 }

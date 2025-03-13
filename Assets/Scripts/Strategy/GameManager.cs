@@ -15,6 +15,13 @@ public class GameManager : MonoBehaviour
     //tracks active player
     private PlayerController player;
 
+    public ActionBTNController actionBTNPrefab;
+    private ActionBTNController actionBTNController;
+
+    //canvas for overlay rendering
+    public Canvas UI;
+    public GameObject HPTextPrefab;
+
     //tracks the player prefab for spawning
     public PlayerController playerPrefab;
     //tracks the enemy prefab for spawning
@@ -22,13 +29,11 @@ public class GameManager : MonoBehaviour
     //tracks the players in the game
     public OrderedCharacter[] characters;
 
-
-    private EnemyController enemy;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         characters = new OrderedCharacter[3];
-        //spawn the players
+        //spawn the characters
         characters[0] = Instantiate(playerPrefab);
         characters[0].spawn(boardManager, new Vector2Int(0, 0));
         characters[1] = Instantiate(playerPrefab);
@@ -37,6 +42,13 @@ public class GameManager : MonoBehaviour
         characters[2] = Instantiate(enemyPrefab);
         characters[2].spawn(boardManager, new Vector2Int(3, 0));
 
+        //give every character an HP tracker
+        for(int i = 0; i < characters.Length; i++){
+            GameObject newhptext = Instantiate(HPTextPrefab);
+            newhptext.transform.SetParent(UI.transform);
+            newhptext.GetComponent<HPTextController>().setCharacter(characters[i]);
+        }
+        
     }
 
     // Update is called once per frame
@@ -52,8 +64,9 @@ public class GameManager : MonoBehaviour
                 hasSelected = false;
                 player.setSelected(false);
                 player = null;
-                //move enemy
-                characters[2].moveToCell(new Vector2Int(characters[2].gridPosition.x + 1, characters[2].gridPosition.y));
+                if(actionBTNController != null){
+                    actionBTNController.destroy();
+                }
             }else{
                 //if no player is selected, select the player in the clicked cell
                 Vector2Int cell = boardManager.clickToCell(worldPoint);
@@ -63,9 +76,18 @@ public class GameManager : MonoBehaviour
                         //player is selected
                         hasSelected = true;
                         player.setSelected(true);
+                        if(player.hasActed == false){
+                            actionBTNController = Instantiate(actionBTNPrefab);
+                            actionBTNController.transform.SetParent(UI.transform);
+                            actionBTNController.setAction(actionDatabase.actions[0], player);
+                        }
                     }else{
                         //right now, enemy would be the one clicked
+                        player.setSelected(false);
                         player = null;
+                        if(actionBTNController != null){
+                            actionBTNController.destroy();
+                        }
                     }
                 }
             }
@@ -77,5 +99,36 @@ public class GameManager : MonoBehaviour
             player.setSelected(false);
         }
 
+        //list characters to end turn
+        PlayerController[] players = new PlayerController[] { (PlayerController) characters[0], (PlayerController) characters[1] };
+        processEndTurn(players);
+    }
+
+    void processEndTurn(PlayerController[] players){
+        for(int i = 0; i < players.Length; i++){
+            if(!players[i].isTurnComplete()){
+                Debug.Log("Player " + i + " has not completed their turn");
+                return;
+            }
+        }
+        takeEnemyAction();
+        for(int i = 0; i < players.Length; i++){
+            players[i].resetTurn();
+        }
+    }
+
+    void takeEnemyAction(){
+        //move enemy towards player
+        Vector2Int playerPos = characters[0].gridPosition;
+        Vector2Int enemyPos = characters[2].gridPosition;
+        if(playerPos.x > enemyPos.x){
+            characters[2].moveToCell(new Vector2Int(enemyPos.x + 1, enemyPos.y));
+        }else if(playerPos.x < enemyPos.x){
+            characters[2].moveToCell(new Vector2Int(enemyPos.x - 1, enemyPos.y));
+        }else if(playerPos.y > enemyPos.y){
+            characters[2].moveToCell(new Vector2Int(enemyPos.x, enemyPos.y + 1));
+        }else if(playerPos.y < enemyPos.y){
+            characters[2].moveToCell(new Vector2Int(enemyPos.x, enemyPos.y - 1));
+        }
     }
 }
