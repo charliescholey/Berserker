@@ -105,18 +105,20 @@ public class CharacterController : OrderedCharacter
         hp = 100;
     }
 
-    public void TakeDamage(int damage){
-        int finalDamage = Mathf.Max(damage - baseDefense, 1);
-        currentHealth -= finalDamage;
+    public override void TakeDamage(int damage)
+    {
+        hp -= damage;
 
-        if (currentHealth <= 0)
+        if (hp <= 0)
         {
             Die();
         }
     }
 
-    //not sure how we are going to go about having thr characters die but here is a function for it
-    private void Die(){ 
-
+    public override void Die()
+    {
+        // to deal with dying, again not sure how we are dealing with it
+        Debug.Log($"{gameObject.name} died.");
+        gameObject.SetActive(false);
     }
 }

@@ -14,7 +14,7 @@ public class ActionBTNController : MonoBehaviour
     {
         this.textMeshPro = GetComponent<TextMeshProUGUI>();
         Button button = GetComponent<Button>();
-        button.onClick.AddListener(clicked);
+        button.onClick.AddListener(OnAttackButtonClicked);
     }
 
     public void setAction(Action action, CharacterController player)
@@ -25,9 +25,16 @@ public class ActionBTNController : MonoBehaviour
         textMeshPro.text = action.name;
     }
 
-    void clicked()
+     //Changed clicked to this 
+    public void OnAttackButtonClicked()
     {
-        player.takeAction(action);
+        GameManager gm = UnityEngine.Object.FindFirstObjectByType<GameManager>();
+        if(gm != null && player != null && action != null)
+        {
+            gm.ExecuteAttack(player, action);
+        }
+        // Optionally destroy or hide the button after use.
+        destroy();
     }
 
     public void destroy()
