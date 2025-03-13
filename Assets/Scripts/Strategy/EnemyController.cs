@@ -45,9 +45,6 @@ public class EnemyController : OrderedCharacter
        public override void TakeDamage(int damage)
     {
         hp -= damage;
-        {
-            hpTextController.UpdateHPText();
-        }
 
         if (hp <= 0)
         {
