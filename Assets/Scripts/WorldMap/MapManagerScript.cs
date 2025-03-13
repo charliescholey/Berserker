@@ -56,7 +56,7 @@ public class MapManagerScript : MonoBehaviour
 
         // Make the play button load the correct level.
         playButton.onClick.RemoveAllListeners();
-        playButton.onClick.AddListener(() => MapLoader.LoadLevel(ld.sceneToLoad)); //SceneManager.LoadScene(ld.sceneToLoad));
+        playButton.onClick.AddListener(() => WorldMapLoader.LoadLevel(ld.sceneToLoad)); //SceneManager.LoadScene(ld.sceneToLoad));
         
         // Colour the stars to reflect the level difficulty
         Array.ForEach(stars, x => x.color = Color.white);

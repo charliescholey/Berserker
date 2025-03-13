@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MapLoader
+public class WorldMapLoader
 {
     public static void LoadLevel(string levelName)
     {
