@@ -1,0 +1,34 @@
+using TMPro;
+using UnityEngine;
+
+public class HPTextController : MonoBehaviour
+{
+    private TextMeshProUGUI textMeshPro;
+    private OrderedCharacter character;
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
+        this.textMeshPro = GetComponent<TextMeshProUGUI>();
+    }
+
+    public void setCharacter(OrderedCharacter character)
+    {
+        this.character = character;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if(character == null)
+        {
+            return;
+        }
+        textMeshPro.text = character.hp.ToString();
+        textMeshPro.transform.position = Camera.main.WorldToScreenPoint(character.transform.position) + new Vector3(0, 0.25f, 0);
+
+        if(character.hp <= 0)
+        {
+            Destroy(gameObject);
+        }
+    }
+}
