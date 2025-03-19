@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour
     public OrderedCharacter[] characters;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Awake()
     {
         characters = new OrderedCharacter[3];
         //spawn the characters
