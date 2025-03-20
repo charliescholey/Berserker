@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 /**
  * PlayerController class -- manages the player-controlled characters.
@@ -69,7 +70,7 @@ public class CharacterController : OrderedCharacter
 
     public Vector2Int[] getMovementRange(){
         //handle as arraylist for dynamic sizing
-        ArrayList<Vector2Int> cells = new ArrayList<Vector2Int>();
+        List<Vector2Int> cells = new List<Vector2Int>();
         for(int i = -moveRange; i <= moveRange; i++){
             for(int j = -moveRange; j <= moveRange; j++){
                 //uses existing manhattan distance function from OrderedCharacter
