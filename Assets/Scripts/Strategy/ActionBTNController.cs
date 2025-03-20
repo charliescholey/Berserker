@@ -15,6 +15,7 @@ public class ActionBTNController : MonoBehaviour
         this.textMeshPro = GetComponent<TextMeshProUGUI>();
         Button button = GetComponent<Button>();
         button.onClick.AddListener(OnAttackButtonClicked);
+
     }
 
     public void setAction(Action action, CharacterController player)
@@ -39,6 +40,11 @@ public class ActionBTNController : MonoBehaviour
 
     public void destroy()
     {
-        Destroy(gameObject, 0.2f);
+        // Hide the button (by hiding its image and text)
+        GetComponent<Button>().image.color = Color.clear;
+        gameObject.transform.Find("ActionText").gameObject.SetActive(false);
+
+        // Destroy button after 0.5 sec
+        Destroy(gameObject, 0.5f);
     }
 }

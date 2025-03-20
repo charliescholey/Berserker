@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 /**
@@ -38,7 +39,7 @@ public class CharacterController : OrderedCharacter
         gridPosition = cell;
         transform.position = boardManager.cellToWorld(cell);
     }
-
+    
     public void spawn(BoardManager bm, Vector2Int cell, Action[] acts)
     {
         boardManager = bm;
@@ -121,4 +122,10 @@ public class CharacterController : OrderedCharacter
         Debug.Log($"{gameObject.name} died.");
         gameObject.SetActive(false);
     }
+
+    // HWE Code Start
+    public Action[] GetActions() {
+        return actions;
+    }
+    // HWE Code End
 }

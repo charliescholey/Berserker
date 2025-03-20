@@ -16,7 +16,10 @@ public class GameManager : MonoBehaviour
     private CharacterController player;
 
     public ActionBTNController actionBTNPrefab;
-    private ActionBTNController actionBTNController;
+    public ActionBTNManager actionBTNManagerPrefab;
+    ///private ActionBTNController actionBTNController;
+    
+    private ActionBTNManager actionBTNManager;
 
     //canvas for overlay rendering
     public Canvas UI;
@@ -35,9 +38,9 @@ public class GameManager : MonoBehaviour
         characters = new OrderedCharacter[3];
         //spawn the characters
         characters[0] = Instantiate(playerPrefab);
-        characters[0].spawn(boardManager, new Vector2Int(0, 0));
+        ((CharacterController)characters[0]).spawn(boardManager, new Vector2Int(0, 0), new[] {actionDatabase.actions[0], actionDatabase.actions[1] } );
         characters[1] = Instantiate(playerPrefab);
-        characters[1].spawn(boardManager, new Vector2Int(1, 3));
+        ((CharacterController)characters[1]).spawn(boardManager, new Vector2Int(1, 3), new[] {actionDatabase.actions[1], actionDatabase.actions[2] });
 
         characters[2] = Instantiate(enemyPrefab);
         characters[2].spawn(boardManager, new Vector2Int(3, 0));
@@ -50,7 +53,7 @@ public class GameManager : MonoBehaviour
             HPTextController hpTextController = hpText.GetComponent<HPTextController>();
             hpTextController.setCharacter(oc);
         }
-        
+        actionBTNManager = Instantiate(actionBTNManagerPrefab);
     }
 
     // Update is called once per frame
@@ -66,9 +69,14 @@ public class GameManager : MonoBehaviour
                 hasSelected = false;
                 player.setSelected(false);
                 player = null;
+                
+                actionBTNManager.destroy();
+                /*
                 if(actionBTNController != null){
                     actionBTNController.destroy();
                 }
+                */
+                
             }else{
                 //if no player is selected, select the player in the clicked cell
                 Vector2Int cell = boardManager.clickToCell(worldPoint);
@@ -78,18 +86,24 @@ public class GameManager : MonoBehaviour
                         //player is selected
                         hasSelected = true;
                         player.setSelected(true);
-                        if(player.hasActed == false){
-                            actionBTNController = Instantiate(actionBTNPrefab);
-                            actionBTNController.transform.SetParent(UI.transform);
-                            actionBTNController.setAction(actionDatabase.actions[0], player);
+                        if(player.hasActed == false) {
+                            actionBTNManager.Create(player, UI);
+                            
+                            //actionBTNController = Instantiate(actionBTNPrefab);
+                            //actionBTNController.transform.SetParent(UI.transform);
+                            //actionBTNController.setAction(actionDatabase.actions[0], player);
                         }
                     }else{
                         //right now, enemy would be the one clicked
                         player.setSelected(false);
                         player = null;
+
+                        actionBTNManager.destroy();
+                        /*
                         if(actionBTNController != null){
                             actionBTNController.destroy();
                         }
+                        */
                     }
                 }
             }
@@ -168,7 +182,7 @@ public class GameManager : MonoBehaviour
                 Debug.Log(oc.gameObject.name + " took " + damage + " damage from " + attacker.gameObject.name);
             }
         }
-
+        
         // Mark the attacker as having taken their action.
         attacker.hasActed = true;
     }
