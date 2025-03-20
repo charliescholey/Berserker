@@ -41,7 +41,7 @@ public abstract class OrderedCharacter : MonoBehaviour
     //get all related cells for an action
     public Vector2Int[] processActionRange(Action action){
         Vector2Int[] cells;
-        switch(action.type){
+        switch(action.target){
             case Action.TargetType.SELF:
                 return new Vector2Int[]{gridPosition};
             case Action.TargetType.RADIUS:
@@ -77,10 +77,11 @@ public abstract class OrderedCharacter : MonoBehaviour
                 }
                 return cells;
         }
+        return new Vector2Int[]{gridPosition};
     }
 
     public void processActionEffect(Action action, Vector2Int cell){
-        odds = action.effectChance;
+        float odds = action.effectChance;
         float randomValue = Random.Range(0.0f, 1.0f);
         if(randomValue < odds){
             switch(action.effect){
