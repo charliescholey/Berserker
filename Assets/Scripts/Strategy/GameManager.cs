@@ -38,10 +38,11 @@ public class GameManager : MonoBehaviour
         characters = new OrderedCharacter[3];
         //spawn the characters
         characters[0] = Instantiate(playerPrefab);
-        ((CharacterController)characters[0]).spawn(boardManager, new Vector2Int(0, 0), new[] {actionDatabase.actions[0], actionDatabase.actions[1] } );
+        //((CharacterController)characters[0]).spawn(boardManager, new Vector2Int(0, 0), new[] {actionDatabase.actions[0], actionDatabase.actions[1] } );
         characters[1] = Instantiate(playerPrefab);
-        ((CharacterController)characters[1]).spawn(boardManager, new Vector2Int(1, 3), new[] {actionDatabase.actions[1], actionDatabase.actions[2] });
-
+        //((CharacterController)characters[1]).spawn(boardManager, new Vector2Int(1, 3), new[] {actionDatabase.actions[1], actionDatabase.actions[2] });
+        spawnPlayers(new[] {new Vector2Int(0, 0), new Vector2Int(3, 3)});
+        
         characters[2] = Instantiate(enemyPrefab);
         characters[2].spawn(boardManager, new Vector2Int(3, 0));
 
@@ -202,6 +203,16 @@ public class GameManager : MonoBehaviour
             new Vector2Int(center.x - 1, center.y + 1),   // Northwest
             new Vector2Int(center.x - 1, center.y - 1)    // Southwest
         };
+    }
+
+    void spawnPlayers(Vector2Int[] playerSpawnLocations) {
+        int i = 0;
+        foreach(OrderedCharacter oc in characters) {
+            if(oc is CharacterController) {
+                ((CharacterController)oc).spawn(boardManager, playerSpawnLocations[i], new[] {actionDatabase.actions[1], actionDatabase.actions[2] });
+                i++;
+            }
+        }
     }
 
 }
