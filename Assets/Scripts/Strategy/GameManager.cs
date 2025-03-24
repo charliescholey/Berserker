@@ -1,4 +1,6 @@
 using UnityEngine;
+using System;
+using System.Linq;
 
 /**
 * GameManager class -- handles gameplay logic.
@@ -14,10 +16,8 @@ public class GameManager : MonoBehaviour
     public ActionDatabase actionDatabase;
     //tracks active player
     private CharacterController player;
-
-    public ActionBTNController actionBTNPrefab;
+    
     public ActionBTNManager actionBTNManagerPrefab;
-    ///private ActionBTNController actionBTNController;
     
     private ActionBTNManager actionBTNManager;
 
@@ -30,30 +30,29 @@ public class GameManager : MonoBehaviour
     //tracks the enemy prefab for spawning
     public EnemyController enemyPrefab;
     //tracks the players in the game
-    public OrderedCharacter[] characters;
+    public CharacterController[] players;
+    public EnemyController[] enemies;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
-        characters = new OrderedCharacter[3];
+        players = new CharacterController[2];
+
         //spawn the characters
-        characters[0] = Instantiate(playerPrefab);
-        //((CharacterController)characters[0]).spawn(boardManager, new Vector2Int(0, 0), new[] {actionDatabase.actions[0], actionDatabase.actions[1] } );
-        characters[1] = Instantiate(playerPrefab);
-        //((CharacterController)characters[1]).spawn(boardManager, new Vector2Int(1, 3), new[] {actionDatabase.actions[1], actionDatabase.actions[2] });
-        spawnPlayers(new[] {new Vector2Int(0, 0), new Vector2Int(3, 3)});
+        players[0] = Instantiate(playerPrefab);
+        ((CharacterController)players[0]).spawn(boardManager, new Vector2Int(0, 0), new[] {actionDatabase.actions[0], actionDatabase.actions[1] } );
+        players[1] = Instantiate(playerPrefab);
+        ((CharacterController)players[1]).spawn(boardManager, new Vector2Int(1, 3), new[] {actionDatabase.actions[1], actionDatabase.actions[2] });
+        //spawnPlayers(new[] {new Vector2Int(0, 0), new Vector2Int(3, 3)});
         
-        characters[2] = Instantiate(enemyPrefab);
-        characters[2].spawn(boardManager, new Vector2Int(3, 0));
+        enemies = new EnemyController[1];
+        enemies[0] = Instantiate(enemyPrefab);
+        enemies[0].spawn(boardManager, new Vector2Int(3, 0));
 
         //give every character an HP tracker
-        foreach (OrderedCharacter oc in characters)
-        {
-            GameObject hpText = Instantiate(HPTextPrefab);
-            hpText.transform.SetParent(UI.transform);
-            HPTextController hpTextController = hpText.GetComponent<HPTextController>();
-            hpTextController.setCharacter(oc);
-        }
+        Array.ForEach(players, x => addHPTracker(x));
+        Array.ForEach(enemies, x => addHPTracker(x));
+        
         actionBTNManager = Instantiate(actionBTNManagerPrefab);
     }
 
@@ -72,15 +71,13 @@ public class GameManager : MonoBehaviour
                 player = null;
                 
                 actionBTNManager.destroy();
-                /*
-                if(actionBTNController != null){
-                    actionBTNController.destroy();
-                }
-                */
                 
             }else{
                 //if no player is selected, select the player in the clicked cell
                 Vector2Int cell = boardManager.clickToCell(worldPoint);
+
+                OrderedCharacter[] characters = players.Cast<OrderedCharacter>().Concat(enemies.Cast<OrderedCharacter>()).ToArray();
+
                 player = (CharacterController) boardManager.detectSelected(cell, characters);
                 if(player != null){
                     if(player.GetType() == typeof(CharacterController)){
@@ -89,10 +86,6 @@ public class GameManager : MonoBehaviour
                         player.setSelected(true);
                         if(player.hasActed == false) {
                             actionBTNManager.Create(player, UI);
-                            
-                            //actionBTNController = Instantiate(actionBTNPrefab);
-                            //actionBTNController.transform.SetParent(UI.transform);
-                            //actionBTNController.setAction(actionDatabase.actions[0], player);
                         }
                     }else{
                         //right now, enemy would be the one clicked
@@ -100,11 +93,6 @@ public class GameManager : MonoBehaviour
                         player = null;
 
                         actionBTNManager.destroy();
-                        /*
-                        if(actionBTNController != null){
-                            actionBTNController.destroy();
-                        }
-                        */
                     }
                 }
             }
@@ -116,12 +104,11 @@ public class GameManager : MonoBehaviour
             player.setSelected(false);
         }
 
-        //list characters to end turn
-        CharacterController[] players = new CharacterController[] { (CharacterController) characters[0], (CharacterController) characters[1] };
-        processEndTurn(players);
+        processEndTurn();
     }
 
-    void processEndTurn(CharacterController[] players){
+    //void processEndTurn(CharacterController[] players){
+    void processEndTurn(){
         for(int i = 0; i < players.Length; i++){
             if(!players[i].isTurnComplete()){
                 return;
@@ -135,16 +122,16 @@ public class GameManager : MonoBehaviour
 
     void takeEnemyAction(){
         //move enemy towards player
-        Vector2Int playerPos = characters[0].gridPosition;
-        Vector2Int enemyPos = characters[2].gridPosition;
+        Vector2Int playerPos = players[0].gridPosition;
+        Vector2Int enemyPos = enemies[0].gridPosition;
         if(playerPos.x > enemyPos.x){
-            characters[2].moveToCell(new Vector2Int(enemyPos.x + 1, enemyPos.y));
+            enemies[0].moveToCell(new Vector2Int(enemyPos.x + 1, enemyPos.y));
         }else if(playerPos.x < enemyPos.x){
-            characters[2].moveToCell(new Vector2Int(enemyPos.x - 1, enemyPos.y));
+            enemies[0].moveToCell(new Vector2Int(enemyPos.x - 1, enemyPos.y));
         }else if(playerPos.y > enemyPos.y){
-            characters[2].moveToCell(new Vector2Int(enemyPos.x, enemyPos.y + 1));
+            enemies[0].moveToCell(new Vector2Int(enemyPos.x, enemyPos.y + 1));
         }else if(playerPos.y < enemyPos.y){
-            characters[2].moveToCell(new Vector2Int(enemyPos.x, enemyPos.y - 1));
+            enemies[0].moveToCell(new Vector2Int(enemyPos.x, enemyPos.y - 1));
         }
     }
 
@@ -158,12 +145,9 @@ public class GameManager : MonoBehaviour
 
         Vector2Int[] adjacentCells = GetAdjacentCells(attackerPos);
 
-        // Loop through all characters in the game.
-        foreach (OrderedCharacter oc in characters)
+        // Loop through all enemies in the game.
+        foreach (OrderedCharacter oc in enemies)
         {
-            if (!(oc is EnemyController))
-                continue;
-
             bool isAdjacent = false;
 
             foreach (Vector2Int cell in adjacentCells)
@@ -207,12 +191,17 @@ public class GameManager : MonoBehaviour
 
     void spawnPlayers(Vector2Int[] playerSpawnLocations) {
         int i = 0;
-        foreach(OrderedCharacter oc in characters) {
-            if(oc is CharacterController) {
-                ((CharacterController)oc).spawn(boardManager, playerSpawnLocations[i], new[] {actionDatabase.actions[1], actionDatabase.actions[2] });
-                i++;
-            }
+        foreach(CharacterController oc in players) {
+            oc.spawn(boardManager, playerSpawnLocations[i], new[] {actionDatabase.actions[1], actionDatabase.actions[2] });
+            i++;
         }
+    }
+
+    void addHPTracker(OrderedCharacter oc) {
+        GameObject hpText = Instantiate(HPTextPrefab);
+        hpText.transform.SetParent(UI.transform);
+        HPTextController hpTextController = hpText.GetComponent<HPTextController>();
+        hpTextController.setCharacter(oc);
     }
 
 }
