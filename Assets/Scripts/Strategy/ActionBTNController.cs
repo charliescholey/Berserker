@@ -2,6 +2,9 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
+/*
+Represents a single action button
+*/
 
 public class ActionBTNController : MonoBehaviour
 {
@@ -15,7 +18,6 @@ public class ActionBTNController : MonoBehaviour
         this.textMeshPro = GetComponent<TextMeshProUGUI>();
         Button button = GetComponent<Button>();
         button.onClick.AddListener(OnAttackButtonClicked);
-
     }
 
     public void setAction(Action action, CharacterController player)
@@ -26,7 +28,7 @@ public class ActionBTNController : MonoBehaviour
         textMeshPro.text = action.name;
     }
 
-     //Changed clicked to this 
+     // When the action button is clicked, executes the action through the game manager
     public void OnAttackButtonClicked()
     {
         GameManager gm = UnityEngine.Object.FindFirstObjectByType<GameManager>();

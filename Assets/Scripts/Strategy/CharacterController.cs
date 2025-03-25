@@ -123,9 +123,7 @@ public class CharacterController : OrderedCharacter
         gameObject.SetActive(false);
     }
 
-    // HWE Code Start
     public Action[] GetActions() {
         return actions;
     }
-    // HWE Code End
 }

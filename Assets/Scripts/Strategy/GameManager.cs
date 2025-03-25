@@ -40,10 +40,16 @@ public class GameManager : MonoBehaviour
 
         //spawn the characters
         players[0] = Instantiate(playerPrefab);
-        ((CharacterController)players[0]).spawn(boardManager, new Vector2Int(0, 0), new[] {actionDatabase.actions[0], actionDatabase.actions[1] } );
         players[1] = Instantiate(playerPrefab);
-        ((CharacterController)players[1]).spawn(boardManager, new Vector2Int(1, 3), new[] {actionDatabase.actions[1], actionDatabase.actions[2] });
-        //spawnPlayers(new[] {new Vector2Int(0, 0), new Vector2Int(3, 3)});
+
+        /*
+        Use the following two commented out lines instead of the spawnPlayers() function to test different actions.
+        spawnPlayers() currently gives all the players the same actions.
+        */
+        
+        //((CharacterController)players[0]).spawn(boardManager, new Vector2Int(0, 0), new[] {actionDatabase.actions[0], actionDatabase.actions[1] } );
+        //((CharacterController)players[1]).spawn(boardManager, new Vector2Int(1, 3), new[] {actionDatabase.actions[1], actionDatabase.actions[2] });
+        spawnPlayers(new[] {new Vector2Int(0, 0), new Vector2Int(3, 3)});
         
         enemies = new EnemyController[1];
         enemies[0] = Instantiate(enemyPrefab);
@@ -107,7 +113,6 @@ public class GameManager : MonoBehaviour
         processEndTurn();
     }
 
-    //void processEndTurn(CharacterController[] players){
     void processEndTurn(){
         for(int i = 0; i < players.Length; i++){
             if(!players[i].isTurnComplete()){
@@ -189,6 +194,9 @@ public class GameManager : MonoBehaviour
         };
     }
 
+    // Spawns players given their locations
+    // At the moment, each player is spawned with the same actions.
+    // This will need to be updated to reflect the actual actions and locations of the players.
     void spawnPlayers(Vector2Int[] playerSpawnLocations) {
         int i = 0;
         foreach(CharacterController oc in players) {
