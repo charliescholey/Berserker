@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using System.IO;
 
 public class Chest : MonoBehaviour
 {
@@ -7,12 +9,16 @@ public class Chest : MonoBehaviour
     public Sprite openedChestSprite;
 
     private GoldManager goldManager;
+    private ExpManager expManager;
 
     private bool isOpened = false;
+
+    public static int openedChestCount = 0;
 
     void Start()
     {
         goldManager = FindAnyObjectByType<GoldManager>();
+        expManager = FindAnyObjectByType<ExpManager>();
     }
 
     // When the player enters the trigger area
@@ -28,6 +34,15 @@ public class Chest : MonoBehaviour
             }
             GetComponent<Collider2D>().enabled = false;
             isOpened = true;
+            openedChestCount += 1;
+            if (SaveFileManager.currentLevelName == "DemoLevel" && openedChestCount == 3){
+                SaveFileManager.CurrentPlayerData.gold += goldManager.currentGold;
+                SaveFileManager.CurrentPlayerData.exp += expManager.currentExp;
+                
+                string json = JsonUtility.ToJson(SaveFileManager.CurrentPlayerData, true);
+                File.WriteAllText(SaveFileManager.saveFilePath, json);
+                SceneManager.LoadScene("WorldMap");
+            }
         }
     }
 }

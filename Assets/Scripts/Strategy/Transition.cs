@@ -11,6 +11,6 @@ public class Transition : MonoBehaviour
     {
         Debug.Log("died");
         Destroy(StealthManager.Instance);
-        SceneManager.LoadScene("DemoLevel", LoadSceneMode.Single);
+        SceneManager.LoadScene(SaveFileManager.currentLevelName, LoadSceneMode.Single);
     }
 }

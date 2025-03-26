@@ -18,7 +18,6 @@ public class StealthManager : MonoBehaviour
         {
             Instance = this;
             expManager = FindAnyObjectByType<ExpManager>();
-            DontDestroyOnLoad(gameObject);
         }
         else
         {
