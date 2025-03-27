@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
 
 /**
  * PlayerController class -- manages the player-controlled characters.
@@ -66,6 +67,22 @@ public class CharacterController : OrderedCharacter
     {
         hasActed = true;
         Debug.Log("Player has taken action: " + action.name);
+    }
+
+    public Vector2Int[] getMovementRange(){
+        //handle as arraylist for dynamic sizing
+        List<Vector2Int> cells = new List<Vector2Int>();
+        for(int i = -moveRange; i <= moveRange; i++){
+            for(int j = -moveRange; j <= moveRange; j++){
+                //uses existing manhattan distance function from OrderedCharacter
+                if(getDist(new Vector2Int(gridPosition.x + i, gridPosition.y + j)) <= moveRange){
+                    cells.Add(new Vector2Int(gridPosition.x + i, gridPosition.y + j));
+                }
+            }
+        }
+        
+        //handle return as array
+        return cells.ToArray();
     }
 
     public override void moveToCell(Vector2Int cell)

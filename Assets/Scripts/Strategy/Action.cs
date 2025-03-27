@@ -7,7 +7,7 @@ using UnityEngine;
 public class Action : ScriptableObject
 {
     //track the type of move - what does the move do?
-    public enum moveType
+    public enum MoveType
     {
         MELEE,
         RANGED,
@@ -17,7 +17,7 @@ public class Action : ScriptableObject
         PPUP
     }
     //if the move has an effect, what is it?
-    public enum effectType
+    public enum EffectType
     {
         NONE,
         BURN,
@@ -26,7 +26,7 @@ public class Action : ScriptableObject
         SLEEP
     }
     //who does the move target?
-    public enum targetType
+    public enum TargetType
     {
         SELF,
         RADIUS,
@@ -41,15 +41,15 @@ public class Action : ScriptableObject
     [Range(0, 25)]
     public int totalUses;
     //see earlier enums
-    public moveType type;
-    public effectType effect;
+    public MoveType type;
+    public EffectType effect;
     //how likely is the effect to occur?
     [Range(0.1f, 1f)]
     public float effectChance;
     //can track damage, healing ability, range boost, etc.
     [Range(0, 100)]
     public int power;
-    public targetType target;
+    public TargetType target;
     [Range(0, 6)]
     public int range;
 }

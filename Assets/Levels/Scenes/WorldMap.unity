@@ -4524,6 +4524,7 @@ GameObject:
   - component: {fileID: 720790965}
   - component: {fileID: 720790967}
   - component: {fileID: 720790966}
+  - component: {fileID: 720790968}
   m_Layer: 5
   m_Name: Money and XP Panel
   m_TagString: Untagged
@@ -4592,6 +4593,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 720790964}
   m_CullTransparentMesh: 1
+--- !u!114 &720790968
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 720790964}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 859f47c581684ea4bb370a3eda5ebac4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  xpText: {fileID: 49591534}
+  moneyText: {fileID: 557210601}
 --- !u!1 &749171736
 GameObject:
   m_ObjectHideFlags: 0
@@ -5765,6 +5780,7 @@ GameObject:
   - component: {fileID: 939519689}
   - component: {fileID: 939519691}
   - component: {fileID: 939519690}
+  - component: {fileID: 939519692}
   m_Layer: 5
   m_Name: Money and XP Panel
   m_TagString: Untagged
@@ -5833,6 +5849,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 939519688}
   m_CullTransparentMesh: 1
+--- !u!114 &939519692
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 939519688}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 859f47c581684ea4bb370a3eda5ebac4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  xpText: {fileID: 113211907}
+  moneyText: {fileID: 1488895780}
 --- !u!1 &950385980
 GameObject:
   m_ObjectHideFlags: 0
@@ -6175,6 +6205,7 @@ GameObject:
   - component: {fileID: 963315409}
   - component: {fileID: 963315411}
   - component: {fileID: 963315410}
+  - component: {fileID: 963315412}
   m_Layer: 5
   m_Name: Money and XP Panel
   m_TagString: Untagged
@@ -6243,6 +6274,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963315408}
   m_CullTransparentMesh: 1
+--- !u!114 &963315412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963315408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 859f47c581684ea4bb370a3eda5ebac4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  xpText: {fileID: 1210565138}
+  moneyText: {fileID: 1569160264}
 --- !u!1001 &964265554
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7433,7 +7478,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 150 XP
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9c6da071edac04f8680f5825ddc03d2c, type: 2}
   m_sharedMaterial: {fileID: -6762071893695586392, guid: 9c6da071edac04f8680f5825ddc03d2c, type: 2}
@@ -8832,7 +8877,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 10 000 $
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9c6da071edac04f8680f5825ddc03d2c, type: 2}
   m_sharedMaterial: {fileID: -6762071893695586392, guid: 9c6da071edac04f8680f5825ddc03d2c, type: 2}
@@ -10712,6 +10757,7 @@ GameObject:
   - component: {fileID: 2001454217}
   - component: {fileID: 2001454219}
   - component: {fileID: 2001454218}
+  - component: {fileID: 2001454220}
   m_Layer: 5
   m_Name: Money and XP Panel
   m_TagString: Untagged
@@ -10780,6 +10826,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2001454216}
   m_CullTransparentMesh: 1
+--- !u!114 &2001454220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2001454216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 859f47c581684ea4bb370a3eda5ebac4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  xpText: {fileID: 505387555}
+  moneyText: {fileID: 454694163}
 --- !u!114 &2018745594 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 9082749894828157718, guid: 22041f265822040af8a182137c4b24d8, type: 3}
