@@ -2,6 +2,9 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
+/*
+Represents a single action button
+*/
 
 public class ActionBTNController : MonoBehaviour
 {
@@ -25,7 +28,7 @@ public class ActionBTNController : MonoBehaviour
         textMeshPro.text = action.name;
     }
 
-     //Changed clicked to this 
+     // When the action button is clicked, executes the action through the game manager
     public void OnAttackButtonClicked()
     {
         GameManager gm = UnityEngine.Object.FindFirstObjectByType<GameManager>();
@@ -39,6 +42,11 @@ public class ActionBTNController : MonoBehaviour
 
     public void destroy()
     {
-        Destroy(gameObject, 0.2f);
+        // Hide the button (by hiding its image and text)
+        GetComponent<Button>().image.color = Color.clear;
+        gameObject.transform.Find("ActionText").gameObject.SetActive(false);
+
+        // Destroy button after 0.5 sec
+        Destroy(gameObject, 0.5f);
     }
 }

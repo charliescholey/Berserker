@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -39,7 +40,7 @@ public class CharacterController : OrderedCharacter
         gridPosition = cell;
         transform.position = boardManager.cellToWorld(cell);
     }
-
+    
     public void spawn(BoardManager bm, Vector2Int cell, Action[] acts)
     {
         boardManager = bm;
@@ -137,5 +138,9 @@ public class CharacterController : OrderedCharacter
         // to deal with dying, again not sure how we are dealing with it
         Debug.Log($"{gameObject.name} died.");
         gameObject.SetActive(false);
+    }
+
+    public Action[] GetActions() {
+        return actions;
     }
 }
