@@ -109,11 +109,6 @@ public class CharacterController : OrderedCharacter
     public override void TakeDamage(int damage)
     {
         hp -= damage;
-        if (hpTextController != null)
-        {
-            hpTextController.UpdateHPText();
-        }
-
 
         if (hp <= 0)
         {

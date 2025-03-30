@@ -5,7 +5,6 @@ public abstract class OrderedCharacter : MonoBehaviour
     protected BoardManager boardManager;
     public Vector2Int gridPosition;
     public int hp;
-    public HPTextController hpTextController;
 
     // to deal with dying, again not sure how we are dealing with it
     public virtual void Die()

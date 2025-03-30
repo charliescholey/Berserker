@@ -43,10 +43,12 @@ public class GameManager : MonoBehaviour
         characters[2].spawn(boardManager, new Vector2Int(3, 0));
 
         //give every character an HP tracker
-        for(int i = 0; i < characters.Length; i++){
-            GameObject newhptext = Instantiate(HPTextPrefab);
-            newhptext.transform.SetParent(UI.transform);
-            newhptext.GetComponent<HPTextController>().setCharacter(characters[i]);
+        foreach (OrderedCharacter oc in characters)
+        {
+            GameObject hpText = Instantiate(HPTextPrefab);
+            hpText.transform.SetParent(UI.transform);
+            HPTextController hpTextController = hpText.GetComponent<HPTextController>();
+            hpTextController.setCharacter(oc);
         }
         
     }
@@ -107,7 +109,6 @@ public class GameManager : MonoBehaviour
     void processEndTurn(CharacterController[] players){
         for(int i = 0; i < players.Length; i++){
             if(!players[i].isTurnComplete()){
-                Debug.Log("Player " + i + " has not completed their turn");
                 return;
             }
         }

@@ -14,7 +14,6 @@ public class HPTextController : MonoBehaviour
     public void setCharacter(OrderedCharacter character)
     {
         this.character = character;
-        UpdateHPText();
     }
 
     // Update is called once per frame
@@ -37,6 +36,6 @@ public class HPTextController : MonoBehaviour
     // Public method to update the displayed HP
     public void UpdateHPText()
     {
-        textMeshPro.text = "HP: " + character.hp.ToString();
+        textMeshPro.text = character.hp.ToString();
     }
 }
