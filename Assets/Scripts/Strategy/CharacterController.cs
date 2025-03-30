@@ -30,7 +30,8 @@ public class CharacterController : OrderedCharacter
     //this is for if we decide to have class specific chcaracters
     public string characterClass; 
     // One unique ability specific to each character
-    public string uniqueAbility;
+    public SpecialAbility uniqueAbility;
+
 
     public override void spawn(BoardManager bm, Vector2Int cell)
     {
@@ -126,4 +127,16 @@ public class CharacterController : OrderedCharacter
         Debug.Log($"{gameObject.name} died.");
         gameObject.SetActive(false);
     }
+
+    public void UseSpecialAbility()
+    {
+        if (uniqueAbility == null)
+        {
+            Debug.LogWarning($"{gameObject.name} has no special ability assigned.");
+            return;
+        }
+        // Implement the actual effect logic here (damage, buffs, etc.).
+
+    }
+
 }
