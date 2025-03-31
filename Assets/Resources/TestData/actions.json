@@ -1,0 +1,52 @@
+{
+    "actions": [
+        {
+            "identifier": "slash",
+            "actionName": "Slash",
+            "description": "A basic melee attack",
+            "totalUses": 20,
+            "type": 0,
+            "effect": 0,
+            "effectChance": 0.0,
+            "power": 20,
+            "target": 0,
+            "range": 1
+        },
+        {
+            "identifier": "fireball",
+            "actionName": "Fireball",
+            "description": "A ranged fire attack that can burn enemies",
+            "totalUses": 15,
+            "type": 1,
+            "effect": 1,
+            "effectChance": 0.3,
+            "power": 30,
+            "target": 2,
+            "range": 3
+        },
+        {
+            "identifier": "heal",
+            "actionName": "Heal",
+            "description": "Restores HP to an ally",
+            "totalUses": 10,
+            "type": 2,
+            "effect": 0,
+            "effectChance": 0.0,
+            "power": 25,
+            "target": 0,
+            "range": 1
+        },
+        {
+            "identifier": "dash",
+            "actionName": "Dash",
+            "description": "Increases movement range",
+            "totalUses": 15,
+            "type": 3,
+            "effect": 0,
+            "effectChance": 0.0,
+            "power": 2,
+            "target": 0,
+            "range": 0
+        }
+    ]
+} 
