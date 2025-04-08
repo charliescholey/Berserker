@@ -9,7 +9,9 @@
             "currentHealth": 100,
             "characterClass": "Warrior",
             "uniqueAbility": "Berserker Rage",
-            "actionIdentifiers": ["slash", "dash"]
+            "actionIdentifiers": ["slash", "dash"],
+            "skillIdentifiers": ["berserker_rage"],
+            "spritePath": "Sprites/Warrior"
         },
         {
             "characterName": "Mage",
@@ -20,7 +22,9 @@
             "currentHealth": 80,
             "characterClass": "Mage",
             "uniqueAbility": "Arcane Burst",
-            "actionIdentifiers": ["fireball", "heal"]
+            "actionIdentifiers": ["fireball", "heal"],
+            "skillIdentifiers": ["arcane_burst"],
+            "spritePath": "Sprites/Mage"
         },
         {
             "characterName": "Rogue",
@@ -31,7 +35,9 @@
             "currentHealth": 90,
             "characterClass": "Rogue",
             "uniqueAbility": "Stealth",
-            "actionIdentifiers": ["slash", "dash"]
+            "actionIdentifiers": ["slash", "dash"],
+            "skillIdentifiers": ["stealth"],
+            "spritePath": "Sprites/Rogue"
         },
         {
             "characterName": "Paladin",
@@ -42,7 +48,9 @@
             "currentHealth": 95,
             "characterClass": "Paladin",
             "uniqueAbility": "Divine Shield",
-            "actionIdentifiers": ["slash", "heal"]
+            "actionIdentifiers": ["slash", "heal"],
+            "skillIdentifiers": ["divine_shield"],
+            "spritePath": "Sprites/Paladin"
         }
     ]
 } 

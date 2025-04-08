@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
-using System.Collections.Generic;
+using System.Linq;
 
 [System.Serializable]
 public class CharacterData
@@ -15,6 +15,8 @@ public class CharacterData
     public string characterClass;
     public string uniqueAbility;
     public string[] actionIdentifiers; // References to actions in the database
+    public string[] skillIdentifiers;
+    public string spritePath;
 }
 
 [System.Serializable]
@@ -49,27 +51,19 @@ public class CharacterController : OrderedCharacter
     private static bool s_IsDatabaseLoaded = false;
     #endregion
 
-    #region Static Constructor
-    static CharacterController()
-    {
-        SaveFilePath = System.IO.Path.Combine(UnityEngine.Application.persistentDataPath, SAVE_FILENAME);
-    }
-    #endregion
-
     #region Private Fields
     private SpriteRenderer spriteRenderer;
     private CharacterData characterData;
-    private bool hasActed = false;
     private bool hasMoved = false;
     private bool isSelected = false;
-    private Vector2Int gridPosition;
     private List<Action> actions = new List<Action>();
-    private BoardManager boardManager;
+    private List<Skill> skills = new List<Skill>();
     private ActionDatabase actionDatabase;
-    private int moveRange;
+    private SkillDatabase skillDatabase;
     #endregion
 
     #region Public Properties
+    public bool hasActed = false;
     public string characterName { get; private set; }
     public int baseHealth { get; private set; }
     public int baseAttack { get; private set; }
@@ -78,32 +72,37 @@ public class CharacterController : OrderedCharacter
     public int currentHealth { get; private set; }
     public string characterClass { get; private set; }
     public string uniqueAbility { get; private set; }
+    public string spritePath { get; private set; }
     #endregion
 
     void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+        if (string.IsNullOrEmpty(SaveFilePath))
+        {
+            SaveFilePath = Path.Combine(Application.persistentDataPath, SAVE_FILENAME);
+        }
         LoadTestData();
     }
 
     public override void spawn(BoardManager bm, Vector2Int cell)
     {
         boardManager = bm;
-        gridPosition = cell;
         transform.position = boardManager.cellToWorld(cell);
     }
 
     public void spawn(BoardManager bm, Vector2Int cell, Action[] acts)
     {
         boardManager = bm;
-        gridPosition = cell;
         transform.position = boardManager.cellToWorld(cell);
         actions = acts.ToList();
     }
 
-    public void spawn(BoardManager bm, Vector2Int cell, string characterName, ActionDatabase actionDatabase)
+    public void spawn(BoardManager bm, Vector2Int cell, string characterName, ActionDatabase actionDatabase, SkillDatabase skillDatabase)
     {
-        LoadCharacterData(characterName, actionDatabase);
+        this.actionDatabase = actionDatabase;
+        this.skillDatabase = skillDatabase;
+        LoadCharacterData(characterName, actionDatabase, skillDatabase);
         spawn(bm, cell);
     }
 
@@ -133,12 +132,12 @@ public class CharacterController : OrderedCharacter
     {
         //handle as arraylist for dynamic sizing
         List<Vector2Int> cells = new List<Vector2Int>();
-        for (int i = -base.moveRange; i <= base.moveRange; i++)
+        for (int i = -moveRange; i <= moveRange; i++)
         {
-            for (int j = -base.moveRange; j <= base.moveRange; j++)
+            for (int j = -moveRange; j <= moveRange; j++)
             {
                 //uses existing manhattan distance function from OrderedCharacter
-                if (getDist(new Vector2Int(gridPosition.x + i, gridPosition.y + j)) <= base.moveRange)
+                if (getDist(new Vector2Int(gridPosition.x + i, gridPosition.y + j)) <= moveRange)
                 {
                     cells.Add(new Vector2Int(gridPosition.x + i, gridPosition.y + j));
                 }
@@ -151,7 +150,7 @@ public class CharacterController : OrderedCharacter
 
     public override void moveToCell(Vector2Int cell)
     {
-        if (getDist(cell) > base.moveRange)
+        if (getDist(cell) > moveRange)
         {
             return;
         }
@@ -215,6 +214,11 @@ public class CharacterController : OrderedCharacter
         return actions.ToArray();
     }
 
+    public Skill[] GetSkills()
+    {
+        return skills.ToArray();
+    }
+
     public static void SaveCharacterData(CharacterData data)
     {
         if (!s_IsDatabaseLoaded)
@@ -250,7 +254,9 @@ public class CharacterController : OrderedCharacter
             currentHealth = this.currentHealth,
             characterClass = this.characterClass,
             uniqueAbility = this.uniqueAbility,
-            actionIdentifiers = GetActionIdentifiers()
+            actionIdentifiers = GetActionIdentifiers(),
+            skillIdentifiers = GetSkillIdentifiers(),
+            spritePath = this.spritePath
         };
 
         SaveCharacterData(data);
@@ -288,11 +294,13 @@ public class CharacterController : OrderedCharacter
         Debug.Log($"Test character database loaded with {s_CharacterDatabase.characters.Count} characters");
     }
 
-    public void LoadCharacterData(string characterName, ActionDatabase actionDatabase)
+    public void LoadCharacterData(string characterName, ActionDatabase actionDatabase, SkillDatabase skillDatabase)
     {
-        if (!s_IsDatabaseLoaded)
+        Debug.Log($"Loading character data for: {characterName}");
+        if (s_CharacterDatabase == null)
         {
-            LoadTestData();
+            Debug.LogError("Character database is null!");
+            return;
         }
 
         CharacterData data = s_CharacterDatabase.characters.Find(c => c.characterName == characterName);
@@ -302,7 +310,32 @@ public class CharacterController : OrderedCharacter
             return;
         }
 
-        // Apply loaded data
+        Debug.Log($"Found character data. Skill identifiers: {string.Join(", ", data.skillIdentifiers)}");
+        
+        // Load skills from database
+        if (skillDatabase != null && data.skillIdentifiers != null)
+        {
+            skills.Clear();
+            foreach (string skillId in data.skillIdentifiers)
+            {
+                Skill skill = skillDatabase.GetSkillByIdentifier(skillId);
+                if (skill != null)
+                {
+                    Debug.Log($"Successfully loaded skill: {skill.skillName} (ID: {skillId})");
+                    skills.Add(skill);
+                }
+                else
+                {
+                    Debug.LogError($"Failed to load skill with ID: {skillId}");
+                }
+            }
+        }
+        else
+        {
+            Debug.LogError($"Skill database is null or no skill identifiers found for character: {characterName}");
+        }
+
+        // Apply character data
         this.characterName = data.characterName;
         this.baseHealth = data.baseHealth;
         this.baseAttack = data.baseAttack;
@@ -311,7 +344,30 @@ public class CharacterController : OrderedCharacter
         this.currentHealth = data.currentHealth;
         this.characterClass = data.characterClass;
         this.uniqueAbility = data.uniqueAbility;
-        base.moveRange = data.baseMovementRange; // Set the base class's moveRange
+        this.spritePath = data.spritePath;
+        moveRange = data.baseMovementRange;
+
+        // Load and set the character sprite from prefab
+        if (!string.IsNullOrEmpty(data.spritePath))
+        {
+            GameObject prefab = Resources.Load<GameObject>(data.spritePath);
+            if (prefab != null)
+            {
+                SpriteRenderer prefabRenderer = prefab.GetComponent<SpriteRenderer>();
+                if (prefabRenderer != null && prefabRenderer.sprite != null)
+                {
+                    spriteRenderer.sprite = prefabRenderer.sprite;
+                }
+                else
+                {
+                    Debug.LogWarning($"Prefab at path {data.spritePath} does not have a SpriteRenderer or sprite");
+                }
+            }
+            else
+            {
+                Debug.LogWarning($"Failed to load prefab at path: {data.spritePath}");
+            }
+        }
 
         // Resolve actions from identifiers
         if (actionDatabase != null && data.actionIdentifiers != null)
@@ -342,6 +398,18 @@ public class CharacterController : OrderedCharacter
         for (int i = 0; i < actions.Count; i++)
         {
             identifiers[i] = actions[i]?.identifier ?? string.Empty;
+        }
+        return identifiers;
+    }
+
+    private string[] GetSkillIdentifiers()
+    {
+        if (skills == null) return new string[0];
+
+        string[] identifiers = new string[skills.Count];
+        for (int i = 0; i < skills.Count; i++)
+        {
+            identifiers[i] = skills[i]?.identifier ?? string.Empty;
         }
         return identifiers;
     }

@@ -1,0 +1,52 @@
+{
+    "skills": [
+        {
+            "identifier": "berserker_rage",
+            "skillName": "Berserker Rage",
+            "description": "Increases attack power at the cost of defense",
+            "totalUses": 3,
+            "type": 1,
+            "effect": 1,
+            "effectChance": 1.0,
+            "power": 20,
+            "target": 0,
+            "range": 0
+        },
+        {
+            "identifier": "arcane_burst",
+            "skillName": "Arcane Burst",
+            "description": "Releases a burst of arcane energy, damaging all enemies in range",
+            "totalUses": 2,
+            "type": 1,
+            "effect": 2,
+            "effectChance": 0.5,
+            "power": 40,
+            "target": 2,
+            "range": 2
+        },
+        {
+            "identifier": "stealth",
+            "skillName": "Stealth",
+            "description": "Become invisible to enemies for a short duration",
+            "totalUses": 2,
+            "type": 1,
+            "effect": 1,
+            "effectChance": 1.0,
+            "power": 0,
+            "target": 0,
+            "range": 0
+        },
+        {
+            "identifier": "divine_shield",
+            "skillName": "Divine Shield",
+            "description": "Creates a protective shield that blocks incoming damage",
+            "totalUses": 2,
+            "type": 1,
+            "effect": 1,
+            "effectChance": 1.0,
+            "power": 30,
+            "target": 1,
+            "range": 1
+        }
+    ]
+} 
