@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using System.Linq;
+using System.Collections.Generic;
 
 /**
 * GameManager class -- handles gameplay logic.
@@ -225,12 +226,15 @@ public class GameManager : MonoBehaviour
     // This will need to be updated to reflect the actual actions and locations of the players.
     void spawnPlayers(Vector2Int[] playerSpawnLocations)
     {
+        List<Action> actions = actionDatabase.GetAllActions();
+
         int i = 0;
         foreach (CharacterController oc in players)
         {
-            oc.spawn(boardManager, playerSpawnLocations[i], new[] { actionDatabase.actions[1], actionDatabase.actions[2] });
+            oc.spawn(boardManager, playerSpawnLocations[i], new[] { actions[1], actions[2] });
             i++;
         }
+
     }
 
     void addHPTracker(OrderedCharacter oc)

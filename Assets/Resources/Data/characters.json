@@ -9,8 +9,8 @@
             "currentHealth": 100,
             "characterClass": "Warrior",
             "uniqueAbility": "Berserker Rage",
-            "actionIdentifiers": ["slash", "dash"],
-            "spritePath": "Sprites/Warrior"
+            "actionIndices": [0,1],
+            "spritePath": "tilemap_packed_105"
         },
         {
             "characterName": "Mage",
@@ -21,8 +21,8 @@
             "currentHealth": 80,
             "characterClass": "Mage",
             "uniqueAbility": "Arcane Burst",
-            "actionIdentifiers": ["fireball", "heal"],
-            "spritePath": "Sprites/Mage"
+            "actionIndices": [1,2],
+            "spritePath": "tilemap_packed_186"
         },
         {
             "characterName": "Rogue",
@@ -33,8 +33,8 @@
             "currentHealth": 90,
             "characterClass": "Rogue",
             "uniqueAbility": "Stealth",
-            "actionIdentifiers": ["slash", "dash"],
-            "spritePath": "Sprites/Rogue"
+            "actionIndices": [0],
+            "spritePath": "tilemap_packed_267"
         },
         {
             "characterName": "Paladin",
@@ -45,8 +45,8 @@
             "currentHealth": 95,
             "characterClass": "Paladin",
             "uniqueAbility": "Divine Shield",
-            "actionIdentifiers": ["slash", "heal"],
-            "spritePath": "Sprites/Paladin"
+            "actionIndices": [0,2],
+            "spritePath": "tilemap_packed_429"
         }
     ]
 } 

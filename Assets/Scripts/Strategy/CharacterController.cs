@@ -14,7 +14,7 @@ public class CharacterData
     public int currentHealth;
     public string characterClass;
     public string uniqueAbility;
-    public string[] actionIdentifiers; // References to actions in the database
+    public int[] actionIndices; // References to actions in the database
     public string spritePath;
 }
 
@@ -245,7 +245,7 @@ public class CharacterController : OrderedCharacter
             currentHealth = this.currentHealth,
             characterClass = this.characterClass,
             uniqueAbility = this.uniqueAbility,
-            actionIdentifiers = GetActionIdentifiers(),
+            actionIndices = GetActionIndices(),
             spritePath = this.spritePath
         };
 
@@ -272,10 +272,10 @@ public class CharacterController : OrderedCharacter
     {
         if (s_IsDatabaseLoaded) return;
 
-        TextAsset jsonFile = Resources.Load<TextAsset>(TEST_DATA_PATH);
+        TextAsset jsonFile = Resources.Load<TextAsset>(DATA_PATH);
         if (jsonFile == null)
         {
-            Debug.LogError($"Failed to load test character data from {TEST_DATA_PATH}");
+            Debug.LogError($"Failed to load test character data from {DATA_PATH}");
             return;
         }
 
@@ -302,6 +302,7 @@ public class CharacterController : OrderedCharacter
 
 
 
+
         // Apply character data
         this.characterName = data.characterName;
         this.baseHealth = data.baseHealth;
@@ -317,56 +318,64 @@ public class CharacterController : OrderedCharacter
         // Load and set the character sprite from prefab
         if (!string.IsNullOrEmpty(data.spritePath))
         {
-            GameObject prefab = Resources.Load<GameObject>(data.spritePath);
-            if (prefab != null)
+            // spritePath is the sprite name from the sliced sheet
+            Sprite[] sprites = Resources.LoadAll<Sprite>("Sprites/CharacterSprites/tilemap_packed");
+            Sprite found = sprites.FirstOrDefault(s => s.name == data.spritePath);
+            if (found != null)
             {
-                SpriteRenderer prefabRenderer = prefab.GetComponent<SpriteRenderer>();
-                if (prefabRenderer != null && prefabRenderer.sprite != null)
-                {
-                    spriteRenderer.sprite = prefabRenderer.sprite;
-                }
-                else
-                {
-                    Debug.LogWarning($"Prefab at path {data.spritePath} does not have a SpriteRenderer or sprite");
-                }
+                spriteRenderer.sprite = found;
             }
             else
             {
-                Debug.LogWarning($"Failed to load prefab at path: {data.spritePath}");
+                Debug.LogWarning($"Sprite '{data.spritePath}' not found in tilemap_packed.png");
             }
         }
 
-        // Resolve actions from identifiers
-        if (actionDatabase != null && data.actionIdentifiers != null)
+        if (actionDatabase != null && data.actionIndices != null)
         {
             actions = new List<Action>();
-            for (int i = 0; i < data.actionIdentifiers.Length; i++)
+            foreach (int idx in data.actionIndices)
             {
-                Action action = actionDatabase.GetActionByIdentifier(data.actionIdentifiers[i]);
+                Action action = actionDatabase.GetActionByIndex(idx);
                 if (action != null)
                 {
                     actions.Add(action);
                 }
                 else
                 {
-                    Debug.LogWarning($"Failed to resolve action identifier: {data.actionIdentifiers[i]}");
+                    Debug.LogWarning($"Failed to resolve action at index: {idx}");
                 }
             }
+        }
+
+        // Log Character Actions
+        Debug.Log($"Actions for {characterName}:");
+        foreach (Action action in actions)
+        {
+            Debug.Log($"- {action.actionName}");
         }
 
         Debug.Log($"Character data loaded for: {characterName}");
     }
 
-    private string[] GetActionIdentifiers()
+    private void logActions()
     {
-        if (actions == null) return new string[0];
+        Debug.Log($"Actions for {characterName}:");
+        foreach (Action action in actions)
+        {
+            Debug.Log($"- {action.actionName}");
+        }
+    }
 
-        string[] identifiers = new string[actions.Count];
+    private int[] GetActionIndices()
+    {
+        if (actions == null) return new int[0];
+        int[] indices = new int[actions.Count];
         for (int i = 0; i < actions.Count; i++)
         {
-            identifiers[i] = actions[i]?.identifier ?? string.Empty;
+            indices[i] = actionDatabase.GetIndexOfAction(actions[i]);
         }
-        return identifiers;
+        return indices;
     }
 
 }
