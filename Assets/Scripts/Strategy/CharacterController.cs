@@ -15,7 +15,6 @@ public class CharacterData
     public string characterClass;
     public string uniqueAbility;
     public string[] actionIdentifiers; // References to actions in the database
-    public string[] skillIdentifiers;
     public string spritePath;
 }
 
@@ -41,7 +40,7 @@ public class CharacterDatabase
 public class CharacterController : OrderedCharacter
 {
     #region Constants
-    private const string TEST_DATA_PATH = "TestData/characters";
+    private const string DATA_PATH = "Data/characters";
     private const string SAVE_FILENAME = "character_data.json";
     #endregion
 
@@ -57,9 +56,7 @@ public class CharacterController : OrderedCharacter
     private bool hasMoved = false;
     private bool isSelected = false;
     private List<Action> actions = new List<Action>();
-    private List<Skill> skills = new List<Skill>();
     private ActionDatabase actionDatabase;
-    private SkillDatabase skillDatabase;
     #endregion
 
     #region Public Properties
@@ -98,11 +95,10 @@ public class CharacterController : OrderedCharacter
         actions = acts.ToList();
     }
 
-    public void spawn(BoardManager bm, Vector2Int cell, string characterName, ActionDatabase actionDatabase, SkillDatabase skillDatabase)
+    public void spawn(BoardManager bm, Vector2Int cell, string characterName, ActionDatabase actionDatabase)
     {
         this.actionDatabase = actionDatabase;
-        this.skillDatabase = skillDatabase;
-        LoadCharacterData(characterName, actionDatabase, skillDatabase);
+        LoadCharacterData(characterName, actionDatabase);
         spawn(bm, cell);
     }
 
@@ -214,11 +210,6 @@ public class CharacterController : OrderedCharacter
         return actions.ToArray();
     }
 
-    public Skill[] GetSkills()
-    {
-        return skills.ToArray();
-    }
-
     public static void SaveCharacterData(CharacterData data)
     {
         if (!s_IsDatabaseLoaded)
@@ -255,7 +246,6 @@ public class CharacterController : OrderedCharacter
             characterClass = this.characterClass,
             uniqueAbility = this.uniqueAbility,
             actionIdentifiers = GetActionIdentifiers(),
-            skillIdentifiers = GetSkillIdentifiers(),
             spritePath = this.spritePath
         };
 
@@ -294,7 +284,7 @@ public class CharacterController : OrderedCharacter
         Debug.Log($"Test character database loaded with {s_CharacterDatabase.characters.Count} characters");
     }
 
-    public void LoadCharacterData(string characterName, ActionDatabase actionDatabase, SkillDatabase skillDatabase)
+    public void LoadCharacterData(string characterName, ActionDatabase actionDatabase)
     {
         Debug.Log($"Loading character data for: {characterName}");
         if (s_CharacterDatabase == null)
@@ -310,30 +300,7 @@ public class CharacterController : OrderedCharacter
             return;
         }
 
-        Debug.Log($"Found character data. Skill identifiers: {string.Join(", ", data.skillIdentifiers)}");
-        
-        // Load skills from database
-        if (skillDatabase != null && data.skillIdentifiers != null)
-        {
-            skills.Clear();
-            foreach (string skillId in data.skillIdentifiers)
-            {
-                Skill skill = skillDatabase.GetSkillByIdentifier(skillId);
-                if (skill != null)
-                {
-                    Debug.Log($"Successfully loaded skill: {skill.skillName} (ID: {skillId})");
-                    skills.Add(skill);
-                }
-                else
-                {
-                    Debug.LogError($"Failed to load skill with ID: {skillId}");
-                }
-            }
-        }
-        else
-        {
-            Debug.LogError($"Skill database is null or no skill identifiers found for character: {characterName}");
-        }
+
 
         // Apply character data
         this.characterName = data.characterName;
@@ -402,15 +369,4 @@ public class CharacterController : OrderedCharacter
         return identifiers;
     }
 
-    private string[] GetSkillIdentifiers()
-    {
-        if (skills == null) return new string[0];
-
-        string[] identifiers = new string[skills.Count];
-        for (int i = 0; i < skills.Count; i++)
-        {
-            identifiers[i] = skills[i]?.identifier ?? string.Empty;
-        }
-        return identifiers;
-    }
 }

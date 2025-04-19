@@ -10,7 +10,6 @@
             "characterClass": "Warrior",
             "uniqueAbility": "Berserker Rage",
             "actionIdentifiers": ["slash", "dash"],
-            "skillIdentifiers": ["berserker_rage"],
             "spritePath": "Sprites/Warrior"
         },
         {
@@ -23,7 +22,6 @@
             "characterClass": "Mage",
             "uniqueAbility": "Arcane Burst",
             "actionIdentifiers": ["fireball", "heal"],
-            "skillIdentifiers": ["arcane_burst"],
             "spritePath": "Sprites/Mage"
         },
         {
@@ -36,7 +34,6 @@
             "characterClass": "Rogue",
             "uniqueAbility": "Stealth",
             "actionIdentifiers": ["slash", "dash"],
-            "skillIdentifiers": ["stealth"],
             "spritePath": "Sprites/Rogue"
         },
         {
@@ -49,7 +46,6 @@
             "characterClass": "Paladin",
             "uniqueAbility": "Divine Shield",
             "actionIdentifiers": ["slash", "heal"],
-            "skillIdentifiers": ["divine_shield"],
             "spritePath": "Sprites/Paladin"
         }
     ]

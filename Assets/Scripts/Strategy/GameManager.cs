@@ -14,8 +14,6 @@ public class GameManager : MonoBehaviour
     public BoardManager boardManager;
     //link to action database
     public ActionDatabase actionDatabase;
-    //link to skill database
-    public SkillDatabase skillDatabase;
     //tracks active player
     private CharacterController player;
 
@@ -39,11 +37,6 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         Debug.Log("GameManager Awake called");
-        if (skillDatabase == null)
-        {
-            Debug.LogError("SkillDatabase is not assigned in the Inspector!");
-            return;
-        }
 
         players = new CharacterController[4];
 
@@ -57,35 +50,10 @@ public class GameManager : MonoBehaviour
         spawnPlayers() currently gives all the players the same actions.
         */
 
-        players[0].spawn(boardManager, new Vector2Int(0, 0), "Warrior", actionDatabase, skillDatabase);
-        players[1].spawn(boardManager, new Vector2Int(1, 3), "Mage", actionDatabase, skillDatabase);
-        players[2].spawn(boardManager, new Vector2Int(2, 0), "Rogue", actionDatabase, skillDatabase);
-        players[3].spawn(boardManager, new Vector2Int(3, 3), "Paladin", actionDatabase, skillDatabase);
-
-        // Log statements that print the skills of each player  
-        for (int i = 0; i < players.Length; i++)
-        {
-            var skills = players[i].GetSkills();
-            if (skills == null || skills.Length == 0)
-            {
-                Debug.Log($"Player {i} has no skills loaded");
-            }
-            else
-            {
-                Debug.Log($"Player {i} skills:");
-                foreach (var skill in skills)
-                {
-                    if (skill == null)
-                    {
-                        Debug.Log("  - Null skill");
-                    }
-                    else
-                    {
-                        Debug.Log($"  - {skill.skillName} (ID: {skill.identifier})");
-                    }
-                }
-            }
-        }
+        players[0].spawn(boardManager, new Vector2Int(0, 0), "Warrior", actionDatabase);
+        players[1].spawn(boardManager, new Vector2Int(1, 3), "Mage", actionDatabase);
+        players[2].spawn(boardManager, new Vector2Int(2, 0), "Rogue", actionDatabase);
+        players[3].spawn(boardManager, new Vector2Int(3, 3), "Paladin", actionDatabase);
 
         enemies = new EnemyController[1];
         enemies[0] = Instantiate(enemyPrefab);
