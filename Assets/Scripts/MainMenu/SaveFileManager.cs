@@ -1,26 +1,40 @@
 using System.IO;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+
+[System.Serializable]
+public class PassiveSkill {
+    public string skillName;
+    public int attAdd;
+    public float attMult;
+    public int hpAdd;
+    public float hpMult;
+    public string description;
+}
+
+[System.Serializable]
+public class ActiveSkill {
+    public string skillName;
+    public string description;
+}
 
 [System.Serializable]
 public class PlayerData {
     public int gold;
     public int exp;
     public int stageReached;
+
+    public List<PassiveSkill> passiveSkills = new List<PassiveSkill>();
+    public ActiveSkill activeSkill = new ActiveSkill();
 }
 
 public class SaveFileManager : MonoBehaviour {
-    // Static player data accessible from any scene.
     public static PlayerData CurrentPlayerData;
-
-    // Path to the JSON save file.
     public static string saveFilePath;
-
-    // Current level being played
     public static string currentLevelName;
 
     void Awake() {
-        // Persist this GameObject across scene loads.
         DontDestroyOnLoad(gameObject);
         saveFilePath = Path.Combine(Application.persistentDataPath, "savefile.json");
     }
@@ -41,7 +55,12 @@ public class SaveFileManager : MonoBehaviour {
         CurrentPlayerData = new PlayerData {
             gold = 0,
             exp = 0,
-            stageReached = 1
+            stageReached = 1,
+            passiveSkills = new List<PassiveSkill>(), 
+            activeSkill = new ActiveSkill {         
+                skillName = "",
+                description = ""
+            }
         };
 
         string json = JsonUtility.ToJson(CurrentPlayerData, true);
