@@ -1,2 +1,18 @@
 fileFormatVersion: 2
 guid: 32c4bb67d433147a49180fc5943b91b4
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - boardManager: {instanceID: 0}
+  - actionDatabase: {fileID: 11400000, guid: 235e58b60aa4c49f0ae5cc360e986c00, type: 2}
+  - actionBTNManagerPrefab: {instanceID: 0}
+  - UI: {instanceID: 0}
+  - HPTextPrefab: {instanceID: 0}
+  - playerPrefab: {instanceID: 0}
+  - enemyPrefab: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

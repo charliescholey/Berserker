@@ -288,13 +288,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boardManager: {fileID: 1562470333}
   actionDatabase: {fileID: 11400000, guid: 235e58b60aa4c49f0ae5cc360e986c00, type: 2}
-  actionBTNPrefab: {fileID: 4131270380529167760, guid: d3a0048d15b304f8d8aa1e92a68ed70f, type: 3}
+  skillDatabase: {fileID: 11400000, guid: 6952ad02e222adcb183fdf8ca52fbe37, type: 2}
   actionBTNManagerPrefab: {fileID: 65098539977710995, guid: a5e7f0f0d69e14b2e9c0d40d5e753a94, type: 3}
   UI: {fileID: 413238158}
   HPTextPrefab: {fileID: 6780849818201967594, guid: 803d4f81e378149f885216357b1373db, type: 3}
   playerPrefab: {fileID: 8725632180631831916, guid: 83763b74ac4554664ba6b9618adaeab2, type: 3}
   enemyPrefab: {fileID: 9159905902385111533, guid: fbc3114c7275941978ac0f37eabd2d2d, type: 3}
-  characters: []
+  players: []
+  enemies: []
 --- !u!4 &307944507
 Transform:
   m_ObjectHideFlags: 0

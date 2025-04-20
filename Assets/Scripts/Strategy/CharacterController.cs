@@ -1,6 +1,28 @@
 using System.Collections.Generic;
 using UnityEngine;
-using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+[System.Serializable]
+public class CharacterData
+{
+    public string characterName;
+    public int baseHealth;
+    public int baseAttack;
+    public int baseDefense;
+    public int baseMovementRange;
+    public int currentHealth;
+    public string characterClass;
+    public string uniqueAbility;
+    public int[] actionIndices; // References to actions in the database
+    public string spritePath;
+}
+
+[System.Serializable]
+public class CharacterDatabase
+{
+    public List<CharacterData> characters = new List<CharacterData>();
+}
 
 /**
  * PlayerController class -- manages the player-controlled characters.
@@ -17,39 +39,71 @@ using System.Collections.Generic;
  */
 public class CharacterController : OrderedCharacter
 {
-    private SpriteRenderer m_SpriteRenderer;
+    #region Constants
+    private const string DATA_PATH = "Data/characters";
+    private const string SAVE_FILENAME = "character_data.json";
+    #endregion
+
+    #region Static Fields
+    private static string SaveFilePath;
+    private static CharacterDatabase s_CharacterDatabase;
+    private static bool s_IsDatabaseLoaded = false;
+    #endregion
+
+    #region Private Fields
+    private SpriteRenderer spriteRenderer;
+    private CharacterData characterData;
+    private bool hasMoved = false;
     private bool isSelected = false;
-    public bool hasMoved = false;
+    private List<Action> actions = new List<Action>();
+    private ActionDatabase actionDatabase;
+    #endregion
+
+    #region Public Properties
     public bool hasActed = false;
-    private int moveRange = 3;
-    private Action[] actions;
-    //basic stats of a character that can be changed 
-    public int baseHealth;
-    public int baseAttack;
-    public int baseDefense;
-    public int baseMovementRange;
-    public int currentHealth;
-    //this is for if we decide to have class specific chcaracters
-    public string characterClass; 
-    // One unique ability specific to each character
-    public string uniqueAbility;
+    public string characterName { get; private set; }
+    public int baseHealth { get; private set; }
+    public int baseAttack { get; private set; }
+    public int baseDefense { get; private set; }
+    public int baseMovementRange { get; private set; }
+    public int currentHealth { get; private set; }
+    public string characterClass { get; private set; }
+    public string uniqueAbility { get; private set; }
+    public string spritePath { get; private set; }
+    #endregion
+
+    void Awake()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        if (string.IsNullOrEmpty(SaveFilePath))
+        {
+            SaveFilePath = Path.Combine(Application.persistentDataPath, SAVE_FILENAME);
+        }
+        LoadTestData();
+    }
 
     public override void spawn(BoardManager bm, Vector2Int cell)
     {
         boardManager = bm;
-        gridPosition = cell;
         transform.position = boardManager.cellToWorld(cell);
     }
-    
+
     public void spawn(BoardManager bm, Vector2Int cell, Action[] acts)
     {
         boardManager = bm;
-        gridPosition = cell;
         transform.position = boardManager.cellToWorld(cell);
-        actions = acts;
+        actions = acts.ToList();
     }
 
-    public void resetTurn(){
+    public void spawn(BoardManager bm, Vector2Int cell, string characterName, ActionDatabase actionDatabase)
+    {
+        this.actionDatabase = actionDatabase;
+        LoadCharacterData(characterName, actionDatabase);
+        spawn(bm, cell);
+    }
+
+    public void resetTurn()
+    {
         hasMoved = false;
         hasActed = false;
         isSelected = false;
@@ -57,7 +111,8 @@ public class CharacterController : OrderedCharacter
 
     public override bool isTurnComplete()
     {   //temp solve until combat is implemented
-        if(hasMoved && hasActed){
+        if (hasMoved && hasActed)
+        {
             return true;
         }
         return false;
@@ -69,31 +124,38 @@ public class CharacterController : OrderedCharacter
         Debug.Log("Player has taken action: " + action.name);
     }
 
-    public Vector2Int[] getMovementRange(){
+    public Vector2Int[] getMovementRange()
+    {
         //handle as arraylist for dynamic sizing
         List<Vector2Int> cells = new List<Vector2Int>();
-        for(int i = -moveRange; i <= moveRange; i++){
-            for(int j = -moveRange; j <= moveRange; j++){
+        for (int i = -moveRange; i <= moveRange; i++)
+        {
+            for (int j = -moveRange; j <= moveRange; j++)
+            {
                 //uses existing manhattan distance function from OrderedCharacter
-                if(getDist(new Vector2Int(gridPosition.x + i, gridPosition.y + j)) <= moveRange){
+                if (getDist(new Vector2Int(gridPosition.x + i, gridPosition.y + j)) <= moveRange)
+                {
                     cells.Add(new Vector2Int(gridPosition.x + i, gridPosition.y + j));
                 }
             }
         }
-        
+
         //handle return as array
         return cells.ToArray();
     }
 
     public override void moveToCell(Vector2Int cell)
     {
-        if(getDist(cell) > moveRange){
+        if (getDist(cell) > moveRange)
+        {
             return;
         }
-        if(gridPosition.x == cell.x && gridPosition.y == cell.y){
+        if (gridPosition.x == cell.x && gridPosition.y == cell.y)
+        {
             return;
         }
-        if(hasMoved){
+        if (hasMoved)
+        {
             return;
         }
         gridPosition = cell;
@@ -101,26 +163,29 @@ public class CharacterController : OrderedCharacter
         hasMoved = true;
     }
 
-    public void toggleHighlight(){
-        if(isSelected){
-            if(hasMoved){
-                m_SpriteRenderer.color = Color.red;
-            }else{
-                m_SpriteRenderer.color = Color.cyan;
+    public void toggleHighlight()
+    {
+        if (isSelected)
+        {
+            if (hasMoved)
+            {
+                spriteRenderer.color = Color.red;
             }
-        }else{
-            m_SpriteRenderer.color = Color.white;
+            else
+            {
+                spriteRenderer.color = Color.cyan;
+            }
+        }
+        else
+        {
+            spriteRenderer.color = Color.white;
         }
     }
 
-    public void setSelected(bool selected){
+    public void setSelected(bool selected)
+    {
         isSelected = selected;
         toggleHighlight();
-    }
-
-    void Start(){
-        m_SpriteRenderer = GetComponent<SpriteRenderer>();
-        hp = 100;
     }
 
     public override void TakeDamage(int damage)
@@ -140,7 +205,177 @@ public class CharacterController : OrderedCharacter
         gameObject.SetActive(false);
     }
 
-    public Action[] GetActions() {
-        return actions;
+    public Action[] GetActions()
+    {
+        return actions.ToArray();
     }
+
+    public static void SaveCharacterData(CharacterData data)
+    {
+        if (!s_IsDatabaseLoaded)
+        {
+            LoadCharacterDatabase();
+        }
+
+        // Update existing character or add new one
+        int existingIndex = s_CharacterDatabase.characters.FindIndex(c => c.characterName == data.characterName);
+        if (existingIndex >= 0)
+        {
+            s_CharacterDatabase.characters[existingIndex] = data;
+        }
+        else
+        {
+            s_CharacterDatabase.characters.Add(data);
+        }
+
+        string json = JsonUtility.ToJson(s_CharacterDatabase, true);
+        File.WriteAllText(SaveFilePath, json);
+        Debug.Log($"Character database saved to {SaveFilePath}");
+    }
+
+    public void SaveCharacterData()
+    {
+        CharacterData data = new CharacterData
+        {
+            characterName = this.characterName,
+            baseHealth = this.baseHealth,
+            baseAttack = this.baseAttack,
+            baseDefense = this.baseDefense,
+            baseMovementRange = this.baseMovementRange,
+            currentHealth = this.currentHealth,
+            characterClass = this.characterClass,
+            uniqueAbility = this.uniqueAbility,
+            actionIndices = GetActionIndices(),
+            spritePath = this.spritePath
+        };
+
+        SaveCharacterData(data);
+    }
+
+    private static void LoadCharacterDatabase()
+    {
+        if (s_IsDatabaseLoaded) return;
+
+        if (!File.Exists(SaveFilePath))
+        {
+            s_CharacterDatabase = new CharacterDatabase();
+            s_IsDatabaseLoaded = true;
+            return;
+        }
+
+        string json = File.ReadAllText(SaveFilePath);
+        s_CharacterDatabase = JsonUtility.FromJson<CharacterDatabase>(json);
+        s_IsDatabaseLoaded = true;
+    }
+
+    private static void LoadTestData()
+    {
+        if (s_IsDatabaseLoaded) return;
+
+        TextAsset jsonFile = Resources.Load<TextAsset>(DATA_PATH);
+        if (jsonFile == null)
+        {
+            Debug.LogError($"Failed to load test character data from {DATA_PATH}");
+            return;
+        }
+
+        s_CharacterDatabase = JsonUtility.FromJson<CharacterDatabase>(jsonFile.text);
+        s_IsDatabaseLoaded = true;
+        Debug.Log($"Test character database loaded with {s_CharacterDatabase.characters.Count} characters");
+    }
+
+    public void LoadCharacterData(string characterName, ActionDatabase actionDatabase)
+    {
+        Debug.Log($"Loading character data for: {characterName}");
+        if (s_CharacterDatabase == null)
+        {
+            Debug.LogError("Character database is null!");
+            return;
+        }
+
+        CharacterData data = s_CharacterDatabase.characters.Find(c => c.characterName == characterName);
+        if (data == null)
+        {
+            Debug.LogError($"Character data not found for: {characterName}");
+            return;
+        }
+
+
+
+
+        // Apply character data
+        this.characterName = data.characterName;
+        this.baseHealth = data.baseHealth;
+        this.baseAttack = data.baseAttack;
+        this.baseDefense = data.baseDefense;
+        this.baseMovementRange = data.baseMovementRange;
+        this.currentHealth = data.currentHealth;
+        this.characterClass = data.characterClass;
+        this.uniqueAbility = data.uniqueAbility;
+        this.spritePath = data.spritePath;
+        moveRange = data.baseMovementRange;
+
+        // Load and set the character sprite from prefab
+        if (!string.IsNullOrEmpty(data.spritePath))
+        {
+            // spritePath is the sprite name from the sliced sheet
+            Sprite[] sprites = Resources.LoadAll<Sprite>("Sprites/CharacterSprites/tilemap_packed");
+            Sprite found = sprites.FirstOrDefault(s => s.name == data.spritePath);
+            if (found != null)
+            {
+                spriteRenderer.sprite = found;
+            }
+            else
+            {
+                Debug.LogWarning($"Sprite '{data.spritePath}' not found in tilemap_packed.png");
+            }
+        }
+
+        if (actionDatabase != null && data.actionIndices != null)
+        {
+            actions = new List<Action>();
+            foreach (int idx in data.actionIndices)
+            {
+                Action action = actionDatabase.GetActionByIndex(idx);
+                if (action != null)
+                {
+                    actions.Add(action);
+                }
+                else
+                {
+                    Debug.LogWarning($"Failed to resolve action at index: {idx}");
+                }
+            }
+        }
+
+        // Log Character Actions
+        Debug.Log($"Actions for {characterName}:");
+        foreach (Action action in actions)
+        {
+            Debug.Log($"- {action.actionName}");
+        }
+
+        Debug.Log($"Character data loaded for: {characterName}");
+    }
+
+    private void logActions()
+    {
+        Debug.Log($"Actions for {characterName}:");
+        foreach (Action action in actions)
+        {
+            Debug.Log($"- {action.actionName}");
+        }
+    }
+
+    private int[] GetActionIndices()
+    {
+        if (actions == null) return new int[0];
+        int[] indices = new int[actions.Count];
+        for (int i = 0; i < actions.Count; i++)
+        {
+            indices[i] = actionDatabase.GetIndexOfAction(actions[i]);
+        }
+        return indices;
+    }
+
 }

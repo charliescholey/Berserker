@@ -5,6 +5,7 @@ public abstract class OrderedCharacter : MonoBehaviour
     protected BoardManager boardManager;
     public Vector2Int gridPosition;
     public int hp;
+    protected int moveRange;
 
     // to deal with dying, again not sure how we are dealing with it
     public virtual void Die()
@@ -39,16 +40,20 @@ public abstract class OrderedCharacter : MonoBehaviour
     // Action Processing
 
     //get all related cells for an action
-    public Vector2Int[] processActionRange(Action action){
+    public Vector2Int[] processActionRange(Action action)
+    {
         Vector2Int[] cells;
-        switch(action.target){
+        switch (action.target)
+        {
             case Action.TargetType.SELF:
-                return new Vector2Int[]{gridPosition};
+                return new Vector2Int[] { gridPosition };
             case Action.TargetType.RADIUS:
                 cells = new Vector2Int[(action.range * 2 + 1) * (action.range * 2 + 1)];
                 int index = 0;
-                for(int i = -action.range; i <= action.range; i++){
-                    for(int j = -action.range; j <= action.range; j++){
+                for (int i = -action.range; i <= action.range; i++)
+                {
+                    for (int j = -action.range; j <= action.range; j++)
+                    {
                         cells[index] = new Vector2Int(gridPosition.x + i, gridPosition.y + j);
                         index++;
                     }
@@ -63,28 +68,35 @@ public abstract class OrderedCharacter : MonoBehaviour
                 return cells;
             case Action.TargetType.LINE:
                 cells = new Vector2Int[action.range * 4];
-                for(int i = 0; i < action.range; i++){
+                for (int i = 0; i < action.range; i++)
+                {
                     cells[i] = new Vector2Int(gridPosition.x + i, gridPosition.y);
                 }
-                for(int i = 0; i < action.range; i++){
+                for (int i = 0; i < action.range; i++)
+                {
                     cells[i] = new Vector2Int(gridPosition.x - i, gridPosition.y);
                 }
-                for(int i = 0; i < action.range; i++){
+                for (int i = 0; i < action.range; i++)
+                {
                     cells[i] = new Vector2Int(gridPosition.x, gridPosition.y + i);
                 }
-                for(int i = 0; i < action.range; i++){
+                for (int i = 0; i < action.range; i++)
+                {
                     cells[i] = new Vector2Int(gridPosition.x, gridPosition.y - i);
                 }
                 return cells;
         }
-        return new Vector2Int[]{gridPosition};
+        return new Vector2Int[] { gridPosition };
     }
 
-    public void processActionEffect(Action action, Vector2Int cell){
+    public void processActionEffect(Action action, Vector2Int cell)
+    {
         float odds = action.effectChance;
         float randomValue = Random.Range(0.0f, 1.0f);
-        if(randomValue < odds){
-            switch(action.effect){
+        if (randomValue < odds)
+        {
+            switch (action.effect)
+            {
                 case Action.EffectType.BURN:
                     Debug.Log("Burned");
                     break;
@@ -98,13 +110,16 @@ public abstract class OrderedCharacter : MonoBehaviour
                     Debug.Log("Put to sleep");
                     break;
             }
-        }else{
+        }
+        else
+        {
             Debug.Log("Effect failed");
         }
-        
+
     }
 
-    public void processAction(Action action){
+    public void processAction(Action action)
+    {
         //TODO
     }
 }
