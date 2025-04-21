@@ -13,6 +13,7 @@ public class HPTextController : MonoBehaviour
 
     public void setCharacter(OrderedCharacter character)
     {
+        Debug.Log("Setting character to: " + character);
         this.character = character;
     }
 

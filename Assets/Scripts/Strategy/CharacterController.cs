@@ -11,8 +11,6 @@ public class CharacterData
     public int baseAttack;
     public int baseDefense;
     public int baseMovementRange;
-    public int currentHealth;
-    public string characterClass;
     public string uniqueAbility;
     public int[] actionIndices; // References to actions in the database
     public string spritePath;
@@ -66,8 +64,6 @@ public class CharacterController : OrderedCharacter
     public int baseAttack { get; private set; }
     public int baseDefense { get; private set; }
     public int baseMovementRange { get; private set; }
-    public int currentHealth { get; private set; }
-    public string characterClass { get; private set; }
     public string uniqueAbility { get; private set; }
     public string spritePath { get; private set; }
     #endregion
@@ -82,14 +78,17 @@ public class CharacterController : OrderedCharacter
         LoadTestData();
     }
 
+    #region Spawning
     public override void spawn(BoardManager bm, Vector2Int cell)
     {
+        gridPosition = cell;
         boardManager = bm;
         transform.position = boardManager.cellToWorld(cell);
     }
 
     public void spawn(BoardManager bm, Vector2Int cell, Action[] acts)
     {
+        gridPosition = cell;
         boardManager = bm;
         transform.position = boardManager.cellToWorld(cell);
         actions = acts.ToList();
@@ -97,11 +96,14 @@ public class CharacterController : OrderedCharacter
 
     public void spawn(BoardManager bm, Vector2Int cell, string characterName, ActionDatabase actionDatabase)
     {
+        gridPosition = cell;
         this.actionDatabase = actionDatabase;
         LoadCharacterData(characterName, actionDatabase);
         spawn(bm, cell);
     }
 
+    #endregion
+    #region Turn Management
     public void resetTurn()
     {
         hasMoved = false;
@@ -117,6 +119,7 @@ public class CharacterController : OrderedCharacter
         }
         return false;
     }
+    #endregion
 
     public override void takeAction(Action action)
     {
@@ -242,8 +245,6 @@ public class CharacterController : OrderedCharacter
             baseAttack = this.baseAttack,
             baseDefense = this.baseDefense,
             baseMovementRange = this.baseMovementRange,
-            currentHealth = this.currentHealth,
-            characterClass = this.characterClass,
             uniqueAbility = this.uniqueAbility,
             actionIndices = GetActionIndices(),
             spritePath = this.spritePath
@@ -309,8 +310,7 @@ public class CharacterController : OrderedCharacter
         this.baseAttack = data.baseAttack;
         this.baseDefense = data.baseDefense;
         this.baseMovementRange = data.baseMovementRange;
-        this.currentHealth = data.currentHealth;
-        this.characterClass = data.characterClass;
+        hp = data.baseHealth;
         this.uniqueAbility = data.uniqueAbility;
         this.spritePath = data.spritePath;
         moveRange = data.baseMovementRange;
