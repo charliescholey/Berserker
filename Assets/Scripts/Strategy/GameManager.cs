@@ -129,6 +129,33 @@ public class GameManager : MonoBehaviour
         }
 
         processEndTurn();
+
+        //check for end of section
+        bool enemiesAlive = false;
+        foreach (OrderedCharacter oc in enemies)
+        {
+            if(oc != null)
+            {
+                enemiesAlive = true;
+                break;
+            }
+        }
+        if (!enemiesAlive){
+            Transition.Instance.onKill();
+        }
+
+        bool playersAlive = false;
+        foreach (OrderedCharacter oc in players)
+        {
+            if(oc != null)
+            {
+                playersAlive = true;
+                break;
+            }
+        }
+        if (!enemiesAlive){
+            Transition.Instance.onDeath();
+        }
     }
 
     void processEndTurn()
