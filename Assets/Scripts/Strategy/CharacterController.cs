@@ -119,7 +119,6 @@ public class CharacterController : OrderedCharacter
         }
         return false;
     }
-    #endregion
 
     public override void takeAction(Action action)
     {
@@ -127,25 +126,11 @@ public class CharacterController : OrderedCharacter
         Debug.Log("Player has taken action: " + action.name);
     }
 
-    public Vector2Int[] getMovementRange()
+    public Action[] GetActions()
     {
-        //handle as arraylist for dynamic sizing
-        List<Vector2Int> cells = new List<Vector2Int>();
-        for (int i = -moveRange; i <= moveRange; i++)
-        {
-            for (int j = -moveRange; j <= moveRange; j++)
-            {
-                //uses existing manhattan distance function from OrderedCharacter
-                if (getDist(new Vector2Int(gridPosition.x + i, gridPosition.y + j)) <= moveRange)
-                {
-                    cells.Add(new Vector2Int(gridPosition.x + i, gridPosition.y + j));
-                }
-            }
-        }
-
-        //handle return as array
-        return cells.ToArray();
+        return actions.ToArray();
     }
+
 
     public override void moveToCell(Vector2Int cell)
     {
@@ -165,7 +150,9 @@ public class CharacterController : OrderedCharacter
         transform.position = boardManager.cellToWorld(cell);
         hasMoved = true;
     }
+    #endregion
 
+    #region Player Selection
     public void toggleHighlight()
     {
         if (isSelected)
@@ -190,6 +177,8 @@ public class CharacterController : OrderedCharacter
         isSelected = selected;
         toggleHighlight();
     }
+    #endregion
+    #region Damage
 
     public override void TakeDamage(int damage)
     {
@@ -207,12 +196,10 @@ public class CharacterController : OrderedCharacter
         Debug.Log($"{gameObject.name} died.");
         gameObject.SetActive(false);
     }
+    #endregion
 
-    public Action[] GetActions()
-    {
-        return actions.ToArray();
-    }
 
+    #region Save and Load
     public static void SaveCharacterData(CharacterData data)
     {
         if (!s_IsDatabaseLoaded)
@@ -358,15 +345,6 @@ public class CharacterController : OrderedCharacter
         Debug.Log($"Character data loaded for: {characterName}");
     }
 
-    private void logActions()
-    {
-        Debug.Log($"Actions for {characterName}:");
-        foreach (Action action in actions)
-        {
-            Debug.Log($"- {action.actionName}");
-        }
-    }
-
     private int[] GetActionIndices()
     {
         if (actions == null) return new int[0];
@@ -378,4 +356,14 @@ public class CharacterController : OrderedCharacter
         return indices;
     }
 
+    #endregion
+
+    private void logActions()
+    {
+        Debug.Log($"Actions for {characterName}:");
+        foreach (Action action in actions)
+        {
+            Debug.Log($"- {action.actionName}");
+        }
+    }
 }

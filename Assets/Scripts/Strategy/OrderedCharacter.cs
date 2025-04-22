@@ -36,6 +36,26 @@ public abstract class OrderedCharacter : MonoBehaviour
         return gridPosition;
     }
 
+    public Vector2Int[] getMovementRange()
+    {
+        //handle as arraylist for dynamic sizing
+        List<Vector2Int> cells = new List<Vector2Int>();
+        for (int i = -moveRange; i <= moveRange; i++)
+        {
+            for (int j = -moveRange; j <= moveRange; j++)
+            {
+                //uses existing manhattan distance function from OrderedCharacter
+                if (getDist(new Vector2Int(gridPosition.x + i, gridPosition.y + j)) <= moveRange)
+                {
+                    cells.Add(new Vector2Int(gridPosition.x + i, gridPosition.y + j));
+                }
+            }
+        }
+
+        //handle return as array
+        return cells.ToArray();
+    }
+
 
     // Action Processing
 
