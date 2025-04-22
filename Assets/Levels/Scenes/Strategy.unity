@@ -288,7 +288,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boardManager: {fileID: 1562470333}
   actionDatabase: {fileID: 11400000, guid: 235e58b60aa4c49f0ae5cc360e986c00, type: 2}
-  skillDatabase: {fileID: 11400000, guid: 6952ad02e222adcb183fdf8ca52fbe37, type: 2}
   actionBTNManagerPrefab: {fileID: 65098539977710995, guid: a5e7f0f0d69e14b2e9c0d40d5e753a94, type: 3}
   UI: {fileID: 413238158}
   HPTextPrefab: {fileID: 6780849818201967594, guid: 803d4f81e378149f885216357b1373db, type: 3}
@@ -3652,7 +3651,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1052382673
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3785,7 +3784,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1115799082
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3852,7 +3851,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 307944508}
         m_TargetAssemblyTypeName: Transition, Assembly-CSharp
-        m_MethodName: OnDeath
+        m_MethodName: onDeath
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

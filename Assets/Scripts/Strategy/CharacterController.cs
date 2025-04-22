@@ -11,8 +11,6 @@ public class CharacterData
     public int baseAttack;
     public int baseDefense;
     public int baseMovementRange;
-    public int currentHealth;
-    public string characterClass;
     public string uniqueAbility;
     public int[] actionIndices; // References to actions in the database
     public string spritePath;
@@ -66,8 +64,6 @@ public class CharacterController : OrderedCharacter
     public int baseAttack { get; private set; }
     public int baseDefense { get; private set; }
     public int baseMovementRange { get; private set; }
-    public int currentHealth { get; private set; }
-    public string characterClass { get; private set; }
     public string uniqueAbility { get; private set; }
     public string spritePath { get; private set; }
     #endregion
@@ -82,14 +78,17 @@ public class CharacterController : OrderedCharacter
         LoadTestData();
     }
 
+    #region Spawning
     public override void spawn(BoardManager bm, Vector2Int cell)
     {
+        gridPosition = cell;
         boardManager = bm;
         transform.position = boardManager.cellToWorld(cell);
     }
 
     public void spawn(BoardManager bm, Vector2Int cell, Action[] acts)
     {
+        gridPosition = cell;
         boardManager = bm;
         transform.position = boardManager.cellToWorld(cell);
         actions = acts.ToList();
@@ -97,11 +96,14 @@ public class CharacterController : OrderedCharacter
 
     public void spawn(BoardManager bm, Vector2Int cell, string characterName, ActionDatabase actionDatabase)
     {
+        gridPosition = cell;
         this.actionDatabase = actionDatabase;
         LoadCharacterData(characterName, actionDatabase);
         spawn(bm, cell);
     }
 
+    #endregion
+    #region Turn Management
     public void resetTurn()
     {
         hasMoved = false;
@@ -124,25 +126,11 @@ public class CharacterController : OrderedCharacter
         Debug.Log("Player has taken action: " + action.name);
     }
 
-    public Vector2Int[] getMovementRange()
+    public Action[] GetActions()
     {
-        //handle as arraylist for dynamic sizing
-        List<Vector2Int> cells = new List<Vector2Int>();
-        for (int i = -moveRange; i <= moveRange; i++)
-        {
-            for (int j = -moveRange; j <= moveRange; j++)
-            {
-                //uses existing manhattan distance function from OrderedCharacter
-                if (getDist(new Vector2Int(gridPosition.x + i, gridPosition.y + j)) <= moveRange)
-                {
-                    cells.Add(new Vector2Int(gridPosition.x + i, gridPosition.y + j));
-                }
-            }
-        }
-
-        //handle return as array
-        return cells.ToArray();
+        return actions.ToArray();
     }
+
 
     public override void moveToCell(Vector2Int cell)
     {
@@ -162,7 +150,9 @@ public class CharacterController : OrderedCharacter
         transform.position = boardManager.cellToWorld(cell);
         hasMoved = true;
     }
+    #endregion
 
+    #region Player Selection
     public void toggleHighlight()
     {
         if (isSelected)
@@ -187,6 +177,8 @@ public class CharacterController : OrderedCharacter
         isSelected = selected;
         toggleHighlight();
     }
+    #endregion
+    #region Damage
 
     public override void TakeDamage(int damage)
     {
@@ -204,12 +196,10 @@ public class CharacterController : OrderedCharacter
         Debug.Log($"{gameObject.name} died.");
         gameObject.SetActive(false);
     }
+    #endregion
 
-    public Action[] GetActions()
-    {
-        return actions.ToArray();
-    }
 
+    #region Save and Load
     public static void SaveCharacterData(CharacterData data)
     {
         if (!s_IsDatabaseLoaded)
@@ -242,8 +232,6 @@ public class CharacterController : OrderedCharacter
             baseAttack = this.baseAttack,
             baseDefense = this.baseDefense,
             baseMovementRange = this.baseMovementRange,
-            currentHealth = this.currentHealth,
-            characterClass = this.characterClass,
             uniqueAbility = this.uniqueAbility,
             actionIndices = GetActionIndices(),
             spritePath = this.spritePath
@@ -309,8 +297,7 @@ public class CharacterController : OrderedCharacter
         this.baseAttack = data.baseAttack;
         this.baseDefense = data.baseDefense;
         this.baseMovementRange = data.baseMovementRange;
-        this.currentHealth = data.currentHealth;
-        this.characterClass = data.characterClass;
+        hp = data.baseHealth;
         this.uniqueAbility = data.uniqueAbility;
         this.spritePath = data.spritePath;
         moveRange = data.baseMovementRange;
@@ -358,15 +345,6 @@ public class CharacterController : OrderedCharacter
         Debug.Log($"Character data loaded for: {characterName}");
     }
 
-    private void logActions()
-    {
-        Debug.Log($"Actions for {characterName}:");
-        foreach (Action action in actions)
-        {
-            Debug.Log($"- {action.actionName}");
-        }
-    }
-
     private int[] GetActionIndices()
     {
         if (actions == null) return new int[0];
@@ -378,4 +356,14 @@ public class CharacterController : OrderedCharacter
         return indices;
     }
 
+    #endregion
+
+    private void logActions()
+    {
+        Debug.Log($"Actions for {characterName}:");
+        foreach (Action action in actions)
+        {
+            Debug.Log($"- {action.actionName}");
+        }
+    }
 }

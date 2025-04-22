@@ -60,9 +60,12 @@ public class GameManager : MonoBehaviour
         enemies[0] = Instantiate(enemyPrefab);
         enemies[0].spawn(boardManager, new Vector2Int(3, 0));
 
-        //give every character an HP tracker
-        Array.ForEach(players, x => addHPTracker(x));
-        Array.ForEach(enemies, x => addHPTracker(x));
+        OrderedCharacter[] characters = players.Cast<OrderedCharacter>().Concat(enemies.Cast<OrderedCharacter>()).ToArray();
+
+        foreach (OrderedCharacter oc in characters)
+        {
+            addHPTracker(oc);
+        }
 
         actionBTNManager = Instantiate(actionBTNManagerPrefab);
     }
@@ -126,6 +129,33 @@ public class GameManager : MonoBehaviour
         }
 
         processEndTurn();
+
+        //check for end of section
+        bool enemiesAlive = false;
+        foreach (OrderedCharacter oc in enemies)
+        {
+            if(oc != null)
+            {
+                enemiesAlive = true;
+                break;
+            }
+        }
+        if (!enemiesAlive){
+            Transition.Instance.onKill();
+        }
+
+        bool playersAlive = false;
+        foreach (OrderedCharacter oc in players)
+        {
+            if(oc != null)
+            {
+                playersAlive = true;
+                break;
+            }
+        }
+        if (!enemiesAlive){
+            Transition.Instance.onDeath();
+        }
     }
 
     void processEndTurn()

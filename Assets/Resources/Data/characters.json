@@ -22,7 +22,7 @@
             "characterClass": "Mage",
             "uniqueAbility": "Arcane Burst",
             "actionIndices": [1,2],
-            "spritePath": "tilemap_packed_186"
+            "spritePath": "tilemap_packed_240"
         },
         {
             "characterName": "Rogue",
