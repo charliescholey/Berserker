@@ -9,6 +9,7 @@ using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
+    public TileHighlighter tileHighlighter;
     //tracks whether the player has an object selected
     private bool hasSelected = false;
     //link to boardmanager
@@ -79,6 +80,7 @@ public class GameManager : MonoBehaviour
                 //if a player is selected, move them to the clicked cell
                 Vector2Int cell = boardManager.clickToCell(worldPoint);
                 player.moveToCell(cell);
+                tileHighlighter.ClearHighlights();
                 hasSelected = false;
                 player.setSelected(false);
                 player = null;
@@ -101,6 +103,17 @@ public class GameManager : MonoBehaviour
                         //player is selected
                         hasSelected = true;
                         player.setSelected(true);
+                        tileHighlighter.ClearHighlights();
+
+                        Vector2Int[] moveRange = player.getMovementRange();
+                        tileHighlighter.HighlightTiles(moveRange);
+
+                        foreach (var action in player.GetActions())
+                        {
+                            Vector2Int[] attackRange = player.processActionRange(action);
+                            tileHighlighter.HighlightTiles(attackRange, isAttack: true);
+                        }
+
                         if (player.hasActed == false)
                         {
                             actionBTNManager.Create(player, UI);
@@ -123,6 +136,7 @@ public class GameManager : MonoBehaviour
             //if the right mouse button is clicked, deselect the player
             hasSelected = false;
             player.setSelected(false);
+            tileHighlighter.ClearHighlights();
         }
 
         processEndTurn();
