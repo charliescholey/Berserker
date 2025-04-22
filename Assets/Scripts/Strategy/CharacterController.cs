@@ -34,6 +34,8 @@ public class CharacterController : OrderedCharacter
     // One unique ability specific to each character
     public string uniqueAbility;
 
+    [SerializeField] private Grid grid;
+
     public override void spawn(BoardManager bm, Vector2Int cell)
     {
         boardManager = bm;
@@ -142,5 +144,22 @@ public class CharacterController : OrderedCharacter
 
     public Action[] GetActions() {
         return actions;
+    }
+
+    // takes in the position that the player wants to move to, returns true if there is a wall at that tile, false otherwise
+    private bool IsWallAtTarget(Vector2 inputDelta) {
+        // compute target position
+        Vector2 desiredPos = (Vector2)transform.position + inputDelta;
+
+        // convert to cell coordinates
+        Vector3Int cell = grid.WorldToCell(desiredPos);
+
+        // get cell center
+        Vector3 cellCenter3 = grid.GetCellCenterWorld(cell);
+        Vector2 cellCenter2 = new Vector2(cellCenter3.x, cellCenter3.y);
+
+        // check there is an object tagged wall at that point
+        Collider2D hit = Physics2D.OverlapPoint(cellCenter2);
+        return hit != null && hit.CompareTag("wall");
     }
 }

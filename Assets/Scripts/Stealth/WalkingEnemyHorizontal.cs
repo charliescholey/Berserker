@@ -97,6 +97,7 @@ public class WalkingEnemyHorizontal : MonoBehaviour {
                     // if moving backward, turn back to the initialRotation.
                     targetRotation = movingForward ? flippedRotation : initialRotation;
                     currentState = State.Rotating;
+                    enemySprite.transform.SetParent(null);
                 }
                 break;
                 
@@ -114,6 +115,7 @@ public class WalkingEnemyHorizontal : MonoBehaviour {
                     phaseStart = pivot.transform.position;
                     // Resume moving.
                     currentState = State.Moving;
+                    enemySprite.transform.SetParent(pivot.transform, true);
                 }
                 break;
         }
