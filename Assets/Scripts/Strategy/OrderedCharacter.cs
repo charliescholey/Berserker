@@ -39,22 +39,37 @@ public abstract class OrderedCharacter : MonoBehaviour
 
     public Vector2Int[] getMovementRange()
     {
-        //handle as arraylist for dynamic sizing
+        // Use BFS to calculate movement range while avoiding walls
+        Queue<Vector2Int> queue = new Queue<Vector2Int>();
+        HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
         List<Vector2Int> cells = new List<Vector2Int>();
-        for (int i = -moveRange; i <= moveRange; i++)
+
+        queue.Enqueue(gridPosition);
+        visited.Add(gridPosition);
+
+        while (queue.Count > 0)
         {
-            for (int j = -moveRange; j <= moveRange; j++)
+            Vector2Int current = queue.Dequeue();
+            cells.Add(current);
+
+            foreach (Vector2Int direction in new Vector2Int[] {
+            new Vector2Int(1, 0), new Vector2Int(-1, 0),
+            new Vector2Int(0, 1), new Vector2Int(0, -1)
+            })
             {
-                //uses existing manhattan distance function from OrderedCharacter
-                if (getDist(new Vector2Int(gridPosition.x + i, gridPosition.y + j)) <= moveRange)
-                {
-                    cells.Add(new Vector2Int(gridPosition.x + i, gridPosition.y + j));
-                }
+            Vector2Int neighbor = current + direction;
+
+            if (!visited.Contains(neighbor) &&
+                getDist(neighbor) <= moveRange &&
+                boardManager.checkCell(neighbor))
+            {
+                queue.Enqueue(neighbor);
+                visited.Add(neighbor);
+            }
             }
         }
 
-        //handle return as array
-        return boardManager.checkCells(cells.ToArray());
+        return cells.ToArray();
     }
 
 
