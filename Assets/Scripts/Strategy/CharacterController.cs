@@ -134,6 +134,10 @@ public class CharacterController : OrderedCharacter
 
     public override void moveToCell(Vector2Int cell)
     {
+        if(!boardManager.checkCell(cell))
+        {
+            return;
+        }
         if (getDist(cell) > moveRange)
         {
             return;
@@ -274,7 +278,6 @@ public class CharacterController : OrderedCharacter
 
     public void LoadCharacterData(string characterName, ActionDatabase actionDatabase)
     {
-        Debug.Log($"Loading character data for: {characterName}");
         if (s_CharacterDatabase == null)
         {
             Debug.LogError("Character database is null!");
@@ -336,13 +339,13 @@ public class CharacterController : OrderedCharacter
         }
 
         // Log Character Actions
-        Debug.Log($"Actions for {characterName}:");
+        /*Debug.Log($"Actions for {characterName}:");
         foreach (Action action in actions)
         {
             Debug.Log($"- {action.actionName}");
         }
 
-        Debug.Log($"Character data loaded for: {characterName}");
+        Debug.Log($"Character data loaded for: {characterName}");*/
     }
 
     private int[] GetActionIndices()

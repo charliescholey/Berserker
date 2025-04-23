@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using System.Collections.Generic;
 
 /**
 * BoardManager class -- manages the game board.
@@ -21,6 +22,12 @@ public class BoardManager : MonoBehaviour
     public PlayerController playerPrefab;
     //tracks the players in the game
     private float cellSize;
+    //tracks every unit on the board
+    private OrderedCharacter[] players;
+    //tracks spawn locations
+    public Vector2Int[] spawnLocations = new Vector2Int[4];
+    
+    private Dictionary<Vector2Int, bool> walls = new Dictionary<Vector2Int, bool>();
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -28,9 +35,26 @@ public class BoardManager : MonoBehaviour
         cellSize = gameTilemap.cellSize.x;
     }
 
+    public void setWalls(Vector2Int[] wallCells){
+        for(int i = 0; i < wallCells.Length; i++){
+            walls.Add(wallCells[i], false);
+        }
+    }
+
+    public void setPlayers(OrderedCharacter[] players){
+        this.players = players;
+    }
+    
+    public void setSpawnLocations(Vector2Int[] spawnLocations){
+        if(spawnLocations.Length != 4){
+            Debug.LogError("Spawn locations must be of length 4");
+            return;
+        }
+        this.spawnLocations = spawnLocations;
+    }
     // detectSelected returns whatever the current cell has in it.
     // If a player is in the cell, it returns the player, otherwise it returns null.
-    public OrderedCharacter detectSelected(Vector2Int cell, OrderedCharacter[] players){
+    public OrderedCharacter detectSelected(Vector2Int cell){
         for(int i = 0; i < players.Length; i++){
             if(players[i]  == null){
                 continue;
@@ -66,6 +90,37 @@ public class BoardManager : MonoBehaviour
     {
         Vector3Int cell = gameTilemap.WorldToCell(click);
         return new Vector2Int((int) cell.x, (int) cell.y);
+    }
+
+    public bool checkCell(Vector2Int cell){
+        //I'm going to treat these values as basically hardcoded for now
+        if(cell.x < -11 || cell.x > 10){
+            return false;
+        }
+        if(cell.y < -5 || cell.y > 4){
+            return false;
+        }
+        //check for player collisions
+        if(detectSelected(cell) != null){
+            return false;
+        }
+        //check for wall collisions
+        if(walls.ContainsKey(cell)){
+            return false;
+        }
+        return true;
+    }
+
+    public Vector2Int[] checkCells(Vector2Int[] cells){
+        List<Vector2Int> validCells = new List<Vector2Int>();
+        for(int i = 0; i < cells.Length; i++){
+            if(checkCell(cells[i])){
+                validCells.Add(cells[i]);
+            }
+        }
+        Vector2Int[] returnCells = validCells.ToArray();
+        
+        return returnCells;
     }
 
     //isTurnComplete returns true if all players have completed their turn

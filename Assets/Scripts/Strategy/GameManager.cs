@@ -38,8 +38,6 @@ public class GameManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
-        Debug.Log("GameManager Awake called");
-
         players = new CharacterController[4];
 
         //spawn the characters
@@ -52,10 +50,20 @@ public class GameManager : MonoBehaviour
         spawnPlayers() currently gives all the players the same actions.
         */
 
-        players[0].spawn(boardManager, new Vector2Int(0, 0), "Warrior", actionDatabase);
-        players[1].spawn(boardManager, new Vector2Int(1, 3), "Mage", actionDatabase);
-        players[2].spawn(boardManager, new Vector2Int(2, 0), "Rogue", actionDatabase);
-        players[3].spawn(boardManager, new Vector2Int(3, 3), "Paladin", actionDatabase);
+        //DEMO Adjustable spawn locations
+        Vector2Int[] playerSpawnLocations = {
+            new Vector2Int(0, 0),
+            new Vector2Int(1, 3),
+            new Vector2Int(2, 0),
+            new Vector2Int(3, 3)
+        };
+
+        boardManager.setSpawnLocations(playerSpawnLocations);
+
+        players[0].spawn(boardManager, boardManager.spawnLocations[0], "Warrior", actionDatabase);
+        players[1].spawn(boardManager, boardManager.spawnLocations[1], "Mage", actionDatabase);
+        players[2].spawn(boardManager, boardManager.spawnLocations[2], "Rogue", actionDatabase);
+        players[3].spawn(boardManager, boardManager.spawnLocations[3], "Paladin", actionDatabase);
 
         enemies = new EnemyController[1];
         enemies[0] = Instantiate(enemyPrefab);
@@ -69,11 +77,26 @@ public class GameManager : MonoBehaviour
         }
 
         actionBTNManager = Instantiate(actionBTNManagerPrefab);
+
+        //DEMO WALLS
+        Vector2Int[] walls = {
+            new Vector2Int(-1, 2),
+            new Vector2Int(-2, 2),
+            new Vector2Int(-2, 1),
+            new Vector2Int(-2, 0),
+            new Vector2Int(-1, 0),
+            new Vector2Int(-1, -1)
+        };
+        boardManager.setWalls(walls);
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        OrderedCharacter[] characters = players.Cast<OrderedCharacter>().Concat(enemies.Cast<OrderedCharacter>()).ToArray();
+        boardManager.setPlayers(characters);
+
         //get where the mouse is in the world
         Vector3 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if (Input.GetMouseButtonDown(0))
@@ -95,10 +118,10 @@ public class GameManager : MonoBehaviour
             {
                 //if no player is selected, select the player in the clicked cell
                 Vector2Int cell = boardManager.clickToCell(worldPoint);
+                Debug.Log("Clicked cell: " + cell);
 
-                OrderedCharacter[] characters = players.Cast<OrderedCharacter>().Concat(enemies.Cast<OrderedCharacter>()).ToArray();
 
-                player = (CharacterController)boardManager.detectSelected(cell, characters);
+                player = (CharacterController)boardManager.detectSelected(cell);
                 if (player != null)
                 {
                     if (player.GetType() == typeof(CharacterController))
@@ -111,15 +134,9 @@ public class GameManager : MonoBehaviour
                         Vector2Int[] moveRange = player.getMovementRange();
                         tileHighlighter.HighlightTiles(moveRange);
 
-                        foreach (var action in player.GetActions())
-                        {
-                            Vector2Int[] attackRange = player.processActionRange(action);
-                            tileHighlighter.HighlightTiles(attackRange, isAttack: true);
-                        }
-
                         if (player.hasActed == false)
                         {
-                            actionBTNManager.Create(player, UI);
+                            actionBTNManager.Create(player, UI, tileHighlighter);
                         }
                     }
                     else
@@ -168,6 +185,10 @@ public class GameManager : MonoBehaviour
             }
         }
         if (!enemiesAlive){
+            Transition.Instance.onKill();
+        }
+        if(!playersAlive)
+        {
             Transition.Instance.onDeath();
         }
     }
