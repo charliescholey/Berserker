@@ -50,10 +50,20 @@ public class GameManager : MonoBehaviour
         spawnPlayers() currently gives all the players the same actions.
         */
 
-        players[0].spawn(boardManager, new Vector2Int(0, 0), "Warrior", actionDatabase);
-        players[1].spawn(boardManager, new Vector2Int(1, 3), "Mage", actionDatabase);
-        players[2].spawn(boardManager, new Vector2Int(2, 0), "Rogue", actionDatabase);
-        players[3].spawn(boardManager, new Vector2Int(3, 3), "Paladin", actionDatabase);
+        //DEMO Adjustable spawn locations
+        Vector2Int[] playerSpawnLocations = {
+            new Vector2Int(0, 0),
+            new Vector2Int(1, 3),
+            new Vector2Int(2, 0),
+            new Vector2Int(3, 3)
+        };
+
+        boardManager.setSpawnLocations(playerSpawnLocations);
+
+        players[0].spawn(boardManager, playerSpawnLocations[0], "Warrior", actionDatabase);
+        players[1].spawn(boardManager, playerSpawnLocations[1], "Mage", actionDatabase);
+        players[2].spawn(boardManager, playerSpawnLocations[2], "Rogue", actionDatabase);
+        players[3].spawn(boardManager, playerSpawnLocations[3], "Paladin", actionDatabase);
 
         enemies = new EnemyController[1];
         enemies[0] = Instantiate(enemyPrefab);
@@ -124,13 +134,6 @@ public class GameManager : MonoBehaviour
                         Vector2Int[] moveRange = player.getMovementRange();
                         tileHighlighter.HighlightTiles(moveRange);
 
-                        //TODO move action highlighting to actionBTNManager on hover
-                        /*foreach (var action in player.GetActions())
-                        {
-                            Vector2Int[] attackRange = player.processActionRange(action);
-                            tileHighlighter.HighlightTiles(attackRange, isAttack: true);
-                        }*/
-
                         if (player.hasActed == false)
                         {
                             actionBTNManager.Create(player, UI, tileHighlighter);
@@ -182,6 +185,10 @@ public class GameManager : MonoBehaviour
             }
         }
         if (!enemiesAlive){
+            Transition.Instance.onKill();
+        }
+        if(!playersAlive)
+        {
             Transition.Instance.onDeath();
         }
     }

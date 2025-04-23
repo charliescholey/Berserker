@@ -22,7 +22,11 @@ public class BoardManager : MonoBehaviour
     public PlayerController playerPrefab;
     //tracks the players in the game
     private float cellSize;
+    //tracks every unit on the board
     private OrderedCharacter[] players;
+    //tracks spawn locations
+    private Vector2Int[] spawnLocations = new Vector2Int[4];
+    
     private Dictionary<Vector2Int, bool> walls = new Dictionary<Vector2Int, bool>();
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -40,7 +44,14 @@ public class BoardManager : MonoBehaviour
     public void setPlayers(OrderedCharacter[] players){
         this.players = players;
     }
-
+    
+    public void setSpawnLocations(Vector2Int[] spawnLocations){
+        if(spawnLocations.Length != 4){
+            Debug.LogError("Spawn locations must be of length 4");
+            return;
+        }
+        this.spawnLocations = spawnLocations;
+    }
     // detectSelected returns whatever the current cell has in it.
     // If a player is in the cell, it returns the player, otherwise it returns null.
     public OrderedCharacter detectSelected(Vector2Int cell){
