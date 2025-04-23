@@ -23,6 +23,8 @@ public class DemoLevel : MonoBehaviour
         };
         level.enemySpawnLocations = enemySpawnLocations;
 
+        level.spawnEnemies(enemySpawnLocations);
+
         //WALLS
         Vector2Int[] walls = {
             new Vector2Int(-1, 2),

@@ -61,8 +61,6 @@ public class GameManager : MonoBehaviour
         players[2].spawn(boardManager, boardManager.spawnLocations[2], "Rogue", actionDatabase);
         players[3].spawn(boardManager, boardManager.spawnLocations[3], "Paladin", actionDatabase);
 
-        spawnEnemies(enemySpawnLocations);
-
         OrderedCharacter[] characters = players.Cast<OrderedCharacter>().Concat(enemies.Cast<OrderedCharacter>()).ToArray();
 
         foreach (OrderedCharacter oc in characters)
