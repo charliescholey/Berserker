@@ -38,8 +38,6 @@ public class GameManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
-        Debug.Log("GameManager Awake called");
-
         players = new CharacterController[4];
 
         //spawn the characters
