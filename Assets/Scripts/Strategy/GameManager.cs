@@ -67,6 +67,16 @@ public class GameManager : MonoBehaviour
         }
 
         actionBTNManager = Instantiate(actionBTNManagerPrefab);
+
+        //DEMO WALLS
+        Vector2Int[] walls = {
+            new Vector2Int(-1, 2),
+            new Vector2Int(-2, 2),
+            new Vector2Int(-2, 1),
+            new Vector2Int(-2, 0),
+            new Vector2Int(-1, 0),
+        };
+        boardManager.setWalls(walls);
     }
 
     // Update is called once per frame

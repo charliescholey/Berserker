@@ -22,13 +22,19 @@ public class BoardManager : MonoBehaviour
     public PlayerController playerPrefab;
     //tracks the players in the game
     private float cellSize;
-
     private OrderedCharacter[] players;
+    private Dictionary<Vector2Int, bool> walls = new Dictionary<Vector2Int, bool>();
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         cellSize = gameTilemap.cellSize.x;
+    }
+
+    public void setWalls(Vector2Int[] wallCells){
+        for(int i = 0; i < wallCells.Length; i++){
+            walls.Add(wallCells[i], false);
+        }
     }
 
     public void setPlayers(OrderedCharacter[] players){
@@ -85,6 +91,10 @@ public class BoardManager : MonoBehaviour
         }
         //check for player collisions
         if(detectSelected(cell) != null){
+            return false;
+        }
+        //check for wall collisions
+        if(walls.ContainsKey(cell)){
             return false;
         }
         return true;
