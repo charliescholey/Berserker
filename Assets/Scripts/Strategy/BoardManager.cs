@@ -76,12 +76,14 @@ public class BoardManager : MonoBehaviour
     }
 
     public bool checkCell(Vector2Int cell){
+        //I'm going to treat these values as basically hardcoded for now
         if(cell.x < -11 || cell.x > 10){
             return false;
         }
         if(cell.y < -5 || cell.y > 4){
             return false;
         }
+        //check for player collisions
         if(detectSelected(cell) != null){
             return false;
         }

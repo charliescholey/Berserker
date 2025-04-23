@@ -1,16 +1,19 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
+
 
 /*
 Represents a single action button
 */
 
-public class ActionBTNController : MonoBehaviour
+public class ActionBTNController : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     private TextMeshProUGUI textMeshPro;
     public Action action;
     public CharacterController player;
+    public TileHighlighter th;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -20,8 +23,9 @@ public class ActionBTNController : MonoBehaviour
         button.onClick.AddListener(OnAttackButtonClicked);
     }
 
-    public void setAction(Action action, CharacterController player)
+    public void setAction(Action action, CharacterController player, TileHighlighter th)
     {
+        this.th = th;
         this.action = action;
         this.player = player;
         this.textMeshPro = GetComponentInChildren<TextMeshProUGUI>();
@@ -39,6 +43,19 @@ public class ActionBTNController : MonoBehaviour
         // Optionally destroy or hide the button after use.
         destroy();
     }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        th.ClearHighlights();
+        th.HighlightTiles(player.processActionRange(action), true);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        th.ClearHighlights();
+        th.HighlightTiles(player.getMovementRange());
+    }
+
 
     public void destroy()
     {

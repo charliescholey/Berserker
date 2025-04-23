@@ -122,7 +122,7 @@ public class GameManager : MonoBehaviour
 
                         if (player.hasActed == false)
                         {
-                            actionBTNManager.Create(player, UI);
+                            actionBTNManager.Create(player, UI, tileHighlighter);
                         }
                     }
                     else
