@@ -134,6 +134,10 @@ public class CharacterController : OrderedCharacter
 
     public override void moveToCell(Vector2Int cell)
     {
+        if(!boardManager.checkCell(cell))
+        {
+            return;
+        }
         if (getDist(cell) > moveRange)
         {
             return;

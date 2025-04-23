@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using System.Collections.Generic;
 
 /**
 * BoardManager class -- manages the game board.
@@ -21,6 +22,8 @@ public class BoardManager : MonoBehaviour
     public PlayerController playerPrefab;
     //tracks the players in the game
     private float cellSize;
+
+    private OrderedCharacter[] players;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -28,9 +31,13 @@ public class BoardManager : MonoBehaviour
         cellSize = gameTilemap.cellSize.x;
     }
 
+    public void setPlayers(OrderedCharacter[] players){
+        this.players = players;
+    }
+
     // detectSelected returns whatever the current cell has in it.
     // If a player is in the cell, it returns the player, otherwise it returns null.
-    public OrderedCharacter detectSelected(Vector2Int cell, OrderedCharacter[] players){
+    public OrderedCharacter detectSelected(Vector2Int cell){
         for(int i = 0; i < players.Length; i++){
             if(players[i]  == null){
                 continue;
@@ -66,6 +73,31 @@ public class BoardManager : MonoBehaviour
     {
         Vector3Int cell = gameTilemap.WorldToCell(click);
         return new Vector2Int((int) cell.x, (int) cell.y);
+    }
+
+    public bool checkCell(Vector2Int cell){
+        if(cell.x < -11 || cell.x > 10){
+            return false;
+        }
+        if(cell.y < -5 || cell.y > 4){
+            return false;
+        }
+        if(detectSelected(cell) != null){
+            return false;
+        }
+        return true;
+    }
+
+    public Vector2Int[] checkCells(Vector2Int[] cells){
+        List<Vector2Int> validCells = new List<Vector2Int>();
+        for(int i = 0; i < cells.Length; i++){
+            if(checkCell(cells[i])){
+                validCells.Add(cells[i]);
+            }
+        }
+        Vector2Int[] returnCells = validCells.ToArray();
+        
+        return returnCells;
     }
 
     //isTurnComplete returns true if all players have completed their turn

@@ -72,6 +72,10 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        OrderedCharacter[] characters = players.Cast<OrderedCharacter>().Concat(enemies.Cast<OrderedCharacter>()).ToArray();
+        boardManager.setPlayers(characters);
+
         //get where the mouse is in the world
         Vector3 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if (Input.GetMouseButtonDown(0))
@@ -93,10 +97,10 @@ public class GameManager : MonoBehaviour
             {
                 //if no player is selected, select the player in the clicked cell
                 Vector2Int cell = boardManager.clickToCell(worldPoint);
+                Debug.Log("Clicked cell: " + cell);
 
-                OrderedCharacter[] characters = players.Cast<OrderedCharacter>().Concat(enemies.Cast<OrderedCharacter>()).ToArray();
 
-                player = (CharacterController)boardManager.detectSelected(cell, characters);
+                player = (CharacterController)boardManager.detectSelected(cell);
                 if (player != null)
                 {
                     if (player.GetType() == typeof(CharacterController))
@@ -109,11 +113,12 @@ public class GameManager : MonoBehaviour
                         Vector2Int[] moveRange = player.getMovementRange();
                         tileHighlighter.HighlightTiles(moveRange);
 
-                        foreach (var action in player.GetActions())
+                        //TODO move action highlighting to actionBTNManager on hover
+                        /*foreach (var action in player.GetActions())
                         {
                             Vector2Int[] attackRange = player.processActionRange(action);
                             tileHighlighter.HighlightTiles(attackRange, isAttack: true);
-                        }
+                        }*/
 
                         if (player.hasActed == false)
                         {

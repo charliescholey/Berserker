@@ -54,7 +54,7 @@ public abstract class OrderedCharacter : MonoBehaviour
         }
 
         //handle return as array
-        return cells.ToArray();
+        return boardManager.checkCells(cells.ToArray());
     }
 
 
