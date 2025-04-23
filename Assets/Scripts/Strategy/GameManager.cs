@@ -75,6 +75,7 @@ public class GameManager : MonoBehaviour
             new Vector2Int(-2, 1),
             new Vector2Int(-2, 0),
             new Vector2Int(-1, 0),
+            new Vector2Int(-1, -1)
         };
         boardManager.setWalls(walls);
     }
