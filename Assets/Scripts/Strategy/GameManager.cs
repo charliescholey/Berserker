@@ -34,6 +34,8 @@ public class GameManager : MonoBehaviour
     //tracks the players in the game
     public CharacterController[] players;
     public EnemyController[] enemies;
+    //enemy spawn locations to be edited per-level
+    public Vector2Int[] enemySpawnLocations;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
@@ -49,25 +51,17 @@ public class GameManager : MonoBehaviour
         Use the following two commented out lines instead of the spawnPlayers() function to test different actions.
         spawnPlayers() currently gives all the players the same actions.
         */
+        
 
-        //DEMO Adjustable spawn locations
-        Vector2Int[] playerSpawnLocations = {
-            new Vector2Int(0, 0),
-            new Vector2Int(1, 3),
-            new Vector2Int(2, 0),
-            new Vector2Int(3, 3)
-        };
+    }
 
-        boardManager.setSpawnLocations(playerSpawnLocations);
-
+    void Start() {
         players[0].spawn(boardManager, boardManager.spawnLocations[0], "Warrior", actionDatabase);
         players[1].spawn(boardManager, boardManager.spawnLocations[1], "Mage", actionDatabase);
         players[2].spawn(boardManager, boardManager.spawnLocations[2], "Rogue", actionDatabase);
         players[3].spawn(boardManager, boardManager.spawnLocations[3], "Paladin", actionDatabase);
 
-        enemies = new EnemyController[1];
-        enemies[0] = Instantiate(enemyPrefab);
-        enemies[0].spawn(boardManager, new Vector2Int(3, 0));
+        spawnEnemies(enemySpawnLocations);
 
         OrderedCharacter[] characters = players.Cast<OrderedCharacter>().Concat(enemies.Cast<OrderedCharacter>()).ToArray();
 
@@ -77,17 +71,16 @@ public class GameManager : MonoBehaviour
         }
 
         actionBTNManager = Instantiate(actionBTNManagerPrefab);
+    }
 
-        //DEMO WALLS
-        Vector2Int[] walls = {
-            new Vector2Int(-1, 2),
-            new Vector2Int(-2, 2),
-            new Vector2Int(-2, 1),
-            new Vector2Int(-2, 0),
-            new Vector2Int(-1, 0),
-            new Vector2Int(-1, -1)
-        };
-        boardManager.setWalls(walls);
+    //Spawn enemies. Likely to be updated later.
+    public void spawnEnemies(Vector2Int[] locs){
+        enemies = new EnemyController[locs.Length];
+        for (int i = 0; i < locs.Length; i++)
+        {
+            enemies[i] = Instantiate(enemyPrefab);
+            enemies[i].spawn(boardManager, locs[i]);
+        }
     }
 
     // Update is called once per frame
