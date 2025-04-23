@@ -64,4 +64,25 @@ public class StoreUI : MonoBehaviour
         selected = character;
         UpdateSelectedCharacter();
     }
+
+    public void PurchaseCharacter() {
+        // Check if you have funds to purchase character
+        if(SaveFileManager.CurrentPlayerData.gold < selected.GetCost()) {
+            Debug.Log("Not enough funds");
+            return;
+        }
+        
+        // Purchase character
+        SaveFileManager.CurrentPlayerData.gold -= selected.GetCost();
+
+        /* TODO: Add character to available characters */
+        /* TODO: Update characters displayed */
+
+        
+    }
+
+    public void RefreshCharacters() {
+        /* TODO: Update characters listed */
+        /* TODO: Update characters displayed */
+    }
 }
