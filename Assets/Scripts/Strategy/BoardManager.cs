@@ -25,7 +25,7 @@ public class BoardManager : MonoBehaviour
     //tracks every unit on the board
     private OrderedCharacter[] players;
     //tracks spawn locations
-    private Vector2Int[] spawnLocations = new Vector2Int[4];
+    public Vector2Int[] spawnLocations = new Vector2Int[4];
     
     private Dictionary<Vector2Int, bool> walls = new Dictionary<Vector2Int, bool>();
     

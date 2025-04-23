@@ -60,10 +60,10 @@ public class GameManager : MonoBehaviour
 
         boardManager.setSpawnLocations(playerSpawnLocations);
 
-        players[0].spawn(boardManager, playerSpawnLocations[0], "Warrior", actionDatabase);
-        players[1].spawn(boardManager, playerSpawnLocations[1], "Mage", actionDatabase);
-        players[2].spawn(boardManager, playerSpawnLocations[2], "Rogue", actionDatabase);
-        players[3].spawn(boardManager, playerSpawnLocations[3], "Paladin", actionDatabase);
+        players[0].spawn(boardManager, boardManager.spawnLocations[0], "Warrior", actionDatabase);
+        players[1].spawn(boardManager, boardManager.spawnLocations[1], "Mage", actionDatabase);
+        players[2].spawn(boardManager, boardManager.spawnLocations[2], "Rogue", actionDatabase);
+        players[3].spawn(boardManager, boardManager.spawnLocations[3], "Paladin", actionDatabase);
 
         enemies = new EnemyController[1];
         enemies[0] = Instantiate(enemyPrefab);
