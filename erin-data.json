@@ -1,0 +1,63 @@
+{
+    "characters": [
+        {
+            "characterName": "Warrior",
+            "baseHealth": 100,
+            "baseAttack": 15,
+            "baseDefense": 10,
+            "baseMovementRange": 3,
+            "currentHealth": 100,
+            "characterClass": "Warrior",
+            "uniqueAbility": "Berserker Rage",
+            "actionIndices": [
+                0,
+                1
+            ],
+            "spritePath": "tilemap_packed_105"
+        },
+        {
+            "characterName": "Mage",
+            "baseHealth": 80,
+            "baseAttack": 20,
+            "baseDefense": 5,
+            "baseMovementRange": 2,
+            "currentHealth": 80,
+            "characterClass": "Mage",
+            "uniqueAbility": "Arcane Burst",
+            "actionIndices": [
+                1,
+                2
+            ],
+            "spritePath": "tilemap_packed_186"
+        },
+        {
+            "characterName": "Rogue",
+            "baseHealth": 90,
+            "baseAttack": 18,
+            "baseDefense": 7,
+            "baseMovementRange": 4,
+            "currentHealth": 90,
+            "characterClass": "Rogue",
+            "uniqueAbility": "Stealth",
+            "actionIndices": [
+                0
+            ],
+            "spritePath": "tilemap_packed_267"
+        },
+        {
+            "characterName": "Paladin",
+            "baseHealth": 95,
+            "baseAttack": 12,
+            "baseDefense": 15,
+            "baseMovementRange": 3,
+            "currentHealth": 95,
+            "characterClass": "Paladin",
+            "uniqueAbility": "Divine Shield",
+            "actionIndices": [
+                0,
+                2
+            ],
+            "spritePath": "tilemap_packed_429"
+        }
+    ]
+}

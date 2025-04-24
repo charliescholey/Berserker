@@ -12,7 +12,6 @@ using Unity.Collections;
 using System.IO;
 using System.Linq;
 
-
 public class CustomizeBattalion : MonoBehaviour
 {
     public static CustomizeBattalion Instance;
@@ -30,6 +29,7 @@ public class CustomizeBattalion : MonoBehaviour
     TempCharacter[] battalion = new TempCharacter[4];
     List<TempCharacter> bench;
     private CharacterDatabase characterDatabase;
+    private Sprite[] sprites;
 
     private string characterFilePath = "Assets/Resources/Data/characters.json";
     
@@ -39,8 +39,10 @@ public class CustomizeBattalion : MonoBehaviour
     void Start()
     {
         Instance = this;
+        sprites = Resources.LoadAll<Sprite>("Sprites/CharacterSprites/tilemap_packed");
         /* Delegate buttons */
         LoadCharacterDatabase();
+        SaveCharacterDatabase();
         //battalion[0] = TempCharacter.exampleCharacters[0];
         //battalion[1] = TempCharacter.exampleCharacters[1];
         //battalion[2] = TempCharacter.exampleCharacters[2];
@@ -80,24 +82,29 @@ public class CustomizeBattalion : MonoBehaviour
 
     void UpdateSelectedCharacter() {
         //selectedCharacterImage.color = selected.GetColor();
-        
+        Sprite found = sprites.FirstOrDefault(s => s.name == selected.spritePath);
+        selectedCharacterImage.sprite = found;
         selectedCharacterInformation.text = "";
         selectedCharacterInformation.text = "Character Ability: " + selected.uniqueAbility + "\n\nGeneral Abilities:";
-        
-        selectedCharacterName.text = selected.characterName;
-
-        UpdateBattalionCharacters();
         UpdateDropdowns();
+        
+
+        selectedCharacterName.text = selected.characterName;
+        
+        UpdateBattalionCharacters();
     }
 
     void UpdateBattalionCharacters() {
         // Loop through battalion characters
         int i = 0;
         foreach(CharacterData character in characterDatabase.characters) {
-            Debug.Log(character.characterName);
+            //Debug.Log(character.characterName);
             // Display them in each slot - skipping the selected character
             if(character != selected) {
                 battalionCharacterNames[i].text = character.characterName;
+                Sprite found = sprites.FirstOrDefault(s => s.name == character.spritePath);
+                battalionCharacterImages[i].sprite = found;
+                battalionCharacterImages[i].color = Color.white;
                 //battalionCharacterImages[i].color = character.GetColor();
                 i += 1;
             }
@@ -108,7 +115,7 @@ public class CustomizeBattalion : MonoBehaviour
     {
         selected = character;
         UpdateSelectedCharacter();
-        UpdateDropdowns();
+        
     }
 
     public void SelectCharacter(int battalionIndex)
@@ -148,8 +155,17 @@ public class CustomizeBattalion : MonoBehaviour
             CharacterData character = characterDatabase.characters.FirstOrDefault(c => c == selected);
 
         }
-        /* TODO: Update the dropdowns to reflect the character abilities */
 
+        int[] _actions = selected.actionIndices;
+        abilityDropdowns[0].value = 0;
+        abilityDropdowns[1].value = 0;
+        Debug.Log(_actions.Length);
+        if(_actions.Length >= 1) {
+            abilityDropdowns[0].value = _actions[0]+1;
+        }
+        if(_actions.Length >= 2) {
+            abilityDropdowns[1].value = _actions[1]+1;
+        }
     }
 
     private void LoadCharacterDatabase()
@@ -159,7 +175,7 @@ public class CustomizeBattalion : MonoBehaviour
     }
     private void SaveCharacterDatabase() {
         string json = JsonUtility.ToJson(characterDatabase, true);
-        Debug.Log(json);
-        //File.WriteAllText(characterFilePath, json);
+        //selectedCharacterInformation.text = json;
+        File.WriteAllText("erin-data.json", json);
     }
 }
