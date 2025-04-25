@@ -27,6 +27,9 @@ public class PlayerData {
 
     public List<PassiveSkill> passiveSkills = new List<PassiveSkill>();
     public ActiveSkill activeSkill = new ActiveSkill();
+
+    //added
+    public List<int> UnlockedSkillIndices = new List<int>();
 }
 
 public class SaveFileManager : MonoBehaviour {
@@ -37,6 +40,8 @@ public class SaveFileManager : MonoBehaviour {
     void Awake() {
         DontDestroyOnLoad(gameObject);
         saveFilePath = Path.Combine(Application.persistentDataPath, "savefile.json");
+        Debug.Log(saveFilePath.ToString());
+
     }
 
     public void ResumeGame() {
@@ -62,6 +67,7 @@ public class SaveFileManager : MonoBehaviour {
                 description = ""
             }
         };
+        CurrentPlayerData.UnlockedSkillIndices = new List<int>();
 
         string json = JsonUtility.ToJson(CurrentPlayerData, true);
         File.WriteAllText(saveFilePath, json);

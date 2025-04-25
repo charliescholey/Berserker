@@ -83,9 +83,15 @@ public class SkillsManager : MonoBehaviour
     };
     public List<Button> activeSkillButtons;
 
+    public List<int> UnlockedSkills = new List<int>(); //added
+    public Dictionary<Button, int> _unlockedMap; //added
+    public ActionDatabase actionDatabase;
+
     private Dictionary<Button, PassiveSkill> _passiveMap;
     private Dictionary<Button, ActiveSkill>  _activeMap;
-    private Button                          _selectedActiveBtn;
+    //private Button                          _selectedActiveBtn;
+    private List<Button> _selectedActionBtns = new List<Button>();
+    public Button button;
 
     void Awake()
     {
@@ -121,6 +127,54 @@ public class SkillsManager : MonoBehaviour
         }
 
         _activeMap = new Dictionary<Button, ActiveSkill>();
+        _unlockedMap = new Dictionary<Button, int>(); //added
+        
+        List<Action> actions = actionDatabase.GetAllActions();
+        for(int i = 1; i < actions.Count; i++) {
+            // Clone the button
+            Button newButton = Instantiate(button, button.transform.parent);
+        
+            // Get the RectTransform of the original and new button
+            RectTransform originalRect = button.GetComponent<RectTransform>();
+            RectTransform newRect = newButton.GetComponent<RectTransform>();
+        
+            // Set the new position
+            Vector3 newPosition = originalRect.localPosition;
+            newPosition.y += -70 * i;
+            newRect.localPosition = newPosition;
+            activeSkillButtons.Add(newButton);
+        }
+        MusicScript.Instance.updateButtonClicks();
+        //added
+        
+        for (int i = 0; i < actions.Count; i++)
+        {
+            var cfg   = actions[i];
+            var btn   = activeSkillButtons[i];
+            var label = btn.GetComponentInChildren<TMP_Text>();
+            Debug.Log(label.text);
+            if (label != null) {
+                Debug.Log("er");
+                label.text = cfg.actionName;
+            }
+            Debug.Log(label.text);
+            _unlockedMap[btn] = actionDatabase.GetIndexOfAction(cfg);
+            btn.onClick.AddListener(() => OnActiveClicked(btn));
+
+            var trigger = btn.gameObject.AddComponent<EventTrigger>();
+            var entryEnter = new EventTrigger.Entry {
+                eventID = EventTriggerType.PointerEnter
+            };
+            entryEnter.callback.AddListener((_) => TooltipUI.Instance.Show(cfg.description));
+            trigger.triggers.Add(entryEnter);
+
+            var entryExit = new EventTrigger.Entry {
+                eventID = EventTriggerType.PointerExit
+            };
+            entryExit.callback.AddListener((_) => TooltipUI.Instance.Hide());
+            trigger.triggers.Add(entryExit);
+        }
+        /* removed
         for (int i = 0; i < activeSkillConfigs.Count; i++)
         {
             var cfg   = activeSkillConfigs[i];
@@ -145,7 +199,7 @@ public class SkillsManager : MonoBehaviour
             entryExit.callback.AddListener((_) => TooltipUI.Instance.Hide());
             trigger.triggers.Add(entryExit);
         }
-
+        */
         RefreshUI();
     }
 
@@ -180,15 +234,45 @@ public class SkillsManager : MonoBehaviour
 
     void OnActiveClicked(Button btn)
     {
+        /* removed
+        Debug.Log("Active Button Clicked");
         var data  = SaveFileManager.CurrentPlayerData;
         var skill = _activeMap[btn];
 
-        if (_selectedActiveBtn != null)
+        if (_selectedActiveBtn != null) {
+            Debug.Log("_selectedActiveBtn != null");
             Highlight(_selectedActiveBtn, false);
-
+        }
+        Debug.Log(skill.skillName);
         data.activeSkill   = skill;
         Highlight(btn,      true);
         _selectedActiveBtn = btn;
+        Persist();
+        TooltipUI.Instance.Hide();
+        */
+        // added
+        Debug.Log("Active Button Clicked");
+        var data  = SaveFileManager.CurrentPlayerData;
+        //var skill = actionDatabase.GetActionByIndex(_activeMap[btn]);
+        /*
+        if (_selectedActiveBtn != null) {
+            Debug.Log("_selectedActiveBtn != null");
+            Highlight(_selectedActiveBtn, false);
+        }
+        */
+        /*
+        if (_selectedActiveBtn != null) {
+            Debug.Log("_selectedActiveBtn != null");
+            Highlight(_selectedActiveBtn, false);
+        }
+        */
+        int i = _unlockedMap[btn];
+        if(! data.UnlockedSkillIndices.Contains(i))
+            data.UnlockedSkillIndices.Add(i);
+        Highlight(btn, true);
+        //_selectedActiveBtn = btn;
+        if(! _selectedActionBtns.Contains(btn))
+            _selectedActionBtns.Add(btn);
         Persist();
         TooltipUI.Instance.Hide();
     }
@@ -199,12 +283,20 @@ public class SkillsManager : MonoBehaviour
 
         foreach (var kv in _passiveMap)
             Highlight(kv.Key, data.passiveSkills.Exists(s => s.skillName == kv.Value.skillName));
-
+        /* removed
         foreach (var kv in _activeMap)
         {
             bool sel = kv.Value.skillName == data.activeSkill.skillName;
             Highlight(kv.Key, sel);
             if (sel) _selectedActiveBtn = kv.Key;
+        }
+        */
+        foreach (var kv in _unlockedMap)
+        {
+            bool sel = data.UnlockedSkillIndices.Contains( kv.Value );
+            Highlight(kv.Key, sel);
+            //if (sel) _selectedActiveBtn = kv.Key;
+            if (sel && ! _selectedActionBtns.Contains(kv.Key)) _selectedActionBtns.Add(kv.Key);
         }
     }
 
@@ -220,7 +312,7 @@ public class SkillsManager : MonoBehaviour
         string json = JsonUtility.ToJson(SaveFileManager.CurrentPlayerData, true);
         File.WriteAllText(SaveFileManager.saveFilePath, json);
     }
-
+    
     void SetupTooltipUI()
     {
         var canvas = FindObjectOfType<Canvas>();
@@ -257,6 +349,7 @@ public class SkillsManager : MonoBehaviour
         var tooltipUI = panelGO.GetComponent<TooltipUI>();
         tooltipUI.tooltipText = tmp;
     }
+    
 }
 
 public class TooltipUI : MonoBehaviour
@@ -286,7 +379,8 @@ public class TooltipUI : MonoBehaviour
             null, 
             out localPoint
         );
-        rectTransform.anchoredPosition = localPoint + new Vector2(450, 350);
+        //rectTransform.anchoredPosition = localPoint + new Vector2(450, 350);
+        rectTransform.anchoredPosition = localPoint + new Vector2(450, 390);
     }
 
     public void Show(string description)

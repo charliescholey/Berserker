@@ -21,9 +21,7 @@ public class CustomizeBattalion : MonoBehaviour
     [SerializeField] TMP_Text selectedCharacterInformation;
     [SerializeField] Image selectedCharacterImage;
     [SerializeField] TMP_Text[] battalionCharacterNames;
-    [SerializeField] Image[] battalionCharacterImages;
     [SerializeField] Button[] battalionCharacterButtons;
-    //[SerializeField] Button[] selectCharacterButtons;
     [SerializeField] TMP_Dropdown[] abilityDropdowns;
     [SerializeField] ActionDatabase actionDatabase;
     CharacterData selected;
@@ -33,8 +31,6 @@ public class CustomizeBattalion : MonoBehaviour
     private Sprite[] sprites;
 
     private string characterFilePath = "Assets/Resources/Data/characters.json";
-    
-    bool init = true;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -51,38 +47,12 @@ public class CustomizeBattalion : MonoBehaviour
     }
 
     public void ResetUI() {
-        /* Delegate buttons */
         LoadCharacterDatabase();
         SelectCharacter(characterDatabase.characters[0]);
         UpdateDropdowns();
     }
 
-    void Update()
-    {
-        /*
-        if(init && this.gameObject.activeInHierarchy) {
-            Debug.Log("LoadCharacterData");
-            LoadCharacterDatabase();
-        }
-        */
-        init = false;
-        // Once the Store is active in the hierarchy, the information about the first character is displayed
-        if(false && init && this.gameObject.activeInHierarchy) {
-            
-            init = false;
-            SelectCharacter(characterDatabase.characters[0]);
-            UpdateSelectedCharacter();
-            int i = 0;
-            foreach(Button b in battalionCharacterButtons) {
-                int x = i;
-                b.onClick.AddListener(delegate{ SelectCharacter(x); });
-                i += 1;
-            }
-        }
-    }
-
     void UpdateSelectedCharacter() {
-        //selectedCharacterImage.color = selected.GetColor();
         Sprite found = sprites.FirstOrDefault(s => s.name == selected.spritePath);
         selectedCharacterImage.sprite = found;
         selectedCharacterInformation.text = "";
@@ -102,11 +72,7 @@ public class CustomizeBattalion : MonoBehaviour
             if(character != selected) {
                 battalionCharacterNames[i].text = character.characterName;
                 Sprite found = sprites.FirstOrDefault(s => s.name == character.spritePath);
-                //battalionCharacterImages[i].color = Color.white;
-                //battalionCharacterImages[i].sprite = found;
-                battalionCharacterButtons[i].image.sprite = found;
-                //Debug.Log("Colour changed to white");
-                
+                battalionCharacterButtons[i].image.sprite = found; 
                 i += 1;
             }
         }
@@ -153,8 +119,6 @@ public class CustomizeBattalion : MonoBehaviour
         }
 
         int[] indices = tempList.ToArray();
-        
-        //Debug.Log("Selected indices: " + string.Join(", ", indices));
 
         characterDatabase.characters.FirstOrDefault(c => c == selected).actionIndices = indices;
     }
@@ -165,7 +129,8 @@ public class CustomizeBattalion : MonoBehaviour
             d.ClearOptions();
             d.options.Add (new TMP_Dropdown.OptionData() {text="-None-"});
             foreach(Action action in actionDatabase.GetAllActions()) {
-                d.options.Add (new TMP_Dropdown.OptionData() {text=action.actionName});
+                if(SaveFileManager.CurrentPlayerData.UnlockedSkillIndices.Contains( actionDatabase.GetIndexOfAction(action)))
+                    d.options.Add (new TMP_Dropdown.OptionData() {text=action.actionName});
             }
             // Get current player's actions
             //CharacterData character = characterDatabase.characters.FirstOrDefault(c => c == selected);
@@ -196,10 +161,8 @@ public class CustomizeBattalion : MonoBehaviour
     }
 
     public void Cancel() {
-        init = true;
     }
     public void Save() {
         SaveCharacterDatabase();
-        init = true;
     }
 }

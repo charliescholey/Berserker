@@ -1946,10 +1946,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 79543411}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -17.000008, y: 202.5}
-  m_SizeDelta: {x: -33.999985, y: 35}
+  m_SizeDelta: {x: 66.000015, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &157980425
 MonoBehaviour:
@@ -3613,7 +3613,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &470438402
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6768,7 +6768,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &806701382
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7250,7 +7250,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &853369876
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8329,7 +8329,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &972316348
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11410,9 +11410,9 @@ MonoBehaviour:
     description: '100% accuracy: deals 75% of attack damage.'
   activeSkillButtons:
   - {fileID: 1172501733}
-  - {fileID: 972316349}
-  - {fileID: 806701383}
-  - {fileID: 1963966310}
+  UnlockedSkills: 
+  actionDatabase: {fileID: 11400000, guid: 235e58b60aa4c49f0ae5cc360e986c00, type: 2}
+  button: {fileID: 1172501733}
 --- !u!1 &1373813503
 GameObject:
   m_ObjectHideFlags: 0
@@ -14363,10 +14363,6 @@ MonoBehaviour:
   - {fileID: 1863346053}
   - {fileID: 2104649573}
   - {fileID: 2087065001}
-  battalionCharacterImages:
-  - {fileID: 960024822}
-  - {fileID: 27363149}
-  - {fileID: 1422248749}
   battalionCharacterButtons:
   - {fileID: 973601391}
   - {fileID: 1373813505}
@@ -14733,7 +14729,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1963966309
 RectTransform:
   m_ObjectHideFlags: 0
@@ -15173,10 +15169,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 79543411}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -400.0001, y: 202.5}
-  m_SizeDelta: {x: 60.00003, y: 35.000015}
+  m_SizeDelta: {x: 160.00003, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2074041136
 MonoBehaviour:

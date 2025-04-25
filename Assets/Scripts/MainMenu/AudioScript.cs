@@ -21,6 +21,8 @@ Use the playSoundByName function to play the sound in the game.
 
 public class MusicScript : MonoBehaviour
 {
+    public static MusicScript Instance;
+
     [SerializeField] Sound[] sounds;
     [SerializeField] AudioMixerGroup soundEffectsMixerGroup;
     [SerializeField] AudioMixerGroup musicMixerGroup;
@@ -30,6 +32,7 @@ public class MusicScript : MonoBehaviour
     
     void Start()
     {
+        Instance = this;
         DontDestroyOnLoad(gameObject); // Allow this object to persist across scenes
 
         // Sounds are added in the Inspector with their name, audio clip, and type (music, sound effect)
@@ -86,7 +89,7 @@ public class MusicScript : MonoBehaviour
 
     // Finds all buttons in the scene and adds the buttonPress method as a listener to their onClick event
     // Clicking any button will make the button sound play
-    void updateButtonClicks() {
+    public void updateButtonClicks() {
         // Finds all the buttons in the scene
         Button[] buttons = FindObjectsByType<Button>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 
