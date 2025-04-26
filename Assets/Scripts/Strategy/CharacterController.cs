@@ -240,7 +240,12 @@ public class CharacterController : OrderedCharacter
                 if (ally != null) {
                     if(ally.GetType() == this.GetType()) {
                         //heal ally
-                        ally.hp += action.power;
+                        CharacterController affectedCharacter = (CharacterController) ally;
+                        if(affectedCharacter.hp + action.power > affectedCharacter.baseHealth){
+                            affectedCharacter.hp = affectedCharacter.baseHealth;
+                        } else {
+                            affectedCharacter.hp = affectedCharacter.hp + action.power;
+                        }
                         Debug.Log($"{gameObject.name} healed {ally.gameObject.name} for {action.power} HP");
                     }
                 }
