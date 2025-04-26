@@ -124,8 +124,10 @@ public class GameManager : MonoBehaviour
                         tileHighlighter.ClearHighlights();
 
                         Vector2Int[] moveRange = player.getMovementRange();
-                        tileHighlighter.HighlightTiles(moveRange);
-
+                        if(player.hasMoved == false){
+                            tileHighlighter.HighlightTiles(moveRange);
+                        }
+                        
                         if (player.hasActed == false)
                         {
                             actionBTNManager.Create(player, UI, tileHighlighter);

@@ -51,7 +51,6 @@ public class CharacterController : OrderedCharacter
     #region Private Fields
     private SpriteRenderer spriteRenderer;
     private CharacterData characterData;
-    private bool hasMoved = false;
     private bool isSelected = false;
     private List<Action> actions = new List<Action>();
     private ActionDatabase actionDatabase;
@@ -59,6 +58,7 @@ public class CharacterController : OrderedCharacter
 
     #region Public Properties
     public bool hasActed = false;
+    public bool hasMoved = false;
     public string characterName { get; private set; }
     public int baseHealth { get; private set; }
     public int baseAttack { get; private set; }

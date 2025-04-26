@@ -53,7 +53,9 @@ public class ActionBTNController : MonoBehaviour, IPointerEnterHandler, IPointer
     public void OnPointerExit(PointerEventData eventData)
     {
         th.ClearHighlights();
-        th.HighlightTiles(player.getMovementRange());
+        if(!player.hasMoved){
+            th.HighlightTiles(player.getMovementRange());
+        }
     }
 
 
