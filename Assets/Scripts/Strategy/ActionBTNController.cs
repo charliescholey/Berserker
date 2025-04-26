@@ -29,7 +29,7 @@ public class ActionBTNController : MonoBehaviour, IPointerEnterHandler, IPointer
         this.action = action;
         this.player = player;
         this.textMeshPro = GetComponentInChildren<TextMeshProUGUI>();
-        textMeshPro.text = action.name;
+        textMeshPro.text = action.actionName;
     }
 
      // When the action button is clicked, executes the action through the game manager
