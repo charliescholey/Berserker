@@ -148,6 +148,7 @@ public class GameManager : MonoBehaviour
             hasSelected = false;
             player.setSelected(false);
             tileHighlighter.ClearHighlights();
+            actionBTNManager.destroy();
         }
 
         processEndTurn();
