@@ -152,10 +152,8 @@ public class SkillsManager : MonoBehaviour
             var cfg   = actions[i];
             var btn   = activeSkillButtons[i];
             var label = btn.GetComponentInChildren<TMP_Text>();
-            Debug.Log(label.text);
             if (label != null) {
-                Debug.Log("er");
-                label.text = cfg.actionName;
+                label.text = "<b>" + cfg.actionName + "</b>\n300";
             }
             Debug.Log(label.text);
             _unlockedMap[btn] = actionDatabase.GetIndexOfAction(cfg);
@@ -266,9 +264,16 @@ public class SkillsManager : MonoBehaviour
             Highlight(_selectedActiveBtn, false);
         }
         */
-        int i = _unlockedMap[btn];
-        if(! data.UnlockedSkillIndices.Contains(i))
-            data.UnlockedSkillIndices.Add(i);
+        int skillCost = 300; // change
+        if( data.gold < skillCost ) {
+            return;
+        }
+
+        if(! data.UnlockedSkillIndices.Contains( _unlockedMap[btn] )) {
+            data.gold -= skillCost;
+            FindFirstObjectByType<PlayerDataUIUpdater>().Refresh();
+            data.UnlockedSkillIndices.Add( _unlockedMap[btn] );
+        }
         Highlight(btn, true);
         //_selectedActiveBtn = btn;
         if(! _selectedActionBtns.Contains(btn))
@@ -304,7 +309,7 @@ public class SkillsManager : MonoBehaviour
     {
         var img = btn.GetComponent<Image>();
         if (img != null)
-            img.color = on ? Color.gray : Color.white;
+            img.color = on ? Color.gray : new Color32(0x77, 0x04, 0x13, 0xFF);
     }
 
     void Persist()

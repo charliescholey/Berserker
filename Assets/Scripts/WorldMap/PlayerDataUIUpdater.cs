@@ -23,6 +23,11 @@ public class PlayerDataUIUpdater : MonoBehaviour
     }
     void Start()
     {
+        Refresh();
+    }
+
+    public void Refresh()
+    {
         if (SaveFileManager.CurrentPlayerData != null)
         {
             xpText.text = " Level: " + CalculateLevel(SaveFileManager.CurrentPlayerData.exp).ToString();
