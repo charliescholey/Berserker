@@ -224,8 +224,8 @@ public class CharacterController : OrderedCharacter
                         Debug.Log($"{gameObject.name} dealt {action.power} damage to {enemy.gameObject.name}");
                     }   
                 }
-            return;
             }
+            return;
         }
 
         //heal
