@@ -211,6 +211,10 @@ public class CharacterController : OrderedCharacter
         //get action range
         Vector2Int[] actionRange = processActionRange(action);
 
+        if(action.type == Action.MoveType.PASS){
+            hasMoved = true;
+        }
+
         //deal damage
         if (action.type == Action.MoveType.MELEE || action.type == Action.MoveType.RANGED)
         {
@@ -387,6 +391,7 @@ public class CharacterController : OrderedCharacter
                     Debug.LogWarning($"Failed to resolve action at index: {idx}");
                 }
             }
+            actions.Add(actionDatabase.GetActionByIndex(3)); // Add pass action at end of list
         }
 
         // Log Character Actions
