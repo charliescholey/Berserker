@@ -201,6 +201,11 @@ public class GameManager : MonoBehaviour
             }
         }
         takeEnemyAction();
+        //reset highlights
+        hasSelected = false;
+        tileHighlighter.ClearHighlights();
+        actionBTNManager.destroy();
+
         for (int i = 0; i < players.Length; i++)
         {
             players[i].resetTurn();
