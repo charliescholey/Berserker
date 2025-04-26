@@ -152,10 +152,4 @@ public abstract class OrderedCharacter : MonoBehaviour
             Debug.Log("Effect failed");
         }
 
-    }
-
-    public void processAction(Action action)
-    {
-        //TODO
-    }
-}
+    }}

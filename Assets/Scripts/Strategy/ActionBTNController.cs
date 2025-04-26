@@ -38,7 +38,7 @@ public class ActionBTNController : MonoBehaviour, IPointerEnterHandler, IPointer
         GameManager gm = UnityEngine.Object.FindFirstObjectByType<GameManager>();
         if(gm != null && player != null && action != null)
         {
-            gm.ExecuteAttack(player, action);
+            player.processAction(action);
         }
         // Optionally destroy or hide the button after use.
         destroy();

@@ -224,12 +224,12 @@ public class GameManager : MonoBehaviour
     }
 
     //Executes the attack action.
-    public void ExecuteAttack(CharacterController attacker, Action attackAction)
+    public void ExecuteAttack(CharacterController player, Action action)
     {
         // Determine damage from the action's power defaulting to 10 if no action is provided.
-        int damage = attackAction != null ? attackAction.power : 10;
+        int damage = action.power;
 
-        Vector2Int attackerPos = attacker.gridPosition;
+        Vector2Int attackerPos = player.gridPosition;
 
         Vector2Int[] adjacentCells = GetAdjacentCells(attackerPos);
 
@@ -252,12 +252,12 @@ public class GameManager : MonoBehaviour
             {
                 oc.TakeDamage(damage);
                 //this my best attempt at logging 
-                Debug.Log(oc.gameObject.name + " took " + damage + " damage from " + attacker.gameObject.name);
+                Debug.Log(oc.gameObject.name + " took " + damage + " damage from " + player.gameObject.name);
             }
         }
 
         // Mark the attacker as having taken their action.
-        attacker.hasActed = true;
+        player.hasActed = true;
     }
 
 

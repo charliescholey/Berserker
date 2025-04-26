@@ -194,6 +194,57 @@ public class CharacterController : OrderedCharacter
         }
     }
 
+    public void processAction(Action action){
+        //check if action is valid
+        if (action == null)
+        {
+            Debug.LogError("Action is null");
+            return;
+        }
+        if(hasActed)
+        {
+            Debug.LogError("Action has already been taken");
+            return;
+        }
+        hasActed = true;
+
+        //get action range
+        Vector2Int[] actionRange = processActionRange(action);
+
+        //deal damage
+        if (action.type == Action.MoveType.MELEE || action.type == Action.MoveType.RANGED)
+        {
+            //get all enemies in range
+            foreach (Vector2Int cell in actionRange) {
+                OrderedCharacter enemy = boardManager.detectSelected(cell);
+                if (enemy != null) {
+                    if(enemy.GetType() != this.GetType()){ 
+                        //deal damage
+                        enemy.TakeDamage(action.power);
+                        Debug.Log($"{gameObject.name} dealt {action.power} damage to {enemy.gameObject.name}");
+                    }   
+                }
+            return;
+            }
+        }
+
+        //heal
+        if (action.type == Action.MoveType.HEAL){
+            //get all allies in range
+            foreach (Vector2Int cell in actionRange) {
+                OrderedCharacter ally = boardManager.detectSelected(cell);
+                if (ally != null) {
+                    if(ally.GetType() == this.GetType()) {
+                        //heal ally
+                        ally.hp += action.power;
+                        Debug.Log($"{gameObject.name} healed {ally.gameObject.name} for {action.power} HP");
+                    }
+                }
+            }
+            return;
+        }
+    }
+
     public override void Die()
     {
         // to deal with dying, again not sure how we are dealing with it
