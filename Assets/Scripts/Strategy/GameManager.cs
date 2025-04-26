@@ -112,11 +112,12 @@ public class GameManager : MonoBehaviour
                 Debug.Log("Clicked cell: " + cell);
 
 
-                player = (CharacterController)boardManager.detectSelected(cell);
-                if (player != null)
+                OrderedCharacter tempPlayer = boardManager.detectSelected(cell);
+                if (tempPlayer != null)
                 {
-                    if (player.GetType() == typeof(CharacterController))
-                    {
+                    if (tempPlayer.GetType() == playerPrefab.GetType())
+                    {   
+                        player = (CharacterController)boardManager.detectSelected(cell);
                         //player is selected
                         hasSelected = true;
                         player.setSelected(true);
@@ -132,11 +133,14 @@ public class GameManager : MonoBehaviour
                     }
                     else
                     {
-                        //right now, enemy would be the one clicked
-                        player.setSelected(false);
-                        player = null;
+                        if(player != null){
+                            //right now, enemy would be the one clicked
+                            player.setSelected(false);
+                            player = null;
 
-                        actionBTNManager.destroy();
+                            actionBTNManager.destroy();
+                        }
+                        
                     }
                 }
             }
