@@ -51,7 +51,6 @@ public class CharacterController : OrderedCharacter
     #region Private Fields
     private SpriteRenderer spriteRenderer;
     private CharacterData characterData;
-    private bool hasMoved = false;
     private bool isSelected = false;
     private List<Action> actions = new List<Action>();
     private ActionDatabase actionDatabase;
@@ -59,6 +58,7 @@ public class CharacterController : OrderedCharacter
 
     #region Public Properties
     public bool hasActed = false;
+    public bool hasMoved = false;
     public string characterName { get; private set; }
     public int baseHealth { get; private set; }
     public int baseAttack { get; private set; }
@@ -191,6 +191,84 @@ public class CharacterController : OrderedCharacter
         if (hp <= 0)
         {
             Die();
+        }
+    }
+
+    public void processAction(Action action){
+        //check if action is valid
+        if (action == null)
+        {
+            Debug.LogError("Action is null");
+            return;
+        }
+        if(hasActed)
+        {
+            Debug.LogError("Action has already been taken");
+            return;
+        }
+        hasActed = true;
+
+        //get action range
+        Vector2Int[] actionRange = processActionRange(action);
+
+        if(action.type == Action.MoveType.PASS){
+            hasMoved = true;
+        }
+
+        //deal damage
+        if (action.type == Action.MoveType.MELEE || action.type == Action.MoveType.RANGED)
+        {
+            //get all enemies in range
+            foreach (Vector2Int cell in actionRange) {
+                OrderedCharacter enemy = boardManager.detectSelected(cell);
+                if (enemy != null) {
+                    if(enemy.GetType() != this.GetType()){ 
+                        //deal damage
+                        enemy.TakeDamage(action.power);
+                        Debug.Log($"{gameObject.name} dealt {action.power} damage to {enemy.gameObject.name}");
+                    }   
+                }
+            }
+            return;
+        }
+
+        //heal
+        if (action.type == Action.MoveType.HEAL){
+            //get all allies in range
+            foreach (Vector2Int cell in actionRange) {
+                OrderedCharacter ally = boardManager.detectSelected(cell);
+                if (ally != null) {
+                    if(ally.GetType() == this.GetType()) {
+                        //heal ally
+                        CharacterController affectedCharacter = (CharacterController) ally;
+                        if(affectedCharacter.hp + action.power > affectedCharacter.baseHealth){
+                            affectedCharacter.hp = affectedCharacter.baseHealth;
+                        } else {
+                            affectedCharacter.hp = affectedCharacter.hp + action.power;
+                        }
+                        Debug.Log($"{gameObject.name} healed {ally.gameObject.name} for {action.power} HP");
+                    }
+                }
+            }
+            return;
+        }
+
+        if (action.type == Action.MoveType.EXTRATURN)
+        {
+            //get all allies in range
+            foreach (Vector2Int cell in actionRange) {
+                OrderedCharacter ally = boardManager.detectSelected(cell);
+                if (ally != null) {
+                    if(ally.GetType() == this.GetType()) {
+                        //give ally extra turn
+                        CharacterController affectedCharacter = (CharacterController) ally;
+                        affectedCharacter.hasActed = false;
+                        affectedCharacter.hasMoved = false;
+                        Debug.Log($"{gameObject.name} gave {ally.gameObject.name} an extra turn");
+                    }
+                }
+            }
+            return;
         }
     }
 
@@ -336,6 +414,7 @@ public class CharacterController : OrderedCharacter
                     Debug.LogWarning($"Failed to resolve action at index: {idx}");
                 }
             }
+            actions.Add(actionDatabase.GetActionByIndex(3)); // Add pass action at end of list
         }
 
         // Log Character Actions
