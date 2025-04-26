@@ -29,11 +29,11 @@
             "baseHealth": 90,
             "baseAttack": 18,
             "baseDefense": 7,
-            "baseMovementRange": 4,
+            "baseMovementRange": 2,
             "currentHealth": 90,
             "characterClass": "Rogue",
             "uniqueAbility": "Stealth",
-            "actionIndices": [0],
+            "actionIndices": [0,4],
             "spritePath": "tilemap_packed_267"
         },
         {

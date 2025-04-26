@@ -247,6 +247,24 @@ public class CharacterController : OrderedCharacter
             }
             return;
         }
+
+        if (action.type == Action.MoveType.EXTRATURN)
+        {
+            //get all allies in range
+            foreach (Vector2Int cell in actionRange) {
+                OrderedCharacter ally = boardManager.detectSelected(cell);
+                if (ally != null) {
+                    if(ally.GetType() == this.GetType()) {
+                        //give ally extra turn
+                        CharacterController affectedCharacter = (CharacterController) ally;
+                        affectedCharacter.hasActed = false;
+                        affectedCharacter.hasMoved = false;
+                        Debug.Log($"{gameObject.name} gave {ally.gameObject.name} an extra turn");
+                    }
+                }
+            }
+            return;
+        }
     }
 
     public override void Die()
