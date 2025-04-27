@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class Map1Strategy1 : MonoBehaviour
+public class Map1Scene2 : MonoBehaviour
 {
     public GameManager level;
     public BoardManager map;
@@ -20,8 +20,10 @@ public class Map1Strategy1 : MonoBehaviour
 
         //ENEMY SPAWN LOCATIONS
         Vector2Int[] enemySpawnLocations = {
-            new Vector2Int(-1,-2),
             new Vector2Int(-1,1),
+            new Vector2Int(0,-2),
+            new Vector2Int(-2,-1),
+            new Vector2Int(1,0),
             
         };
         level.enemySpawnLocations = enemySpawnLocations;
@@ -31,11 +33,10 @@ public class Map1Strategy1 : MonoBehaviour
         // WALLS
         List<Vector2Int> walls = new List<Vector2Int>();
 
-        // First wall on top
-        walls.AddRange(generateBox(new Vector2Int(0, 4), new Vector2Int(0, 1)));
+        // Bonfire (placeholder with water rn)
+        walls.AddRange(generateBox(new Vector2Int(0, 0), new Vector2Int(0, -1)));
 
-        // Second wall on bottom
-        walls.AddRange(generateBox(new Vector2Int(0, -2), new Vector2Int(0, -5)));
+        walls.AddRange(generateBox(new Vector2Int(-1,0), new Vector2Int(-1,-1)));
 
         map.setWalls(walls.ToArray());
     }
