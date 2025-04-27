@@ -212,6 +212,7 @@ public class CharacterController : OrderedCharacter
         Vector2Int[] actionRange = processActionRange(action);
 
         if(action.type == Action.MoveType.PASS){
+            FindFirstObjectByType<MusicScript>().playSoundByName("Whoosh");
             hasMoved = true;
         }
 
@@ -225,6 +226,7 @@ public class CharacterController : OrderedCharacter
                     if(enemy.GetType() != this.GetType()){ 
                         //deal damage
                         enemy.TakeDamage(action.power);
+                        FindFirstObjectByType<MusicScript>().playSoundByName("GunShot");
                         Debug.Log($"{gameObject.name} dealt {action.power} damage to {enemy.gameObject.name}");
                     }   
                 }
@@ -246,6 +248,7 @@ public class CharacterController : OrderedCharacter
                         } else {
                             affectedCharacter.hp = affectedCharacter.hp + action.power;
                         }
+                        FindFirstObjectByType<MusicScript>().playSoundByName("Heal");
                         Debug.Log($"{gameObject.name} healed {ally.gameObject.name} for {action.power} HP");
                     }
                 }

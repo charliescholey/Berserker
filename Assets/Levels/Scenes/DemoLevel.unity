@@ -5069,6 +5069,7 @@ GameObject:
   m_Component:
   - component: {fileID: 431156261}
   - component: {fileID: 431156260}
+  - component: {fileID: 431156262}
   m_Layer: 0
   m_Name: StealthManager
   m_TagString: Untagged
@@ -5104,6 +5105,14 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!81 &431156262
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 431156259}
+  m_Enabled: 1
 --- !u!1001 &433490739
 PrefabInstance:
   m_ObjectHideFlags: 0
