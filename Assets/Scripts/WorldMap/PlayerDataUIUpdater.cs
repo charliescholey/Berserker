@@ -23,9 +23,14 @@ public class PlayerDataUIUpdater : MonoBehaviour
     }
     void Start()
     {
+        Refresh();
+    }
+
+    public void Refresh()
+    {
         if (SaveFileManager.CurrentPlayerData != null)
         {
-            xpText.text = " Level: " + CalculateLevel(SaveFileManager.CurrentPlayerData.exp).ToString();
+            xpText.text = SaveFileManager.CurrentPlayerData.exp + " XP";
             moneyText.text = SaveFileManager.CurrentPlayerData.gold.ToString();
         }
         else

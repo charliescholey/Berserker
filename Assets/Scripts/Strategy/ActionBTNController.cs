@@ -29,7 +29,7 @@ public class ActionBTNController : MonoBehaviour, IPointerEnterHandler, IPointer
         this.action = action;
         this.player = player;
         this.textMeshPro = GetComponentInChildren<TextMeshProUGUI>();
-        textMeshPro.text = action.name;
+        textMeshPro.text = action.actionName;
     }
 
      // When the action button is clicked, executes the action through the game manager
@@ -38,7 +38,7 @@ public class ActionBTNController : MonoBehaviour, IPointerEnterHandler, IPointer
         GameManager gm = UnityEngine.Object.FindFirstObjectByType<GameManager>();
         if(gm != null && player != null && action != null)
         {
-            gm.ExecuteAttack(player, action);
+            player.processAction(action);
         }
         // Optionally destroy or hide the button after use.
         destroy();
@@ -53,7 +53,9 @@ public class ActionBTNController : MonoBehaviour, IPointerEnterHandler, IPointer
     public void OnPointerExit(PointerEventData eventData)
     {
         th.ClearHighlights();
-        th.HighlightTiles(player.getMovementRange());
+        if(!player.hasMoved){
+            th.HighlightTiles(player.getMovementRange());
+        }
     }
 
 

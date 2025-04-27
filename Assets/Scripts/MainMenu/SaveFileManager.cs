@@ -14,19 +14,13 @@ public class PassiveSkill {
 }
 
 [System.Serializable]
-public class ActiveSkill {
-    public string skillName;
-    public string description;
-}
-
-[System.Serializable]
 public class PlayerData {
     public int gold;
     public int exp;
     public int stageReached;
 
     public List<PassiveSkill> passiveSkills = new List<PassiveSkill>();
-    public ActiveSkill activeSkill = new ActiveSkill();
+    public List<int> UnlockedSkillIndices = new List<int>();
 }
 
 public class SaveFileManager : MonoBehaviour {
@@ -37,6 +31,8 @@ public class SaveFileManager : MonoBehaviour {
     void Awake() {
         DontDestroyOnLoad(gameObject);
         saveFilePath = Path.Combine(Application.persistentDataPath, "savefile.json");
+        Debug.Log(saveFilePath.ToString());
+
     }
 
     public void ResumeGame() {
@@ -57,12 +53,8 @@ public class SaveFileManager : MonoBehaviour {
             exp = 0,
             stageReached = 1,
             passiveSkills = new List<PassiveSkill>(), 
-            activeSkill = new ActiveSkill {         
-                skillName = "",
-                description = ""
-            }
+            UnlockedSkillIndices = new List<int> {0, 2}
         };
-
         string json = JsonUtility.ToJson(CurrentPlayerData, true);
         File.WriteAllText(saveFilePath, json);
         Debug.Log("New game started. Player data saved:\n" + json);
