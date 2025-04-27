@@ -40,6 +40,7 @@ public class MusicScript : MonoBehaviour
         foreach(Sound s in sounds) {
             s.audioSource = gameObject.AddComponent<AudioSource>();
             s.audioSource.clip = s.audioClip;
+            s.audioSource.volume = s.volume;
 
             // If a sound is music, make it play when the game starts and on a loop
             // If a sound is a sound effect, make it not play when the game starts and not play on a loop
@@ -75,6 +76,7 @@ public class MusicScript : MonoBehaviour
     
     // Plays a sound given its name
     public void playSoundByName(string soundName) {
+        Debug.Log(soundName);
         Sound sound = Array.Find(sounds, s => s.soundName == soundName);
         sound.audioSource.Play();
     }

@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 
 /**
 * GameManager class -- handles gameplay logic.
@@ -9,6 +10,7 @@ using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
+    public TileHighlighter tileHighlighter;
     //tracks whether the player has an object selected
     private bool hasSelected = false;
     //link to boardmanager
@@ -24,6 +26,7 @@ public class GameManager : MonoBehaviour
 
     //canvas for overlay rendering
     public Canvas UI;
+    private int UILayer;
     public GameObject HPTextPrefab;
 
     //tracks the player prefab for spawning
@@ -33,12 +36,12 @@ public class GameManager : MonoBehaviour
     //tracks the players in the game
     public CharacterController[] players;
     public EnemyController[] enemies;
+    //enemy spawn locations to be edited per-level
+    public Vector2Int[] enemySpawnLocations;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
-        Debug.Log("GameManager Awake called");
-
         players = new CharacterController[4];
 
         //spawn the characters
@@ -50,35 +53,55 @@ public class GameManager : MonoBehaviour
         Use the following two commented out lines instead of the spawnPlayers() function to test different actions.
         spawnPlayers() currently gives all the players the same actions.
         */
+        
 
-        players[0].spawn(boardManager, new Vector2Int(0, 0), "Warrior", actionDatabase);
-        players[1].spawn(boardManager, new Vector2Int(1, 3), "Mage", actionDatabase);
-        players[2].spawn(boardManager, new Vector2Int(2, 0), "Rogue", actionDatabase);
-        players[3].spawn(boardManager, new Vector2Int(3, 3), "Paladin", actionDatabase);
+    }
 
-        enemies = new EnemyController[1];
-        enemies[0] = Instantiate(enemyPrefab);
-        enemies[0].spawn(boardManager, new Vector2Int(3, 0));
+    void Start() {
+        players[0].spawn(boardManager, boardManager.spawnLocations[0], "Warrior", actionDatabase);
+        players[1].spawn(boardManager, boardManager.spawnLocations[1], "Mage", actionDatabase);
+        players[2].spawn(boardManager, boardManager.spawnLocations[2], "Rogue", actionDatabase);
+        players[3].spawn(boardManager, boardManager.spawnLocations[3], "Paladin", actionDatabase);
 
-        //give every character an HP tracker
-        Array.ForEach(players, x => addHPTracker(x));
-        Array.ForEach(enemies, x => addHPTracker(x));
+        OrderedCharacter[] characters = players.Cast<OrderedCharacter>().Concat(enemies.Cast<OrderedCharacter>()).ToArray();
+
+        foreach (OrderedCharacter oc in characters)
+        {
+            addHPTracker(oc);
+        }
 
         actionBTNManager = Instantiate(actionBTNManagerPrefab);
+    }
+
+    //Spawn enemies. Likely to be updated later.
+    public void spawnEnemies(Vector2Int[] locs){
+        enemies = new EnemyController[locs.Length];
+        for (int i = 0; i < locs.Length; i++)
+        {
+            enemies[i] = Instantiate(enemyPrefab);
+            enemies[i].spawn(boardManager, locs[i]);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        OrderedCharacter[] characters = players.Cast<OrderedCharacter>().Concat(enemies.Cast<OrderedCharacter>()).ToArray();
+        boardManager.setPlayers(characters);
+
+        UILayer = LayerMask.NameToLayer("UI");
+
         //get where the mouse is in the world
         Vector3 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if (Input.GetMouseButtonDown(0))
         {
-            if (hasSelected)
+            if (hasSelected && !IsPointerOverUIElement())
             {
                 //if a player is selected, move them to the clicked cell
                 Vector2Int cell = boardManager.clickToCell(worldPoint);
                 player.moveToCell(cell);
+                tileHighlighter.ClearHighlights();
                 hasSelected = false;
                 player.setSelected(false);
                 player = null;
@@ -90,29 +113,40 @@ public class GameManager : MonoBehaviour
             {
                 //if no player is selected, select the player in the clicked cell
                 Vector2Int cell = boardManager.clickToCell(worldPoint);
+                Debug.Log("Clicked cell: " + cell);
 
-                OrderedCharacter[] characters = players.Cast<OrderedCharacter>().Concat(enemies.Cast<OrderedCharacter>()).ToArray();
 
-                player = (CharacterController)boardManager.detectSelected(cell, characters);
-                if (player != null)
+                OrderedCharacter tempPlayer = boardManager.detectSelected(cell);
+                if (tempPlayer != null)
                 {
-                    if (player.GetType() == typeof(CharacterController))
-                    {
+                    if (tempPlayer.GetType() == playerPrefab.GetType())
+                    {   
+                        player = (CharacterController)boardManager.detectSelected(cell);
                         //player is selected
                         hasSelected = true;
                         player.setSelected(true);
+                        tileHighlighter.ClearHighlights();
+
+                        Vector2Int[] moveRange = player.getMovementRange();
+                        if(player.hasMoved == false){
+                            tileHighlighter.HighlightTiles(moveRange);
+                        }
+                        
                         if (player.hasActed == false)
                         {
-                            actionBTNManager.Create(player, UI);
+                            actionBTNManager.Create(player, UI, tileHighlighter);
                         }
                     }
                     else
                     {
-                        //right now, enemy would be the one clicked
-                        player.setSelected(false);
-                        player = null;
+                        if(player != null){
+                            //right now, enemy would be the one clicked
+                            player.setSelected(false);
+                            player = null;
 
-                        actionBTNManager.destroy();
+                            actionBTNManager.destroy();
+                        }
+                        
                     }
                 }
             }
@@ -123,103 +157,120 @@ public class GameManager : MonoBehaviour
             //if the right mouse button is clicked, deselect the player
             hasSelected = false;
             player.setSelected(false);
+            tileHighlighter.ClearHighlights();
+            actionBTNManager.destroy();
         }
 
         processEndTurn();
+
+        //check for end of section
+        bool enemiesAlive = false;
+        foreach (OrderedCharacter oc in enemies)
+        {
+            if(oc != null)
+            {
+                enemiesAlive = true;
+                break;
+            }
+        }
+        if (!enemiesAlive){
+            Transition.Instance.onKill();
+        }
+
+        bool playersAlive = false;
+        foreach (OrderedCharacter oc in players)
+        {
+            if(oc != null)
+            {
+                playersAlive = true;
+                break;
+            }
+        }
+        if (!enemiesAlive){
+            Transition.Instance.onKill();
+        }
+        if(!playersAlive)
+        {
+            Transition.Instance.onDeath();
+        }
     }
 
     void processEndTurn()
     {
         for (int i = 0; i < players.Length; i++)
         {
+            if (players[i] == null) continue;
             if (!players[i].isTurnComplete())
             {
                 return;
             }
         }
         takeEnemyAction();
+        //reset highlights
+        hasSelected = false;
+        tileHighlighter.ClearHighlights();
+        actionBTNManager.destroy();
+
         for (int i = 0; i < players.Length; i++)
         {
+            if (players[i] == null) continue;
             players[i].resetTurn();
         }
     }
 
     void takeEnemyAction()
     {
-        //move enemy towards player
-        Vector2Int playerPos = players[0].gridPosition;
-        Vector2Int enemyPos = enemies[0].gridPosition;
-        if (playerPos.x > enemyPos.x)
+        foreach (EnemyController enemy in enemies)
         {
-            enemies[0].moveToCell(new Vector2Int(enemyPos.x + 1, enemyPos.y));
-        }
-        else if (playerPos.x < enemyPos.x)
-        {
-            enemies[0].moveToCell(new Vector2Int(enemyPos.x - 1, enemyPos.y));
-        }
-        else if (playerPos.y > enemyPos.y)
-        {
-            enemies[0].moveToCell(new Vector2Int(enemyPos.x, enemyPos.y + 1));
-        }
-        else if (playerPos.y < enemyPos.y)
-        {
-            enemies[0].moveToCell(new Vector2Int(enemyPos.x, enemyPos.y - 1));
-        }
-    }
+            if (enemy == null) continue;
+            if (enemy.hp <= 0) continue;
+            CharacterController nearestPlayer = null;
+            int nearestDistance = int.MaxValue;
 
-    //Executes the attack action.
-    public void ExecuteAttack(CharacterController attacker, Action attackAction)
-    {
-        // Determine damage from the action's power defaulting to 10 if no action is provided.
-        int damage = attackAction != null ? attackAction.power : 10;
-
-        Vector2Int attackerPos = attacker.gridPosition;
-
-        Vector2Int[] adjacentCells = GetAdjacentCells(attackerPos);
-
-        // Loop through all enemies in the game.
-        foreach (OrderedCharacter oc in enemies)
-        {
-            bool isAdjacent = false;
-
-            foreach (Vector2Int cell in adjacentCells)
+            foreach (CharacterController player in players)
             {
-                if (oc.gridPosition == cell)
+                if (player == null || player.hp <= 0) continue;
+                int distance = enemy.getDist(player.gridPosition);
+                if (distance < nearestDistance)
                 {
-                    isAdjacent = true;
-                    break;
+                    nearestDistance = distance;
+                    nearestPlayer = player;
                 }
             }
 
-            // If the enemy is adjacent, apply damage and log the event.
-            if (isAdjacent)
+            if (nearestPlayer == null) continue;
+
+            if (nearestDistance == 1)
             {
-                oc.TakeDamage(damage);
-                //this my best attempt at logging 
-                Debug.Log(oc.gameObject.name + " took " + damage + " damage from " + attacker.gameObject.name);
+                nearestPlayer.TakeDamage(enemy.baseAttack);
+                Debug.Log(enemy.name + " attacks " + nearestPlayer.name + " for " + enemy.baseAttack + " damage!");
+            }
+            else
+            {
+                Vector2Int enemyPos = enemy.gridPosition;
+                Vector2Int playerPos = nearestPlayer.gridPosition;
+                Vector2Int moveTarget = enemyPos;
+                if (Mathf.Abs(playerPos.x - enemyPos.x) > Mathf.Abs(playerPos.y - enemyPos.y))
+                {
+                    moveTarget.x += (playerPos.x > enemyPos.x) ? 1 : -1;
+                }
+                else
+                {
+                    moveTarget.y += (playerPos.y > enemyPos.y) ? 1 : -1;
+                }
+                if (boardManager.checkCell(moveTarget))
+                {
+                    enemy.moveToCell(moveTarget);
+                }
+                if (enemy.getDist(nearestPlayer.gridPosition) == 1)
+                {
+                    nearestPlayer.TakeDamage(enemy.baseAttack);
+                    Debug.Log(enemy.name + " attacks " + nearestPlayer.name + " for " + enemy.baseAttack + " damage!");
+                }
             }
         }
-
-        // Mark the attacker as having taken their action.
-        attacker.hasActed = true;
     }
 
-
-    //Helper method to get the four adjacent cells.
-    Vector2Int[] GetAdjacentCells(Vector2Int center)
-    {
-        return new Vector2Int[]
-        {
-            new Vector2Int(center.x + 1, center.y),       // East
-            new Vector2Int(center.x - 1, center.y),       // West
-            new Vector2Int(center.x, center.y + 1),       // North
-            new Vector2Int(center.x, center.y - 1),       // South
-            new Vector2Int(center.x + 1, center.y + 1),   // Northeast
-            new Vector2Int(center.x + 1, center.y - 1),   // Southeast
-            new Vector2Int(center.x - 1, center.y + 1),   // Northwest
-            new Vector2Int(center.x - 1, center.y - 1)    // Southwest
-        };
-    }
 
     // Spawns players given their locations
     // At the moment, each player is spawned with the same actions.
@@ -244,6 +295,38 @@ public class GameManager : MonoBehaviour
         HPTextController hpTextController = hpText.GetComponent<HPTextController>();
         hpTextController.setCharacter(oc);
     }
+
+    //UI Layer Tracking
+        //Returns 'true' if we touched or hovering on Unity UI element.
+    public bool IsPointerOverUIElement()
+    {
+        return IsPointerOverUIElement(GetEventSystemRaycastResults());
+    }
+
+
+    //Returns 'true' if we touched or hovering on Unity UI element.
+    private bool IsPointerOverUIElement(List<RaycastResult> eventSystemRaysastResults)
+    {
+        for (int index = 0; index < eventSystemRaysastResults.Count; index++)
+        {
+            RaycastResult curRaysastResult = eventSystemRaysastResults[index];
+            if (curRaysastResult.gameObject.layer == UILayer)
+                return true;
+        }
+        return false;
+    }
+
+
+    //Gets all event system raycast results of current mouse or touch position.
+    static List<RaycastResult> GetEventSystemRaycastResults()
+    {
+        PointerEventData eventData = new PointerEventData(EventSystem.current);
+        eventData.position = Input.mousePosition;
+        List<RaycastResult> raysastResults = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventData, raysastResults);
+        return raysastResults;
+    }
+
 
 }
 

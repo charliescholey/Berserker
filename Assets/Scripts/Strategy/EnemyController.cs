@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class EnemyController : OrderedCharacter
 {
-    public int moveRange = 2;
     public int baseHealth;
     public int baseAttack;
     public int baseDefense;
@@ -10,6 +9,7 @@ public class EnemyController : OrderedCharacter
 
     public override void spawn(BoardManager bm, Vector2Int cell)
     {
+        moveRange = 2;
         boardManager = bm;
         gridPosition = cell;
         transform.position = boardManager.cellToWorld(cell);
@@ -40,7 +40,8 @@ public class EnemyController : OrderedCharacter
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        hp = 20;
+        hp = 999;
+        baseAttack = 50;
     }
        public override void TakeDamage(int damage)
     {

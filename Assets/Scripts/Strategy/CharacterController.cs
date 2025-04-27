@@ -11,8 +11,6 @@ public class CharacterData
     public int baseAttack;
     public int baseDefense;
     public int baseMovementRange;
-    public int currentHealth;
-    public string characterClass;
     public string uniqueAbility;
     public int[] actionIndices; // References to actions in the database
     public string spritePath;
@@ -53,7 +51,6 @@ public class CharacterController : OrderedCharacter
     #region Private Fields
     private SpriteRenderer spriteRenderer;
     private CharacterData characterData;
-    private bool hasMoved = false;
     private bool isSelected = false;
     private List<Action> actions = new List<Action>();
     private ActionDatabase actionDatabase;
@@ -61,13 +58,12 @@ public class CharacterController : OrderedCharacter
 
     #region Public Properties
     public bool hasActed = false;
+    public bool hasMoved = false;
     public string characterName { get; private set; }
     public int baseHealth { get; private set; }
     public int baseAttack { get; private set; }
     public int baseDefense { get; private set; }
     public int baseMovementRange { get; private set; }
-    public int currentHealth { get; private set; }
-    public string characterClass { get; private set; }
     public string uniqueAbility { get; private set; }
     public string spritePath { get; private set; }
     #endregion
@@ -82,14 +78,17 @@ public class CharacterController : OrderedCharacter
         LoadTestData();
     }
 
+    #region Spawning
     public override void spawn(BoardManager bm, Vector2Int cell)
     {
+        gridPosition = cell;
         boardManager = bm;
         transform.position = boardManager.cellToWorld(cell);
     }
 
     public void spawn(BoardManager bm, Vector2Int cell, Action[] acts)
     {
+        gridPosition = cell;
         boardManager = bm;
         transform.position = boardManager.cellToWorld(cell);
         actions = acts.ToList();
@@ -97,11 +96,14 @@ public class CharacterController : OrderedCharacter
 
     public void spawn(BoardManager bm, Vector2Int cell, string characterName, ActionDatabase actionDatabase)
     {
+        gridPosition = cell;
         this.actionDatabase = actionDatabase;
         LoadCharacterData(characterName, actionDatabase);
         spawn(bm, cell);
     }
 
+    #endregion
+    #region Turn Management
     public void resetTurn()
     {
         hasMoved = false;
@@ -124,28 +126,18 @@ public class CharacterController : OrderedCharacter
         Debug.Log("Player has taken action: " + action.name);
     }
 
-    public Vector2Int[] getMovementRange()
+    public Action[] GetActions()
     {
-        //handle as arraylist for dynamic sizing
-        List<Vector2Int> cells = new List<Vector2Int>();
-        for (int i = -moveRange; i <= moveRange; i++)
-        {
-            for (int j = -moveRange; j <= moveRange; j++)
-            {
-                //uses existing manhattan distance function from OrderedCharacter
-                if (getDist(new Vector2Int(gridPosition.x + i, gridPosition.y + j)) <= moveRange)
-                {
-                    cells.Add(new Vector2Int(gridPosition.x + i, gridPosition.y + j));
-                }
-            }
-        }
-
-        //handle return as array
-        return cells.ToArray();
+        return actions.ToArray();
     }
+
 
     public override void moveToCell(Vector2Int cell)
     {
+        if(!boardManager.checkCell(cell))
+        {
+            return;
+        }
         if (getDist(cell) > moveRange)
         {
             return;
@@ -162,7 +154,9 @@ public class CharacterController : OrderedCharacter
         transform.position = boardManager.cellToWorld(cell);
         hasMoved = true;
     }
+    #endregion
 
+    #region Player Selection
     public void toggleHighlight()
     {
         if (isSelected)
@@ -187,10 +181,17 @@ public class CharacterController : OrderedCharacter
         isSelected = selected;
         toggleHighlight();
     }
+    #endregion
+    #region Damage
 
     public override void TakeDamage(int damage)
     {
-        hp -= damage;
+        int actualDamage = damage - baseDefense;
+        if (actualDamage < 0)
+        {
+            actualDamage = 0;
+        }
+        hp -= actualDamage;
 
         if (hp <= 0)
         {
@@ -198,18 +199,114 @@ public class CharacterController : OrderedCharacter
         }
     }
 
+    public void processAction(Action action){
+        //check if action is valid
+        if (action == null)
+        {
+            Debug.LogError("Action is null");
+            return;
+        }
+        if(hasActed)
+        {
+            Debug.LogError("Action has already been taken");
+            return;
+        }
+        hasActed = true;
+
+        //get action range
+        Vector2Int[] actionRange = processActionRange(action);
+
+        if(action.type == Action.MoveType.PASS){
+            FindFirstObjectByType<MusicScript>().playSoundByName("Whoosh");
+            hasMoved = true;
+        }
+
+        //deal damage
+        if (action.type == Action.MoveType.MELEE || action.type == Action.MoveType.RANGED)
+        {
+            //get all enemies in range
+            foreach (Vector2Int cell in actionRange) {
+                OrderedCharacter enemy = boardManager.detectSelected(cell);
+                if (enemy != null) {
+                    if(enemy.GetType() != this.GetType()){ 
+                        //deal damage
+                        if(action.type == Action.MoveType.MELEE){
+                            enemy.TakeDamage(this.baseAttack);
+                        }else{
+                            enemy.TakeDamage(action.power);
+                        }
+                        
+                        FindFirstObjectByType<MusicScript>().playSoundByName("GunShot");
+                        Debug.Log($"{gameObject.name} dealt {action.power} damage to {enemy.gameObject.name}");
+                    }   
+                }
+            }
+            return;
+        }
+
+        //heal
+        if (action.type == Action.MoveType.HEAL){
+            //get all allies in range
+            foreach (Vector2Int cell in actionRange) {
+                OrderedCharacter ally = boardManager.detectSelected(cell);
+                if (ally != null) {
+                    if(ally.GetType() == this.GetType()) {
+                        //heal ally
+                        CharacterController affectedCharacter = (CharacterController) ally;
+                        if(affectedCharacter.hp + action.power > affectedCharacter.baseHealth){
+                            affectedCharacter.hp = affectedCharacter.baseHealth;
+                        } else {
+                            affectedCharacter.hp = affectedCharacter.hp + action.power;
+                        }
+                        FindFirstObjectByType<MusicScript>().playSoundByName("Heal");
+                        Debug.Log($"{gameObject.name} healed {ally.gameObject.name} for {action.power} HP");
+                    }
+                }
+            }
+            return;
+        }
+
+        if (action.type == Action.MoveType.EXTRATURN)
+        {
+            //get all allies in range
+            foreach (Vector2Int cell in actionRange) {
+                OrderedCharacter ally = boardManager.detectSelected(cell);
+                if (ally != null) {
+                    if(ally.GetType() == this.GetType()) {
+                        //give ally extra turn
+                        CharacterController affectedCharacter = (CharacterController) ally;
+                        affectedCharacter.hasActed = false;
+                        affectedCharacter.hasMoved = false;
+                        Debug.Log($"{gameObject.name} gave {ally.gameObject.name} an extra turn");
+                    }
+                }
+            }
+            return;
+        }
+    }
+
     public override void Die()
     {
-        // to deal with dying, again not sure how we are dealing with it
         Debug.Log($"{gameObject.name} died.");
         gameObject.SetActive(false);
-    }
 
-    public Action[] GetActions()
-    {
-        return actions.ToArray();
+        // Remove from players array
+        GameManager gm = FindObjectOfType<GameManager>();
+        if (gm != null)
+        {
+            for (int i = 0; i < gm.players.Length; i++)
+            {
+                if (gm.players[i] == this)
+                {
+                    gm.players[i] = null;
+                }
+            }
+        }
     }
+    #endregion
 
+
+    #region Save and Load
     public static void SaveCharacterData(CharacterData data)
     {
         if (!s_IsDatabaseLoaded)
@@ -242,8 +339,6 @@ public class CharacterController : OrderedCharacter
             baseAttack = this.baseAttack,
             baseDefense = this.baseDefense,
             baseMovementRange = this.baseMovementRange,
-            currentHealth = this.currentHealth,
-            characterClass = this.characterClass,
             uniqueAbility = this.uniqueAbility,
             actionIndices = GetActionIndices(),
             spritePath = this.spritePath
@@ -286,7 +381,6 @@ public class CharacterController : OrderedCharacter
 
     public void LoadCharacterData(string characterName, ActionDatabase actionDatabase)
     {
-        Debug.Log($"Loading character data for: {characterName}");
         if (s_CharacterDatabase == null)
         {
             Debug.LogError("Character database is null!");
@@ -309,8 +403,7 @@ public class CharacterController : OrderedCharacter
         this.baseAttack = data.baseAttack;
         this.baseDefense = data.baseDefense;
         this.baseMovementRange = data.baseMovementRange;
-        this.currentHealth = data.currentHealth;
-        this.characterClass = data.characterClass;
+        hp = data.baseHealth;
         this.uniqueAbility = data.uniqueAbility;
         this.spritePath = data.spritePath;
         moveRange = data.baseMovementRange;
@@ -346,25 +439,17 @@ public class CharacterController : OrderedCharacter
                     Debug.LogWarning($"Failed to resolve action at index: {idx}");
                 }
             }
+            actions.Add(actionDatabase.GetActionByIndex(3)); // Add pass action at end of list
         }
 
         // Log Character Actions
-        Debug.Log($"Actions for {characterName}:");
+        /*Debug.Log($"Actions for {characterName}:");
         foreach (Action action in actions)
         {
             Debug.Log($"- {action.actionName}");
         }
 
-        Debug.Log($"Character data loaded for: {characterName}");
-    }
-
-    private void logActions()
-    {
-        Debug.Log($"Actions for {characterName}:");
-        foreach (Action action in actions)
-        {
-            Debug.Log($"- {action.actionName}");
-        }
+        Debug.Log($"Character data loaded for: {characterName}");*/
     }
 
     private int[] GetActionIndices()
@@ -378,4 +463,14 @@ public class CharacterController : OrderedCharacter
         return indices;
     }
 
+    #endregion
+
+    private void logActions()
+    {
+        Debug.Log($"Actions for {characterName}:");
+        foreach (Action action in actions)
+        {
+            Debug.Log($"- {action.actionName}");
+        }
+    }
 }

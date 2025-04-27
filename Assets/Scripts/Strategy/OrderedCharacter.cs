@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public abstract class OrderedCharacter : MonoBehaviour
 {
@@ -36,6 +37,41 @@ public abstract class OrderedCharacter : MonoBehaviour
         return gridPosition;
     }
 
+    public Vector2Int[] getMovementRange()
+    {
+        // Use BFS to calculate movement range while avoiding walls
+        Queue<Vector2Int> queue = new Queue<Vector2Int>();
+        HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
+        List<Vector2Int> cells = new List<Vector2Int>();
+
+        queue.Enqueue(gridPosition);
+        visited.Add(gridPosition);
+
+        while (queue.Count > 0)
+        {
+            Vector2Int current = queue.Dequeue();
+            cells.Add(current);
+
+            foreach (Vector2Int direction in new Vector2Int[] {
+            new Vector2Int(1, 0), new Vector2Int(-1, 0),
+            new Vector2Int(0, 1), new Vector2Int(0, -1)
+            })
+            {
+            Vector2Int neighbor = current + direction;
+
+            if (!visited.Contains(neighbor) &&
+                getDist(neighbor) <= moveRange &&
+                boardManager.checkCell(neighbor))
+            {
+                queue.Enqueue(neighbor);
+                visited.Add(neighbor);
+            }
+            }
+        }
+
+        return cells.ToArray();
+    }
+
 
     // Action Processing
 
@@ -68,24 +104,21 @@ public abstract class OrderedCharacter : MonoBehaviour
                 return cells;
             case Action.TargetType.LINE:
                 cells = new Vector2Int[action.range * 4];
-                for (int i = 0; i < action.range; i++)
+                for (int i = 1; i <= action.range; i+=4)
                 {
-                    cells[i] = new Vector2Int(gridPosition.x + i, gridPosition.y);
-                }
-                for (int i = 0; i < action.range; i++)
-                {
+                    cells[i-1] = new Vector2Int(gridPosition.x + i, gridPosition.y);
                     cells[i] = new Vector2Int(gridPosition.x - i, gridPosition.y);
+                    cells[i+1] = new Vector2Int(gridPosition.x, gridPosition.y + i);
+                    cells[i+2] = new Vector2Int(gridPosition.x, gridPosition.y - i);
                 }
-                for (int i = 0; i < action.range; i++)
+                Debug.Log("Line cells: " + cells.Length);
+                for (int i = 0; i < cells.Length; i++)
                 {
-                    cells[i] = new Vector2Int(gridPosition.x, gridPosition.y + i);
-                }
-                for (int i = 0; i < action.range; i++)
-                {
-                    cells[i] = new Vector2Int(gridPosition.x, gridPosition.y - i);
+                    Debug.Log(cells[i]);
                 }
                 return cells;
         }
+        Debug.LogError("Invalid action target type");
         return new Vector2Int[] { gridPosition };
     }
 
@@ -116,10 +149,4 @@ public abstract class OrderedCharacter : MonoBehaviour
             Debug.Log("Effect failed");
         }
 
-    }
-
-    public void processAction(Action action)
-    {
-        //TODO
-    }
-}
+    }}

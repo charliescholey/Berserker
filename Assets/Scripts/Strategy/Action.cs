@@ -14,7 +14,7 @@ public class Action : ScriptableObject
         HEAL,
         MOVERAD,
         EXTRATURN,
-        PPUP
+        PASS
     }
     //if the move has an effect, what is it?
     public enum EffectType
