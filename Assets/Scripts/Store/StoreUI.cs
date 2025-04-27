@@ -5,47 +5,8 @@ using System;
 using Unity.VisualScripting;
 using UnityEngine.UI;
 using Unity.Multiplayer.Center.Common;
+using System.Collections.Generic;
 
-
-// [Serializable]
-// public class CharacterSummary
-// {
-//     public string characterName;
-//     public int baseHealth;
-//     public int baseAttack;
-//     public int baseDefense;
-//     public int baseMovementRange;
-
-//     public int maxHealth;
-//     public int maxAttack;
-//     public int maxDefense;
-//     public int maxMovementRange;
-//     public string spritePath;
-
-//     public string getName() { return characterName; }
-//     public int getCost() { return baseHealth + baseAttack + baseDefense + baseMovementRange; }
-//     public string getImage() { return null; } // Placeholder image
-//     public int getHealth() { return baseHealth; }
-//     public int getAttack() { return baseAttack; }
-//     public int getDefense() { return baseDefense; }
-//     public int getMovement() { return baseMovementRange; }
-//     public int getMaxHealth() { return maxHealth; }
-//     public int getMaxAttack() { return maxAttack; }
-//     public int getMaxDefense() { return maxDefense; }
-//     public int getMaxMovement() { return maxMovementRange; }
-
-//     public Color getColor()
-//     {
-//         // Placeholder color
-//         return new Color(10, 10, 10, 1);
-//     }
-// }
-
-// [Serializable]
-// public class CharacterSummaryList
-// {
-//     public CharacterSummary[] characters;
-// }
 
 /**
 * StoreUI is a singleton class that manages the user interface of the store.
@@ -66,9 +27,9 @@ public class StoreUI : MonoBehaviour
     [SerializeField] TMP_Text Movement;
 
     // private CharacterSummaryList summaryList;
-    private CharacterData[] summaryList;
+    private List<CharacterData> summaryList;
 
-    CharacterSummary selected;
+    CharacterData selected;
 
     bool init = true;
 
@@ -89,13 +50,15 @@ public class StoreUI : MonoBehaviour
         if (characterDataList == null || characterDataList.Count == 0)
         {
             Debug.LogError("No characters found!");
+                    summaryList = new List<CharacterData>(); // Initialize as an empty list to avoid null issues
+
             return;
         }
 
 
-        summaryList = characterDataList
+        summaryList = characterDataList;
 
-        Debug.Log("Loaded " + summaryList.characters.Length + " characters into the Store.");
+        Debug.Log("Loaded " + summaryList.Count + " characters into the Store.");
     }
 
 
@@ -104,8 +67,13 @@ public class StoreUI : MonoBehaviour
         // Once the Store is active in the hierarchy, the information about the first character is displayed
         if (init && this.gameObject.activeInHierarchy)
         {
+            if (summaryList == null || summaryList.Count == 0)
+            {
+                Debug.LogError("No characters available in summaryList.");
+                return;
+            }
             // SelectCharacter(this.transform.Find("Character Image (1)").GetComponent<CharacterImageScript>().character);
-            SelectCharacter(summaryList.characters[0]);
+            SelectCharacter(summaryList[0]);
             UpdateSelectedCharacter();
             init = false;
         }
@@ -123,9 +91,9 @@ public class StoreUI : MonoBehaviour
         if (characterCost == null) { Debug.LogError("characterCost is null!"); return; }
 
         Debug.Log("Updating selected character: " + selected.characterName);
-        characterImage.color = selected.getColor();
-        Debug.Log("cost:" + selected.getCost());
-        characterCost.text = "Buy          " + selected.getCost();
+        // characterImage.color = selected.getColor();
+        // Debug.Log("cost:" + selected.getCost());
+        // characterCost.text = "Buy          " + selected.getCost();
 
         // Show stats as "base / max"
         Health.text = $"{selected.baseHealth} / {selected.maxHealth}";
@@ -174,9 +142,13 @@ public class StoreUI : MonoBehaviour
             baseAttack = selected.baseAttack,
             baseDefense = selected.baseDefense,
             baseMovementRange = selected.baseMovementRange,
-            uniqueAbility = "", // If you have it, otherwise leave empty
+            uniqueAbility = selected.uniqueAbility,
+            maxHealth = selected.maxHealth,
+            maxAttack = selected.maxAttack,
+            maxDefense = selected.maxDefense,
+            maxMovementRange = selected.maxMovementRange,
             spritePath = selected.spritePath,
-            actionIndices = new int[0] // You might not have actions in Store
+            actionIndices = selected.actionIndices,
         };
 
         CharacterController.SaveCharacterData(data);
@@ -185,7 +157,7 @@ public class StoreUI : MonoBehaviour
 
 
     // Update is called once per frame
-    public void SelectCharacter(CharacterSummary character)
+    public void SelectCharacter(CharacterData character)
     {
         selected = character;
         UpdateSelectedCharacter();
@@ -194,59 +166,64 @@ public class StoreUI : MonoBehaviour
     public void PurchaseHealth()
     {
         if (selected == null) { Debug.LogError("selected is null!"); return; }
+        int gold = SaveFileManager.CurrentPlayerData.gold;
+        if (gold < 10)
+        {
+            Debug.LogError("Not enough gold to purchase character!");
+            return;
+        }
         if (selected.baseHealth >= selected.maxHealth) { Debug.LogError("Cannot purchase health, already at max!"); return; }
         selected.baseHealth++;
         UpdateSelectedCharacter();
+        gold -= 10;
+        SaveSelectedCharacter();
     }
 
     public void PurchaseAttack()
     {
         if (selected == null) { Debug.LogError("selected is null!"); return; }
         if (selected.baseAttack >= selected.maxAttack) { Debug.LogError("Cannot purchase attack, already at max!"); return; }
+        int gold = SaveFileManager.CurrentPlayerData.gold;
+        if (gold < 15)
+        {
+            Debug.LogError("Not enough gold to purchase character!");
+            return;
+        }
+
         selected.baseAttack++;
         UpdateSelectedCharacter();
+        gold -= 15;
+        SaveSelectedCharacter();
     }
 
     public void PurchaseDefense()
     {
         if (selected == null) { Debug.LogError("selected is null!"); return; }
         if (selected.baseDefense >= selected.maxDefense) { Debug.LogError("Cannot purchase defense, already at max!"); return; }
+        int gold = SaveFileManager.CurrentPlayerData.gold;
+        if (gold < 15)
+        {
+            Debug.LogError("Not enough gold to purchase character!");
+            return;
+        }
         selected.baseDefense++;
         UpdateSelectedCharacter();
+        gold -= 15;
+        SaveSelectedCharacter();
     }
     public void PurchaseMovement()
     {
         if (selected == null) { Debug.LogError("selected is null!"); return; }
         if (selected.baseMovementRange >= selected.maxMovementRange) { Debug.LogError("Cannot purchase movement, already at max!"); return; }
+        int gold = SaveFileManager.CurrentPlayerData.gold;
+        if (gold < 20)
+        {
+            Debug.LogError("Not enough gold to purchase character!");
+            return;
+        }
         selected.baseMovementRange++;
         UpdateSelectedCharacter();
+        gold -= 20;
+        SaveSelectedCharacter();
     }
-    // void DisplayCharacterStats(CharacterSummary character)
-    // {
-    //     // Clear previous bars
-    //     foreach (Transform child in statsContainer)
-    //         Destroy(child.gameObject);
-
-    //     // List of stat names and their values
-    //     var stats = new List<(string label, int baseValue, int maxValue)>
-    // {
-    //     ("Health", character.baseHealth, character.maxHealth),
-    //     ("Attack", character.baseAttack, character.maxAttack),
-    //     ("Defense", character.baseDefense, character.maxDefense),
-    //     ("Movement", character.baseMovementRange, character.maxMovementRange)
-    // };
-
-    //     foreach (var stat in stats)
-    //     {
-    //         GameObject barObj = Instantiate(statBarPrefab, statsContainer);
-    //         TMP_Text label = barObj.transform.Find("Label").GetComponent<TMP_Text>();
-    //         Slider slider = barObj.transform.Find("Slider").GetComponent<Slider>();
-    //         TMP_Text value = barObj.transform.Find("Value").GetComponent<TMP_Text>();
-
-    //         label.text = stat.label;
-    //         slider.maxValue = stat.maxValue;
-    //         slider.value = stat.baseValue;
-    //         value.text = $"{stat.baseValue} / {stat.maxValue}";
-    //     }
-    // }
 }

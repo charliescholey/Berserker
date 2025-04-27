@@ -53,7 +53,7 @@ public class SaveFileManager : MonoBehaviour {
 
     public void StartNewGame() {
         CurrentPlayerData = new PlayerData {
-            gold = 0,
+            gold = 100,
             exp = 0,
             stageReached = 1,
             passiveSkills = new List<PassiveSkill>(), 

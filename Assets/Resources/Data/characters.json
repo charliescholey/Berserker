@@ -54,7 +54,7 @@
             "baseAttack": 12,
             "baseDefense": 15,
             "baseMovementRange": 3,
-            "maxHealth": 70,
+            "maxHealth": 100,
             "maxAttack": 25,
             "maxDefense": 10,
             "maxMovementRange": 20,

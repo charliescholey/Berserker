@@ -70,6 +70,10 @@ public class CharacterController : OrderedCharacter
     public int baseMovementRange { get; private set; }
     public string uniqueAbility { get; private set; }
     public string spritePath { get; private set; }
+    public int maxHealth { get; private set; }
+    public int maxAttack { get; private set; }
+    public int maxDefense { get; private set; }
+    public int maxMovementRange { get; private set; }
     #endregion
 
     void Awake()
@@ -227,6 +231,10 @@ public class CharacterController : OrderedCharacter
         }
 
         string json = JsonUtility.ToJson(s_CharacterDatabase, true);
+        if (SaveFilePath == null)
+        {
+            SaveFilePath = Path.Combine(Application.persistentDataPath, SAVE_FILENAME);
+        }
         File.WriteAllText(SaveFilePath, json);
         Debug.Log($"Character database saved to {SaveFilePath}");
     }
@@ -242,7 +250,11 @@ public class CharacterController : OrderedCharacter
             baseMovementRange = this.baseMovementRange,
             uniqueAbility = this.uniqueAbility,
             actionIndices = GetActionIndices(),
-            spritePath = this.spritePath
+            spritePath = this.spritePath,
+            maxHealth = this.maxHealth,
+            maxAttack = this.maxAttack,
+            maxDefense = this.maxDefense,
+            maxMovementRange = this.maxMovementRange,
         };
 
         SaveCharacterData(data);
@@ -356,7 +368,7 @@ public class CharacterController : OrderedCharacter
     {
         if (!s_IsDatabaseLoaded)
         {
-            LoadCharacterDatabase();
+            LoadTestData();
         }
         return s_CharacterDatabase.characters;
     }
