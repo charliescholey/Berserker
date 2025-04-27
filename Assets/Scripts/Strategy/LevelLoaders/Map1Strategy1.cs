@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class Map1Strategy1 : MonoBehaviour
+public class LeveOne : MonoBehaviour
 {
     public GameManager level;
     public BoardManager map;
