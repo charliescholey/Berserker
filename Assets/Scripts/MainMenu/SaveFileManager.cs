@@ -14,21 +14,12 @@ public class PassiveSkill {
 }
 
 [System.Serializable]
-public class ActiveSkill {
-    public string skillName;
-    public string description;
-}
-
-[System.Serializable]
 public class PlayerData {
     public int gold;
     public int exp;
     public int stageReached;
 
     public List<PassiveSkill> passiveSkills = new List<PassiveSkill>();
-    public ActiveSkill activeSkill = new ActiveSkill();
-
-    //added
     public List<int> UnlockedSkillIndices = new List<int>();
 }
 
@@ -62,12 +53,8 @@ public class SaveFileManager : MonoBehaviour {
             exp = 0,
             stageReached = 1,
             passiveSkills = new List<PassiveSkill>(), 
-            activeSkill = new ActiveSkill {         
-                skillName = "",
-                description = ""
-            }
+            UnlockedSkillIndices = new List<int>()
         };
-        CurrentPlayerData.UnlockedSkillIndices = new List<int>();
 
         string json = JsonUtility.ToJson(CurrentPlayerData, true);
         File.WriteAllText(saveFilePath, json);
