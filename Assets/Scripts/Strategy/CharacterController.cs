@@ -11,6 +11,10 @@ public class CharacterData
     public int baseAttack;
     public int baseDefense;
     public int baseMovementRange;
+    public int maxHealth;
+    public int maxAttack;
+    public int maxDefense;
+    public int maxMovementRange;
     public string uniqueAbility;
     public int[] actionIndices; // References to actions in the database
     public string spritePath;
@@ -134,7 +138,7 @@ public class CharacterController : OrderedCharacter
 
     public override void moveToCell(Vector2Int cell)
     {
-        if(!boardManager.checkCell(cell))
+        if (!boardManager.checkCell(cell))
         {
             return;
         }
@@ -347,6 +351,16 @@ public class CharacterController : OrderedCharacter
 
         Debug.Log($"Character data loaded for: {characterName}");*/
     }
+
+    public static List<CharacterData> GetAllCharacters()
+    {
+        if (!s_IsDatabaseLoaded)
+        {
+            LoadCharacterDatabase();
+        }
+        return s_CharacterDatabase.characters;
+    }
+
 
     private int[] GetActionIndices()
     {
