@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 
 /**
 * GameManager class -- handles gameplay logic.
@@ -25,6 +26,7 @@ public class GameManager : MonoBehaviour
 
     //canvas for overlay rendering
     public Canvas UI;
+    private int UILayer;
     public GameObject HPTextPrefab;
 
     //tracks the player prefab for spawning
@@ -88,11 +90,13 @@ public class GameManager : MonoBehaviour
         OrderedCharacter[] characters = players.Cast<OrderedCharacter>().Concat(enemies.Cast<OrderedCharacter>()).ToArray();
         boardManager.setPlayers(characters);
 
+        UILayer = LayerMask.NameToLayer("UI");
+
         //get where the mouse is in the world
         Vector3 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if (Input.GetMouseButtonDown(0))
         {
-            if (hasSelected)
+            if (hasSelected && !IsPointerOverUIElement())
             {
                 //if a player is selected, move them to the clicked cell
                 Vector2Int cell = boardManager.clickToCell(worldPoint);
@@ -291,6 +295,38 @@ public class GameManager : MonoBehaviour
         HPTextController hpTextController = hpText.GetComponent<HPTextController>();
         hpTextController.setCharacter(oc);
     }
+
+    //UI Layer Tracking
+        //Returns 'true' if we touched or hovering on Unity UI element.
+    public bool IsPointerOverUIElement()
+    {
+        return IsPointerOverUIElement(GetEventSystemRaycastResults());
+    }
+
+
+    //Returns 'true' if we touched or hovering on Unity UI element.
+    private bool IsPointerOverUIElement(List<RaycastResult> eventSystemRaysastResults)
+    {
+        for (int index = 0; index < eventSystemRaysastResults.Count; index++)
+        {
+            RaycastResult curRaysastResult = eventSystemRaysastResults[index];
+            if (curRaysastResult.gameObject.layer == UILayer)
+                return true;
+        }
+        return false;
+    }
+
+
+    //Gets all event system raycast results of current mouse or touch position.
+    static List<RaycastResult> GetEventSystemRaycastResults()
+    {
+        PointerEventData eventData = new PointerEventData(EventSystem.current);
+        eventData.position = Input.mousePosition;
+        List<RaycastResult> raysastResults = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventData, raysastResults);
+        return raysastResults;
+    }
+
 
 }
 
