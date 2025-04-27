@@ -195,6 +195,7 @@ public class GameManager : MonoBehaviour
     {
         for (int i = 0; i < players.Length; i++)
         {
+            if (players[i] == null) continue;
             if (!players[i].isTurnComplete())
             {
                 return;
@@ -208,32 +209,64 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < players.Length; i++)
         {
+            if (players[i] == null) continue;
             players[i].resetTurn();
         }
     }
 
     void takeEnemyAction()
     {
-        //move enemy towards player
-        Vector2Int playerPos = players[0].gridPosition;
-        Vector2Int enemyPos = enemies[0].gridPosition;
-        if (playerPos.x > enemyPos.x)
+        foreach (EnemyController enemy in enemies)
         {
-            enemies[0].moveToCell(new Vector2Int(enemyPos.x + 1, enemyPos.y));
-        }
-        else if (playerPos.x < enemyPos.x)
-        {
-            enemies[0].moveToCell(new Vector2Int(enemyPos.x - 1, enemyPos.y));
-        }
-        else if (playerPos.y > enemyPos.y)
-        {
-            enemies[0].moveToCell(new Vector2Int(enemyPos.x, enemyPos.y + 1));
-        }
-        else if (playerPos.y < enemyPos.y)
-        {
-            enemies[0].moveToCell(new Vector2Int(enemyPos.x, enemyPos.y - 1));
+            if (enemy == null) continue;
+            if (enemy.hp <= 0) continue;
+            CharacterController nearestPlayer = null;
+            int nearestDistance = int.MaxValue;
+
+            foreach (CharacterController player in players)
+            {
+                if (player == null || player.hp <= 0) continue;
+                int distance = enemy.getDist(player.gridPosition);
+                if (distance < nearestDistance)
+                {
+                    nearestDistance = distance;
+                    nearestPlayer = player;
+                }
+            }
+
+            if (nearestPlayer == null) continue;
+
+            if (nearestDistance == 1)
+            {
+                nearestPlayer.TakeDamage(enemy.baseAttack);
+                Debug.Log(enemy.name + " attacks " + nearestPlayer.name + " for " + enemy.baseAttack + " damage!");
+            }
+            else
+            {
+                Vector2Int enemyPos = enemy.gridPosition;
+                Vector2Int playerPos = nearestPlayer.gridPosition;
+                Vector2Int moveTarget = enemyPos;
+                if (Mathf.Abs(playerPos.x - enemyPos.x) > Mathf.Abs(playerPos.y - enemyPos.y))
+                {
+                    moveTarget.x += (playerPos.x > enemyPos.x) ? 1 : -1;
+                }
+                else
+                {
+                    moveTarget.y += (playerPos.y > enemyPos.y) ? 1 : -1;
+                }
+                if (boardManager.checkCell(moveTarget))
+                {
+                    enemy.moveToCell(moveTarget);
+                }
+                if (enemy.getDist(nearestPlayer.gridPosition) == 1)
+                {
+                    nearestPlayer.TakeDamage(enemy.baseAttack);
+                    Debug.Log(enemy.name + " attacks " + nearestPlayer.name + " for " + enemy.baseAttack + " damage!");
+                }
+            }
         }
     }
+
 
     // Spawns players given their locations
     // At the moment, each player is spawned with the same actions.
