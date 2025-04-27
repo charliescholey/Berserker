@@ -2189,12 +2189,32 @@ MonoBehaviour:
     audioSource: {fileID: 0}
     audioClip: {fileID: 8300000, guid: 77f99d8dc1ffa49958e6241fefb3c4ca, type: 3}
     type: 1
-    volume: 0
+    volume: 1
   - soundName: Button
     audioSource: {fileID: 0}
     audioClip: {fileID: 8300000, guid: 33dfcbdcd65a945d7a4729d792d28656, type: 3}
     type: 0
-    volume: 0
+    volume: 1
+  - soundName: GunShot
+    audioSource: {fileID: 0}
+    audioClip: {fileID: 8300000, guid: 440dd0d21a93c44948594f44f61e68a9, type: 3}
+    type: 0
+    volume: 0.05
+  - soundName: LaserGun
+    audioSource: {fileID: 0}
+    audioClip: {fileID: 8300000, guid: 8073de4d566cc4b48bc6883f9d3dec9c, type: 3}
+    type: 0
+    volume: 1
+  - soundName: Heal
+    audioSource: {fileID: 0}
+    audioClip: {fileID: 8300000, guid: db4eb8bffad2646d58168a61da6ec797, type: 3}
+    type: 0
+    volume: 1
+  - soundName: Whoosh
+    audioSource: {fileID: 0}
+    audioClip: {fileID: 8300000, guid: ac896f41d7e5d4daf81fc2b4a34037bf, type: 3}
+    type: 0
+    volume: 0.5
   soundEffectsMixerGroup: {fileID: -622748074439328149, guid: 8483d68b6bd4044a299c8aea3b3fe409, type: 2}
   musicMixerGroup: {fileID: -782910709680804656, guid: 8483d68b6bd4044a299c8aea3b3fe409, type: 2}
 --- !u!4 &926777795
