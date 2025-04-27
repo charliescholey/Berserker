@@ -10,18 +10,19 @@ public class Map2Scene3 : MonoBehaviour
     {
         //PLAYER SPAWN LOCATIONS
         Vector2Int[] playerSpawnLocations = {
-            new Vector2Int(-6, 1),
-            new Vector2Int(-4, 1),
-            new Vector2Int(-6, -1),
-            new Vector2Int(-4, -1)
+            new Vector2Int(1, -1),
+            new Vector2Int(2, -1),
+            new Vector2Int(3, -1),
+            new Vector2Int(4, -1)
         };
 
         map.setSpawnLocations(playerSpawnLocations);
 
         //ENEMY SPAWN LOCATIONS
         Vector2Int[] enemySpawnLocations = {
-            new Vector2Int(-1,-2),
-            new Vector2Int(-1,1),
+            new Vector2Int(-2,-1),
+            new Vector2Int(6,-1),
+            new Vector2Int(2,-4),
             
         };
         level.enemySpawnLocations = enemySpawnLocations;
@@ -31,11 +32,25 @@ public class Map2Scene3 : MonoBehaviour
         // WALLS
         List<Vector2Int> walls = new List<Vector2Int>();
 
-        // First wall on top
-        walls.AddRange(generateBox(new Vector2Int(0, 4), new Vector2Int(0, 1)));
+        // First wall on top left
+        walls.AddRange(generateBox(new Vector2Int(-4, 0), new Vector2Int(1, 0)));
 
-        // Second wall on bottom
-        walls.AddRange(generateBox(new Vector2Int(0, -2), new Vector2Int(0, -5)));
+        // Second wall on top right 
+        walls.AddRange(generateBox(new Vector2Int(4, 0), new Vector2Int(8, 0)));
+
+        //bottom wall
+        walls.AddRange(generateBox(new Vector2Int(-10, -5), new Vector2Int(9, -5)));
+
+        //vertical wall left
+        walls.AddRange(generateBox(new Vector2Int(-5, 0), new Vector2Int(-5, -4)));
+
+        //vertical wall right
+        walls.AddRange(generateBox(new Vector2Int(9, 4), new Vector2Int(9, -4)));
+
+        //benches
+        walls.AddRange(generateBox(new Vector2Int(-3, -2), new Vector2Int(-1, -2)));
+
+        walls.AddRange(generateBox(new Vector2Int(6, -2), new Vector2Int(8, -2)));
 
         map.setWalls(walls.ToArray());
     }
