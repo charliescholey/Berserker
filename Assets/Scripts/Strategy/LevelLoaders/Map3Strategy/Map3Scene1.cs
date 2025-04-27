@@ -10,20 +10,21 @@ public class Map3Scene1 : MonoBehaviour
     {
         //PLAYER SPAWN LOCATIONS
         Vector2Int[] playerSpawnLocations = {
-            new Vector2Int(4, -1),
-            new Vector2Int(5, -1),
-            new Vector2Int(6, -1),
-            new Vector2Int(7, -1)
+            new Vector2Int(-9, -3),
+            new Vector2Int(-9, -1),
+            new Vector2Int(-9, 1),
+            new Vector2Int(-9, 3)
         };
 
         map.setSpawnLocations(playerSpawnLocations);
 
         //ENEMY SPAWN LOCATIONS
         Vector2Int[] enemySpawnLocations = {
-            new Vector2Int(0,0),
-            new Vector2Int(2,0),
-            new Vector2Int(5,3),
-            new Vector2Int(7,3),
+            new Vector2Int(-6,1),
+            new Vector2Int(-6,-2),
+            new Vector2Int(2,1),
+            new Vector2Int(2,-2),
+            new Vector2Int(6,0),
         };
         level.enemySpawnLocations = enemySpawnLocations;
 
@@ -34,32 +35,23 @@ public class Map3Scene1 : MonoBehaviour
         List<Vector2Int> walls = new List<Vector2Int>();
 
         // First wall on top
-        walls.AddRange(generateBox(new Vector2Int(-2, 4), new Vector2Int(9, 4)));
+        walls.AddRange(generateBox(new Vector2Int(-10, 4), new Vector2Int(9, 4)));
 
-        // left wall
-        walls.AddRange(generateBox(new Vector2Int(-2, 3), new Vector2Int(-2, -3)));
+        //wall on right 
+        walls.AddRange(generateBox(new Vector2Int(9, 3), new Vector2Int(9, -5)));
 
-        // right wall
-        walls.AddRange(generateBox(new Vector2Int(9, 3), new Vector2Int(9, -3)));
+        //left top vertical wall 
+        walls.AddRange(generateBox(new Vector2Int(-5, 3), new Vector2Int(-5, 1)));
 
-        //bottom wall left 
-        walls.AddRange(generateBox(new Vector2Int(-1, -3), new Vector2Int(2, -3)));
+        //left bottom vertical wall 
+        walls.AddRange(generateBox(new Vector2Int(-5, -2), new Vector2Int(-5, -3)));
 
-        //bottom wall right 
-        walls.AddRange(generateBox(new Vector2Int(5, -3), new Vector2Int(8, -3)));
+        //bottom wall 
+        walls.AddRange(generateBox(new Vector2Int(-5, -4), new Vector2Int(8, -4)));
 
-        //benches
-        walls.AddRange(generateBox(new Vector2Int(0, -1), new Vector2Int(2, -1)));
+        //desk
+        walls.AddRange(generateBox(new Vector2Int(4, 0), new Vector2Int(5, 0)));
 
-        walls.AddRange(generateBox(new Vector2Int(5, 2), new Vector2Int(7, 2)));
-
-        //corner knook
-        walls.AddRange(generateBox(new Vector2Int(-1, 1), new Vector2Int(0, 1)));
-
-        walls.AddRange(generateBox(new Vector2Int(1, 2), new Vector2Int(1, 1)));
-
-        //car just because
-        walls.AddRange(generateBox(new Vector2Int(-1, -4), new Vector2Int(0, -4)));
 
 
         map.setWalls(walls.ToArray());
