@@ -45,7 +45,7 @@
             "currentHealth": 90,
             "characterClass": "Rogue",
             "uniqueAbility": "Stealth",
-            "actionIndices": [0],
+            "actionIndices": [0,4],
             "spritePath": "tilemap_packed_267"
         },
         {

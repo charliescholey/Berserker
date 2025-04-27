@@ -112,19 +112,22 @@ public class GameManager : MonoBehaviour
                 Debug.Log("Clicked cell: " + cell);
 
 
-                player = (CharacterController)boardManager.detectSelected(cell);
-                if (player != null)
+                OrderedCharacter tempPlayer = boardManager.detectSelected(cell);
+                if (tempPlayer != null)
                 {
-                    if (player.GetType() == typeof(CharacterController))
-                    {
+                    if (tempPlayer.GetType() == playerPrefab.GetType())
+                    {   
+                        player = (CharacterController)boardManager.detectSelected(cell);
                         //player is selected
                         hasSelected = true;
                         player.setSelected(true);
                         tileHighlighter.ClearHighlights();
 
                         Vector2Int[] moveRange = player.getMovementRange();
-                        tileHighlighter.HighlightTiles(moveRange);
-
+                        if(player.hasMoved == false){
+                            tileHighlighter.HighlightTiles(moveRange);
+                        }
+                        
                         if (player.hasActed == false)
                         {
                             actionBTNManager.Create(player, UI, tileHighlighter);
@@ -132,11 +135,14 @@ public class GameManager : MonoBehaviour
                     }
                     else
                     {
-                        //right now, enemy would be the one clicked
-                        player.setSelected(false);
-                        player = null;
+                        if(player != null){
+                            //right now, enemy would be the one clicked
+                            player.setSelected(false);
+                            player = null;
 
-                        actionBTNManager.destroy();
+                            actionBTNManager.destroy();
+                        }
+                        
                     }
                 }
             }
@@ -148,6 +154,7 @@ public class GameManager : MonoBehaviour
             hasSelected = false;
             player.setSelected(false);
             tileHighlighter.ClearHighlights();
+            actionBTNManager.destroy();
         }
 
         processEndTurn();
@@ -188,94 +195,78 @@ public class GameManager : MonoBehaviour
     {
         for (int i = 0; i < players.Length; i++)
         {
+            if (players[i] == null) continue;
             if (!players[i].isTurnComplete())
             {
                 return;
             }
         }
         takeEnemyAction();
+        //reset highlights
+        hasSelected = false;
+        tileHighlighter.ClearHighlights();
+        actionBTNManager.destroy();
+
         for (int i = 0; i < players.Length; i++)
         {
+            if (players[i] == null) continue;
             players[i].resetTurn();
         }
     }
 
     void takeEnemyAction()
     {
-        //move enemy towards player
-        Vector2Int playerPos = players[0].gridPosition;
-        Vector2Int enemyPos = enemies[0].gridPosition;
-        if (playerPos.x > enemyPos.x)
+        foreach (EnemyController enemy in enemies)
         {
-            enemies[0].moveToCell(new Vector2Int(enemyPos.x + 1, enemyPos.y));
-        }
-        else if (playerPos.x < enemyPos.x)
-        {
-            enemies[0].moveToCell(new Vector2Int(enemyPos.x - 1, enemyPos.y));
-        }
-        else if (playerPos.y > enemyPos.y)
-        {
-            enemies[0].moveToCell(new Vector2Int(enemyPos.x, enemyPos.y + 1));
-        }
-        else if (playerPos.y < enemyPos.y)
-        {
-            enemies[0].moveToCell(new Vector2Int(enemyPos.x, enemyPos.y - 1));
-        }
-    }
+            if (enemy == null) continue;
+            if (enemy.hp <= 0) continue;
+            CharacterController nearestPlayer = null;
+            int nearestDistance = int.MaxValue;
 
-    //Executes the attack action.
-    public void ExecuteAttack(CharacterController attacker, Action attackAction)
-    {
-        // Determine damage from the action's power defaulting to 10 if no action is provided.
-        int damage = attackAction != null ? attackAction.power : 10;
-
-        Vector2Int attackerPos = attacker.gridPosition;
-
-        Vector2Int[] adjacentCells = GetAdjacentCells(attackerPos);
-
-        // Loop through all enemies in the game.
-        foreach (OrderedCharacter oc in enemies)
-        {
-            bool isAdjacent = false;
-
-            foreach (Vector2Int cell in adjacentCells)
+            foreach (CharacterController player in players)
             {
-                if (oc.gridPosition == cell)
+                if (player == null || player.hp <= 0) continue;
+                int distance = enemy.getDist(player.gridPosition);
+                if (distance < nearestDistance)
                 {
-                    isAdjacent = true;
-                    break;
+                    nearestDistance = distance;
+                    nearestPlayer = player;
                 }
             }
 
-            // If the enemy is adjacent, apply damage and log the event.
-            if (isAdjacent)
+            if (nearestPlayer == null) continue;
+
+            if (nearestDistance == 1)
             {
-                oc.TakeDamage(damage);
-                //this my best attempt at logging 
-                Debug.Log(oc.gameObject.name + " took " + damage + " damage from " + attacker.gameObject.name);
+                nearestPlayer.TakeDamage(enemy.baseAttack);
+                Debug.Log(enemy.name + " attacks " + nearestPlayer.name + " for " + enemy.baseAttack + " damage!");
+            }
+            else
+            {
+                Vector2Int enemyPos = enemy.gridPosition;
+                Vector2Int playerPos = nearestPlayer.gridPosition;
+                Vector2Int moveTarget = enemyPos;
+                if (Mathf.Abs(playerPos.x - enemyPos.x) > Mathf.Abs(playerPos.y - enemyPos.y))
+                {
+                    moveTarget.x += (playerPos.x > enemyPos.x) ? 1 : -1;
+                }
+                else
+                {
+                    moveTarget.y += (playerPos.y > enemyPos.y) ? 1 : -1;
+                }
+                if (boardManager.checkCell(moveTarget))
+                {
+                    enemy.moveToCell(moveTarget);
+                }
+                if (enemy.getDist(nearestPlayer.gridPosition) == 1)
+                {
+                    nearestPlayer.TakeDamage(enemy.baseAttack);
+                    Debug.Log(enemy.name + " attacks " + nearestPlayer.name + " for " + enemy.baseAttack + " damage!");
+                }
             }
         }
-
-        // Mark the attacker as having taken their action.
-        attacker.hasActed = true;
     }
 
-
-    //Helper method to get the four adjacent cells.
-    Vector2Int[] GetAdjacentCells(Vector2Int center)
-    {
-        return new Vector2Int[]
-        {
-            new Vector2Int(center.x + 1, center.y),       // East
-            new Vector2Int(center.x - 1, center.y),       // West
-            new Vector2Int(center.x, center.y + 1),       // North
-            new Vector2Int(center.x, center.y - 1),       // South
-            new Vector2Int(center.x + 1, center.y + 1),   // Northeast
-            new Vector2Int(center.x + 1, center.y - 1),   // Southeast
-            new Vector2Int(center.x - 1, center.y + 1),   // Northwest
-            new Vector2Int(center.x - 1, center.y - 1)    // Southwest
-        };
-    }
 
     // Spawns players given their locations
     // At the moment, each player is spawned with the same actions.

@@ -104,24 +104,21 @@ public abstract class OrderedCharacter : MonoBehaviour
                 return cells;
             case Action.TargetType.LINE:
                 cells = new Vector2Int[action.range * 4];
-                for (int i = 0; i < action.range; i++)
+                for (int i = 1; i <= action.range; i+=4)
                 {
-                    cells[i] = new Vector2Int(gridPosition.x + i, gridPosition.y);
-                }
-                for (int i = 0; i < action.range; i++)
-                {
+                    cells[i-1] = new Vector2Int(gridPosition.x + i, gridPosition.y);
                     cells[i] = new Vector2Int(gridPosition.x - i, gridPosition.y);
+                    cells[i+1] = new Vector2Int(gridPosition.x, gridPosition.y + i);
+                    cells[i+2] = new Vector2Int(gridPosition.x, gridPosition.y - i);
                 }
-                for (int i = 0; i < action.range; i++)
+                Debug.Log("Line cells: " + cells.Length);
+                for (int i = 0; i < cells.Length; i++)
                 {
-                    cells[i] = new Vector2Int(gridPosition.x, gridPosition.y + i);
-                }
-                for (int i = 0; i < action.range; i++)
-                {
-                    cells[i] = new Vector2Int(gridPosition.x, gridPosition.y - i);
+                    Debug.Log(cells[i]);
                 }
                 return cells;
         }
+        Debug.LogError("Invalid action target type");
         return new Vector2Int[] { gridPosition };
     }
 
@@ -152,10 +149,4 @@ public abstract class OrderedCharacter : MonoBehaviour
             Debug.Log("Effect failed");
         }
 
-    }
-
-    public void processAction(Action action)
-    {
-        //TODO
-    }
-}
+    }}
