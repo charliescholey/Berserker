@@ -274,9 +274,21 @@ public class CharacterController : OrderedCharacter
 
     public override void Die()
     {
-        // to deal with dying, again not sure how we are dealing with it
         Debug.Log($"{gameObject.name} died.");
         gameObject.SetActive(false);
+
+        // Remove from players array
+        GameManager gm = FindObjectOfType<GameManager>();
+        if (gm != null)
+        {
+            for (int i = 0; i < gm.players.Length; i++)
+            {
+                if (gm.players[i] == this)
+                {
+                    gm.players[i] = null;
+                }
+            }
+        }
     }
     #endregion
 

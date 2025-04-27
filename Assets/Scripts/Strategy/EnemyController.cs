@@ -40,7 +40,8 @@ public class EnemyController : OrderedCharacter
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        hp = 20;
+        hp = 999;
+        baseAttack = 50;
     }
        public override void TakeDamage(int damage)
     {
