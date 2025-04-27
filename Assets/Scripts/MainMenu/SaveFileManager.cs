@@ -53,9 +53,8 @@ public class SaveFileManager : MonoBehaviour {
             exp = 0,
             stageReached = 1,
             passiveSkills = new List<PassiveSkill>(), 
-            UnlockedSkillIndices = new List<int>()
+            UnlockedSkillIndices = new List<int> {0, 2}
         };
-
         string json = JsonUtility.ToJson(CurrentPlayerData, true);
         File.WriteAllText(saveFilePath, json);
         Debug.Log("New game started. Player data saved:\n" + json);

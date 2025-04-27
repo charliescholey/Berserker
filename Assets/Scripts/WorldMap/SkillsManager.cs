@@ -23,8 +23,14 @@ public class SkillsManager : MonoBehaviour
     {
         _unlockedMap = new Dictionary<Button, int>();
         
-        List<Action> actions = actionDatabase.GetAllActions();
-        for(int i = 1; i < actions.Count; i++) {
+        List<Action> acts = new List<Action>(actionDatabase.GetAllActions());
+
+        acts.RemoveAll(action => 
+            action.actionName == "Melee" || 
+            action.actionName == "Heal" || 
+            action.actionName == "Pass Turn");
+        
+        for(int i = 1; i < acts.Count; i++) {
             // Clone the button
             Button newButton = Instantiate(button, button.transform.parent);
         
@@ -39,15 +45,14 @@ public class SkillsManager : MonoBehaviour
             activeSkillButtons.Add(newButton);
         }
         
-        for (int i = 0; i < actions.Count; i++)
+        for (int i = 0; i < acts.Count; i++)
         {
-            var cfg   = actions[i];
+            var cfg   = acts[i];
             var btn = activeSkillButtons[i];
             var label = btn.GetComponentInChildren<TMP_Text>();
             if (label != null) {
                 label.text = "<b>" + cfg.actionName + "</b>\n300";
             }
-            Debug.Log(label.text);
             _unlockedMap[btn] = actionDatabase.GetIndexOfAction(cfg);
             btn.onClick.AddListener(() => OnActiveClicked(btn));
 
@@ -69,15 +74,14 @@ public class SkillsManager : MonoBehaviour
     }
     void OnActiveClicked(Button btn)
     {
-        Debug.Log("Active Button Clicked");
         var data  = SaveFileManager.CurrentPlayerData;
         int skillCost = 300; // change
-        if( data.gold < skillCost ) {
+        if( data.exp < skillCost ) {
             return;
         }
 
         if(! data.UnlockedSkillIndices.Contains( _unlockedMap[btn] )) {
-            data.gold -= skillCost;
+            data.exp -= skillCost;
             FindFirstObjectByType<PlayerDataUIUpdater>().Refresh();
             data.UnlockedSkillIndices.Add( _unlockedMap[btn] );
         }

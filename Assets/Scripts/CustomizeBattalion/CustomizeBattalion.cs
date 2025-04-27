@@ -25,8 +25,6 @@ public class CustomizeBattalion : MonoBehaviour
     [SerializeField] TMP_Dropdown[] abilityDropdowns;
     [SerializeField] ActionDatabase actionDatabase;
     CharacterData selected;
-    //TempCharacter[] battalion = new TempCharacter[4];
-    //List<TempCharacter> bench;
     private CharacterDatabase characterDatabase;
     private Sprite[] sprites;
 
@@ -43,10 +41,10 @@ public class CustomizeBattalion : MonoBehaviour
             b.onClick.AddListener(delegate{ SelectCharacter(x); });
             i += 1;
         }
-        ResetUI();
+        Reset_UI();
     }
 
-    public void ResetUI() {
+    public void Reset_UI() {
         LoadCharacterDatabase();
         SelectCharacter(characterDatabase.characters[0]);
         UpdateDropdowns();
@@ -55,8 +53,7 @@ public class CustomizeBattalion : MonoBehaviour
     void UpdateSelectedCharacter() {
         Sprite found = sprites.FirstOrDefault(s => s.name == selected.spritePath);
         selectedCharacterImage.sprite = found;
-        selectedCharacterInformation.text = "";
-        selectedCharacterInformation.text = "Character Ability: " + selected.uniqueAbility + "\n\nGeneral Abilities:";
+        selectedCharacterInformation.text = "Character Abilities:";
         UpdateDropdowns();
         
         selectedCharacterName.text = selected.characterName;
@@ -86,23 +83,17 @@ public class CustomizeBattalion : MonoBehaviour
 
     public void SelectCharacter(int battalionIndex)
     {
-        Debug.Log("SelectCharacter(int " + battalionIndex + ")");
         int selectedIndex = 0;
         for(int i = 0; i < 4; i++) {
             if(selected == characterDatabase.characters[i]) {
                 selectedIndex = i;
             }
         }
-        Debug.Log("selectedIndex: " + selectedIndex);
         if(battalionIndex < selectedIndex) {
             SelectCharacter( characterDatabase.characters[battalionIndex] );
         } else {
             SelectCharacter( characterDatabase.characters[battalionIndex+1] );
         }
-    }
-
-    public void SwapCharacters(TempCharacter characterToAdd) {
-        /* TODO: Swap the selected character with characterToAdd */
     }
 
     public void UpdateCharacterAbility()
@@ -111,10 +102,12 @@ public class CustomizeBattalion : MonoBehaviour
 
         foreach (TMP_Dropdown dropdown in abilityDropdowns)
         {
-            int val = dropdown.value;
-            if (val >= 1 && !tempList.Contains(val-1))
+            string name = dropdown.options[dropdown.value].text;
+            
+            if (name != "-None-")
             {
-                tempList.Add(val-1);
+                int i = GetActionIndexByName(name);
+                if(! tempList.Contains(i)) tempList.Add(i);
             }
         }
 
@@ -139,13 +132,14 @@ public class CustomizeBattalion : MonoBehaviour
         int[] _actions = selected.actionIndices;
         abilityDropdowns[0].value = -1; // -None-
         abilityDropdowns[1].value = -1;
-        //abilityDropdowns[0].RefreshShownValue();
         
         if(_actions.Length >= 1) {
-            abilityDropdowns[0].value = _actions[0]+1;
+            string actName = actionDatabase.GetActionByIndex(_actions[0]).actionName;
+            abilityDropdowns[0].value = abilityDropdowns[0].options.FindIndex(option => option.text == actName);
         }
         if(_actions.Length >= 2) {
-            abilityDropdowns[1].value = _actions[1]+1;
+            string actName2 = actionDatabase.GetActionByIndex(_actions[1]).actionName;
+            abilityDropdowns[1].value = abilityDropdowns[1].options.FindIndex(option => option.text == actName2);
         }
     }
 
@@ -156,7 +150,6 @@ public class CustomizeBattalion : MonoBehaviour
     }
     private void SaveCharacterDatabase() {
         string json = JsonUtility.ToJson(characterDatabase, true);
-        //selectedCharacterInformation.text = json;
         File.WriteAllText(characterFilePath, json);
     }
 
@@ -165,4 +158,10 @@ public class CustomizeBattalion : MonoBehaviour
     public void Save() {
         SaveCharacterDatabase();
     }
+
+    private int GetActionIndexByName(string name){
+        Action act = actionDatabase.GetAllActions().FirstOrDefault(a => a.actionName == name);
+        int i = actionDatabase.GetIndexOfAction(act);
+        return i;
+    } 
 }

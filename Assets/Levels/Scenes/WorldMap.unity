@@ -11355,59 +11355,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62a4d28405a1b1345af221f459c79294, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  passiveSkillConfigs:
-  - skillName: Sharp Edge
-    attAdd: 5
-    attMult: 1
-    hpAdd: 0
-    hpMult: 1
-    description: Increase base attack by 5.
-  - skillName: Battle Hardened
-    attAdd: 0
-    attMult: 1
-    hpAdd: 20
-    hpMult: 1
-    description: Gain an extra 20 HP.
-  - skillName: Stone Skin
-    attAdd: 0
-    attMult: 1
-    hpAdd: 0
-    hpMult: 1.1
-    description: Increase max HP by 10%.
-  - skillName: Berserker's Rage
-    attAdd: 0
-    attMult: 1.15
-    hpAdd: 0
-    hpMult: 1
-    description: Increase attack by 15%.
-  - skillName: Vital Strike
-    attAdd: 3
-    attMult: 1.05
-    hpAdd: 0
-    hpMult: 1
-    description: Increase attack by 3 and attack multiplier by 5%.
-  - skillName: Enduring Strength
-    attAdd: 1
-    attMult: 1.1
-    hpAdd: 5
-    hpMult: 1.05
-    description: Gain +1 attack, +10% attack multiplier, +5 HP, and +5% max HP.
-  passiveSkillButtons:
-  - {fileID: 105744990}
-  - {fileID: 28138725}
-  - {fileID: 1427638568}
-  - {fileID: 1016931104}
-  - {fileID: 651807127}
-  - {fileID: 1330915235}
-  activeSkillConfigs:
-  - skillName: Burn
-    description: Burns the target for 5 rounds, dealing 30% of attack each round.
-  - skillName: Freeze
-    description: '50% accuracy: freezes the target for 2 rounds.'
-  - skillName: Risky Hit
-    description: '50% accuracy: deals 250% of attack damage.'
-  - skillName: Safe Hit
-    description: '100% accuracy: deals 75% of attack damage.'
   activeSkillButtons:
   - {fileID: 1172501733}
   UnlockedSkills: 
@@ -13754,7 +13701,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1853611258}
         m_TargetAssemblyTypeName: CustomizeBattalion, Assembly-CSharp
-        m_MethodName: ResetUI
+        m_MethodName: Reset_UI
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
