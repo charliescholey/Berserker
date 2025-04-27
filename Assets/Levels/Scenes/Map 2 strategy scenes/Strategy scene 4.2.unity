@@ -1714,8 +1714,8 @@ Tilemap:
   - first: {x: 9, y: 0, z: 0}
     second:
       serializedVersion: 2
-      m_TileIndex: 14
-      m_TileSpriteIndex: 14
+      m_TileIndex: 13
+      m_TileSpriteIndex: 13
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -2314,8 +2314,8 @@ Tilemap:
   - first: {x: 9, y: 3, z: 0}
     second:
       serializedVersion: 2
-      m_TileIndex: 14
-      m_TileSpriteIndex: 14
+      m_TileIndex: 10
+      m_TileSpriteIndex: 10
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -2543,15 +2543,15 @@ Tilemap:
     m_Data: {fileID: 0}
   - m_RefCount: 0
     m_Data: {fileID: 0}
-  - m_RefCount: 1
+  - m_RefCount: 2
     m_Data: {fileID: 11400000, guid: 5407c5b0ba37748dfbfecbd1e0965654, type: 2}
   - m_RefCount: 1
     m_Data: {fileID: 11400000, guid: 6bdf9f61d0e0e4bc3b3af715494aad7b, type: 2}
   - m_RefCount: 23
     m_Data: {fileID: 11400000, guid: 6b3a3fe36dad940ddb6b5165bfa0c140, type: 2}
-  - m_RefCount: 1
+  - m_RefCount: 2
     m_Data: {fileID: 11400000, guid: 2a774fcd01db945bca9b2b6408358261, type: 2}
-  - m_RefCount: 11
+  - m_RefCount: 9
     m_Data: {fileID: 11400000, guid: f88f7ba942d514a1189d89e1ee30a50d, type: 2}
   m_TileSpriteArray:
   - m_RefCount: 0
@@ -2574,15 +2574,15 @@ Tilemap:
     m_Data: {fileID: 0}
   - m_RefCount: 0
     m_Data: {fileID: 0}
-  - m_RefCount: 1
+  - m_RefCount: 2
     m_Data: {fileID: 6889545917827519698, guid: a74ddd1848d2d479b81620f2298e04ce, type: 3}
   - m_RefCount: 1
     m_Data: {fileID: 5651163114573580929, guid: a74ddd1848d2d479b81620f2298e04ce, type: 3}
   - m_RefCount: 23
     m_Data: {fileID: -5498342656047912935, guid: a74ddd1848d2d479b81620f2298e04ce, type: 3}
-  - m_RefCount: 1
+  - m_RefCount: 2
     m_Data: {fileID: 7351026898981361674, guid: a74ddd1848d2d479b81620f2298e04ce, type: 3}
-  - m_RefCount: 11
+  - m_RefCount: 9
     m_Data: {fileID: 5732307694499621417, guid: a74ddd1848d2d479b81620f2298e04ce, type: 3}
   m_TileMatrixArray:
   - m_RefCount: 200
