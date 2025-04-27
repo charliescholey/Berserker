@@ -230,7 +230,7 @@ public class CharacterController : OrderedCharacter
                 if (enemy != null) {
                     if(enemy.GetType() != this.GetType()){ 
                         //deal damage
-                        if(action.type == action.MoveType.MELEE){
+                        if(action.type == Action.MoveType.MELEE){
                             enemy.TakeDamage(this.baseAttack);
                         }else{
                             enemy.TakeDamage(action.power);
