@@ -35,7 +35,7 @@
             "baseHealth": 90,
             "baseAttack": 18,
             "baseDefense": 7,
-            "baseMovementRange": 2,
+            "baseMovementRange": 4,
             "currentHealth": 90,
             "characterClass": "Rogue",
             "uniqueAbility": "Stealth",
