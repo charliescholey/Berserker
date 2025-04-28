@@ -151,6 +151,21 @@ public class StoreUI : MonoBehaviour
             actionIndices = selected.actionIndices,
         };
 
+        // Print all properties to the debug log
+        Debug.Log($"Character Data: \n" +
+          $"Name: {data.characterName}\n" +
+          $"Base Health: {data.baseHealth}\n" +
+          $"Base Attack: {data.baseAttack}\n" +
+          $"Base Defense: {data.baseDefense}\n" +
+          $"Base Movement Range: {data.baseMovementRange}\n" +
+          $"Unique Ability: {data.uniqueAbility}\n" +
+          $"Max Health: {data.maxHealth}\n" +
+          $"Max Attack: {data.maxAttack}\n" +
+          $"Max Defense: {data.maxDefense}\n" +
+          $"Max Movement Range: {data.maxMovementRange}\n" +
+          $"Sprite Path: {data.spritePath}\n" +
+          $"Action Indices: {string.Join(", ", data.actionIndices)}");
+
         CharacterController.SaveCharacterData(data);
         Debug.Log($"Saved character: {data.characterName}");
     }

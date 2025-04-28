@@ -77,6 +77,7 @@ public class SaveFileManager : MonoBehaviour {
     }
 
     public void StartNewGame() {
+        CharacterController.LoadDefaultCharacterDatabase();
         CurrentPlayerData = new PlayerData(100, 0, 1, new List<int> {0, 2});
         SaveData();
         SceneManager.LoadScene("WorldMap");

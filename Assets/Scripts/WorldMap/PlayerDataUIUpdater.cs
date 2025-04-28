@@ -29,8 +29,15 @@ public class PlayerDataUIUpdater : MonoBehaviour
     {
         if (SaveFileManager.CurrentPlayerData != null)
         {
-            xpText.text = SaveFileManager.CurrentPlayerData.GetXP() + " XP";
-            moneyText.text = SaveFileManager.CurrentPlayerData.GetGold().ToString();
+            if (xpText != null)
+                xpText.text = SaveFileManager.CurrentPlayerData.GetXP() + " XP";
+            else
+                Debug.LogWarning("xpText is not assigned in the Inspector.");
+
+            if (moneyText != null)
+                moneyText.text = SaveFileManager.CurrentPlayerData.GetGold().ToString();
+            // else
+                // Debug.LogWarning("moneyText is not assigned in the Inspector.");
         }
         else
         {
