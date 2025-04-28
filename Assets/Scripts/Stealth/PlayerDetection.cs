@@ -4,8 +4,11 @@ using System.Collections;
 
 public class PlayerDetection : MonoBehaviour
 {
+
+    public bool isPlayerDetected = false;
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        string levelName = SceneManager.GetActiveScene().name;
         if (collision.CompareTag("player"))
         {
             Debug.Log("Player has been spotted by enemy character!");
@@ -16,13 +19,16 @@ public class PlayerDetection : MonoBehaviour
             {
                 if (current.CompareTag("EnemyRoot"))
                 {
+                    levelName = current.GetComponent<LevelJump>().levelName;
                     Destroy(current.gameObject);
                     break;
                 }
                 current = current.parent;
             }
             
-            StealthManager.Instance.LoadAndActivateScene("Strategy");
+            StealthManager.Instance.LoadAndActivateScene(levelName);
         }
+
+        Debug.Log("Hit Cone!");
     }
 }
