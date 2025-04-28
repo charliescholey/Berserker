@@ -11,6 +11,10 @@ public class CharacterData
     public int baseAttack;
     public int baseDefense;
     public int baseMovementRange;
+    public int maxHealth;
+    public int maxAttack;
+    public int maxDefense;
+    public int maxMovementRange;
     public string uniqueAbility;
     public int[] actionIndices; // References to actions in the database
     public string spritePath;
@@ -38,7 +42,7 @@ public class CharacterDatabase
 public class CharacterController : OrderedCharacter
 {
     #region Constants
-    private const string DATA_PATH = "Data/characters";
+    private const string DATA_PATH = "Data/characters"; 
     private const string SAVE_FILENAME = "character_data.json";
     #endregion
 
@@ -66,6 +70,10 @@ public class CharacterController : OrderedCharacter
     public int baseMovementRange { get; private set; }
     public string uniqueAbility { get; private set; }
     public string spritePath { get; private set; }
+    public int maxHealth { get; private set; }
+    public int maxAttack { get; private set; }
+    public int maxDefense { get; private set; }
+    public int maxMovementRange { get; private set; }
     #endregion
 
     void Awake()
@@ -75,7 +83,7 @@ public class CharacterController : OrderedCharacter
         {
             SaveFilePath = Path.Combine(Application.persistentDataPath, SAVE_FILENAME);
         }
-        LoadTestData();
+        LoadCharacterDatabase();
     }
 
     #region Spawning
@@ -134,7 +142,7 @@ public class CharacterController : OrderedCharacter
 
     public override void moveToCell(Vector2Int cell)
     {
-        if(!boardManager.checkCell(cell))
+        if (!boardManager.checkCell(cell))
         {
             return;
         }
@@ -326,6 +334,10 @@ public class CharacterController : OrderedCharacter
         }
 
         string json = JsonUtility.ToJson(s_CharacterDatabase, true);
+        if (SaveFilePath == null)
+        {
+            SaveFilePath = Path.Combine(Application.persistentDataPath, SAVE_FILENAME);
+        }
         File.WriteAllText(SaveFilePath, json);
         Debug.Log($"Character database saved to {SaveFilePath}");
     }
@@ -341,42 +353,55 @@ public class CharacterController : OrderedCharacter
             baseMovementRange = this.baseMovementRange,
             uniqueAbility = this.uniqueAbility,
             actionIndices = GetActionIndices(),
-            spritePath = this.spritePath
+            spritePath = this.spritePath,
+            maxHealth = this.maxHealth,
+            maxAttack = this.maxAttack,
+            maxDefense = this.maxDefense,
+            maxMovementRange = this.maxMovementRange,
         };
 
         SaveCharacterData(data);
     }
-
     private static void LoadCharacterDatabase()
     {
         if (s_IsDatabaseLoaded) return;
 
-        if (!File.Exists(SaveFilePath))
+        string userSavePath = Path.Combine(Application.persistentDataPath, SAVE_FILENAME);
+
+        if (File.Exists(userSavePath))
         {
-            s_CharacterDatabase = new CharacterDatabase();
-            s_IsDatabaseLoaded = true;
-            return;
+            // If a user save file exists, load it
+            string json = File.ReadAllText(userSavePath);
+            s_CharacterDatabase = JsonUtility.FromJson<CharacterDatabase>(json);
+            Debug.Log($"Loaded character database from user save: {userSavePath}");
+        }
+        else
+        {
+            // Otherwise load the default version from Resources
+            TextAsset jsonFile = Resources.Load<TextAsset>(DATA_PATH);
+            if (jsonFile == null)
+            {
+                Debug.LogError($"Failed to load character data from {DATA_PATH}");
+                return;
+            }
+            s_CharacterDatabase = JsonUtility.FromJson<CharacterDatabase>(jsonFile.text);
+            Debug.Log($"Loaded default character database from resources: {DATA_PATH}");
         }
 
-        string json = File.ReadAllText(SaveFilePath);
-        s_CharacterDatabase = JsonUtility.FromJson<CharacterDatabase>(json);
         s_IsDatabaseLoaded = true;
     }
 
-    private static void LoadTestData()
+    public static void LoadDefaultCharacterDatabase()
     {
-        if (s_IsDatabaseLoaded) return;
-
+        // Otherwise load the default version from Resources
         TextAsset jsonFile = Resources.Load<TextAsset>(DATA_PATH);
         if (jsonFile == null)
         {
-            Debug.LogError($"Failed to load test character data from {DATA_PATH}");
+            Debug.LogError($"Failed to load character data from {DATA_PATH}");
             return;
         }
-
         s_CharacterDatabase = JsonUtility.FromJson<CharacterDatabase>(jsonFile.text);
-        s_IsDatabaseLoaded = true;
-        Debug.Log($"Test character database loaded with {s_CharacterDatabase.characters.Count} characters");
+        Debug.Log($"Loaded default character database from resources: {DATA_PATH}");
     }
 
     public void LoadCharacterData(string characterName, ActionDatabase actionDatabase)
@@ -451,6 +476,16 @@ public class CharacterController : OrderedCharacter
 
         Debug.Log($"Character data loaded for: {characterName}");*/
     }
+
+    public static List<CharacterData> GetAllCharacters()
+    {
+        if (!s_IsDatabaseLoaded)
+        {
+            LoadCharacterDatabase();
+        }
+        return s_CharacterDatabase.characters;
+    }
+
 
     private int[] GetActionIndices()
     {
