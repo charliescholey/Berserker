@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.Collections.Generic;
+using System.Linq;
 
 /**
 * BoardManager class -- manages the game board.
@@ -37,7 +38,9 @@ public class BoardManager : MonoBehaviour
 
     public void setWalls(Vector2Int[] wallCells){
         for(int i = 0; i < wallCells.Length; i++){
-            walls.Add(wallCells[i], false);
+            if(!walls.ContainsKey(wallCells[i])){
+                walls.Add(wallCells[i], false);
+            }
         }
     }
 
