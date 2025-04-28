@@ -42,7 +42,7 @@ public class CharacterDatabase
 public class CharacterController : OrderedCharacter
 {
     #region Constants
-    private const string DATA_PATH = "Data/characters";
+    private const string DATA_PATH = "Data/characters"; 
     private const string SAVE_FILENAME = "character_data.json";
     #endregion
 
@@ -83,7 +83,7 @@ public class CharacterController : OrderedCharacter
         {
             SaveFilePath = Path.Combine(Application.persistentDataPath, SAVE_FILENAME);
         }
-        LoadTestData();
+        LoadCharacterDatabase();
     }
 
     #region Spawning
@@ -362,37 +362,46 @@ public class CharacterController : OrderedCharacter
 
         SaveCharacterData(data);
     }
-
     private static void LoadCharacterDatabase()
     {
         if (s_IsDatabaseLoaded) return;
 
-        if (!File.Exists(SaveFilePath))
+        string userSavePath = Path.Combine(Application.persistentDataPath, SAVE_FILENAME);
+
+        if (File.Exists(userSavePath))
         {
-            s_CharacterDatabase = new CharacterDatabase();
-            s_IsDatabaseLoaded = true;
-            return;
+            // If a user save file exists, load it
+            string json = File.ReadAllText(userSavePath);
+            s_CharacterDatabase = JsonUtility.FromJson<CharacterDatabase>(json);
+            Debug.Log($"Loaded character database from user save: {userSavePath}");
+        }
+        else
+        {
+            // Otherwise load the default version from Resources
+            TextAsset jsonFile = Resources.Load<TextAsset>(DATA_PATH);
+            if (jsonFile == null)
+            {
+                Debug.LogError($"Failed to load character data from {DATA_PATH}");
+                return;
+            }
+            s_CharacterDatabase = JsonUtility.FromJson<CharacterDatabase>(jsonFile.text);
+            Debug.Log($"Loaded default character database from resources: {DATA_PATH}");
         }
 
-        string json = File.ReadAllText(SaveFilePath);
-        s_CharacterDatabase = JsonUtility.FromJson<CharacterDatabase>(json);
         s_IsDatabaseLoaded = true;
     }
 
-    private static void LoadTestData()
+    public static void LoadDefaultCharacterDatabase()
     {
-        if (s_IsDatabaseLoaded) return;
-
+        // Otherwise load the default version from Resources
         TextAsset jsonFile = Resources.Load<TextAsset>(DATA_PATH);
         if (jsonFile == null)
         {
-            Debug.LogError($"Failed to load test character data from {DATA_PATH}");
+            Debug.LogError($"Failed to load character data from {DATA_PATH}");
             return;
         }
-
         s_CharacterDatabase = JsonUtility.FromJson<CharacterDatabase>(jsonFile.text);
-        s_IsDatabaseLoaded = true;
-        Debug.Log($"Test character database loaded with {s_CharacterDatabase.characters.Count} characters");
+        Debug.Log($"Loaded default character database from resources: {DATA_PATH}");
     }
 
     public void LoadCharacterData(string characterName, ActionDatabase actionDatabase)
@@ -472,7 +481,7 @@ public class CharacterController : OrderedCharacter
     {
         if (!s_IsDatabaseLoaded)
         {
-            LoadTestData();
+            LoadCharacterDatabase();
         }
         return s_CharacterDatabase.characters;
     }
