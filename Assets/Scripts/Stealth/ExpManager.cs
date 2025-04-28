@@ -10,6 +10,7 @@ public class ExpManager : MonoBehaviour
     public void AddExp(int amount)
     {
         currentExp += amount;
+        SaveFileManager.CurrentPlayerData.AddXP(amount);
         UpdateExpUI();
     }
 

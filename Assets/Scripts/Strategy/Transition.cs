@@ -28,6 +28,7 @@ public class Transition : MonoBehaviour
     {
         Debug.Log("died");
         Destroy(StealthManager.Instance);
-        SceneManager.LoadScene(SaveFileManager.currentLevelName, LoadSceneMode.Single);
+        SaveFileManager.CurrentPlayerData.RemoveGold(100);
+        SceneManager.LoadScene("Levels/Scenes/WorldMap", LoadSceneMode.Single);
     }
 }
