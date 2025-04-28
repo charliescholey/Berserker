@@ -5,9 +5,9 @@ using UnityEngine.SceneManagement;
 
 [System.Serializable]
 public class PlayerData {
-    private int gold;
-    private int exp;
-    private int stageReached;
+    [SerializeField] private int gold;
+    [SerializeField] private int exp;
+    [SerializeField] private int stageReached;
 
     public PlayerData(int gold, int exp, int stageReached, List<int> UnlockedSkillIndices) {
         this.gold = gold;
@@ -77,7 +77,7 @@ public class SaveFileManager : MonoBehaviour {
     }
 
     public void StartNewGame() {
-        CurrentPlayerData = new PlayerData(0, 0, 1, new List<int> {0, 2});
+        CurrentPlayerData = new PlayerData(100, 0, 1, new List<int> {0, 2});
         SaveData();
         SceneManager.LoadScene("WorldMap");
     }
