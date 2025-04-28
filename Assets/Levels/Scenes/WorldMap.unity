@@ -178,8 +178,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: SKILL TREE
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: aa94f47e9d551400da2d7b32e51f4e19, type: 2}
-  m_sharedMaterial: {fileID: -3504264314556155065, guid: aa94f47e9d551400da2d7b32e51f4e19, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -277,7 +277,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3551080788715252952, guid: f676b81f8a4bf4feda2b6108e91ddfd3, type: 3}
       propertyPath: sceneToLoad
-      value: DemoLevel
+      value: Levels/Scenes/StealthScenes/Map3
       objectReference: {fileID: 0}
     - target: {fileID: 4274500135871620887, guid: f676b81f8a4bf4feda2b6108e91ddfd3, type: 3}
       propertyPath: m_Pivot.x
@@ -1226,8 +1226,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: BACK
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: aa94f47e9d551400da2d7b32e51f4e19, type: 2}
-  m_sharedMaterial: {fileID: -3504264314556155065, guid: aa94f47e9d551400da2d7b32e51f4e19, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4379,8 +4379,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: STORE
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: aa94f47e9d551400da2d7b32e51f4e19, type: 2}
-  m_sharedMaterial: {fileID: -3504264314556155065, guid: aa94f47e9d551400da2d7b32e51f4e19, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -6747,8 +6747,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: CUSTOMIZE BATTALION
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: aa94f47e9d551400da2d7b32e51f4e19, type: 2}
-  m_sharedMaterial: {fileID: -3504264314556155065, guid: aa94f47e9d551400da2d7b32e51f4e19, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -7630,7 +7630,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3551080788715252952, guid: f676b81f8a4bf4feda2b6108e91ddfd3, type: 3}
       propertyPath: sceneToLoad
-      value: DemoLevel
+      value: Levels/Scenes/StealthScenes/Map2
       objectReference: {fileID: 0}
     - target: {fileID: 4274500135871620887, guid: f676b81f8a4bf4feda2b6108e91ddfd3, type: 3}
       propertyPath: m_Pivot.x
