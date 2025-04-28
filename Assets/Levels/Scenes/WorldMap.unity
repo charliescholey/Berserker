@@ -10154,7 +10154,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3551080788715252952, guid: f676b81f8a4bf4feda2b6108e91ddfd3, type: 3}
       propertyPath: sceneToLoad
-      value: DemoLevel
+      value: Levels/Scenes/StealthScenes/Map1
       objectReference: {fileID: 0}
     - target: {fileID: 4274500135871620887, guid: f676b81f8a4bf4feda2b6108e91ddfd3, type: 3}
       propertyPath: m_Pivot.x
