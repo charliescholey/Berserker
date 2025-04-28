@@ -35,14 +35,6 @@ public class Chest : MonoBehaviour
             GetComponent<Collider2D>().enabled = false;
             isOpened = true;
             openedChestCount += 1;
-            if (SaveFileManager.currentLevelName == "DemoLevel" && openedChestCount == 3){
-                SaveFileManager.CurrentPlayerData.AddGold( goldManager.currentGold );
-                SaveFileManager.CurrentPlayerData.AddXP( expManager.currentExp );
-                
-                string json = JsonUtility.ToJson(SaveFileManager.CurrentPlayerData, true);
-                File.WriteAllText(SaveFileManager.saveFilePath, json);
-                SceneManager.LoadScene("WorldMap");
-            }
         }
     }
 }

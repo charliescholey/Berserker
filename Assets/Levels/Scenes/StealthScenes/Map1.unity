@@ -119,6 +119,11 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &13392577 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 512989694368734599, guid: fa0e6c41dbf754127b6f69806e00991d, type: 3}
+  m_PrefabInstance: {fileID: 286416085}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &15348153 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2387965449559854398, guid: 8ed53703931b64066b147fe2546513e9, type: 3}
@@ -14418,6 +14423,7 @@ GameObject:
   - component: {fileID: 1066217607}
   - component: {fileID: 1066217606}
   - component: {fileID: 1066217605}
+  - component: {fileID: 1066217609}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -14481,6 +14487,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1066217609
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1066217604}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3df4a872fdbde485383fb0c4966a801d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tracked: {fileID: 13392577}
 --- !u!1 &1135053787
 GameObject:
   m_ObjectHideFlags: 0
