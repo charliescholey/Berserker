@@ -23,8 +23,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Levels/Scenes/Strategy.unity
     guid: 6236508b186f5422aa9fa21e64a67064
-<<<<<<< Updated upstream
-=======
   - enabled: 1
     path: Assets/Levels/Scenes/StealthScenes/Map1.unity
     guid: 6ef52e3362f8448629d7b7a3d26aae2f
@@ -43,6 +41,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Levels/Scenes/m1/1p5.unity
     guid: 8be92b73467c2014f9b4318c43b87f3a
+<<<<<<< HEAD
   - enabled: 1
     path: Assets/Levels/Scenes/m2/2p1.unity
     guid: e6b31257a92561e47975d4dfa54c35ee
@@ -79,7 +78,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Levels/Scenes/m2/2p4.unity
     guid: 1f82684245b10de45bee2c949c713e54
->>>>>>> Stashed changes
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

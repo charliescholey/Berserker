@@ -29,29 +29,12 @@ public class RotateEnemy : MonoBehaviour {
         
         // Create a pivot at the enemy sprite's centre offset by +0.5 on X and -0.6 on Y
         pivot = new GameObject("CharacterPivot");
-<<<<<<< Updated upstream
-        pivot.transform.position = enemySprite.transform.position;
-=======
-        Vector3 enemyPos = enemySprite.transform.position;
-        pivot.transform.position = new Vector3(
-            enemyPos.x + 0.5f,
-            enemyPos.y - 0.6f,
-            enemyPos.z
-        );
->>>>>>> Stashed changes
         
         // Re-parent the enemy sprite and vision cone to the pivot, preserving world positions.
         enemySprite.transform.SetParent(pivot.transform, true);
         visionCone.transform.SetParent(pivot.transform, true);
         
-<<<<<<< Updated upstream
-        // Reset the enemy sprite's local position so that the pivot is exactly at its centre.
-        enemySprite.transform.localPosition = Vector3.zero;
-        
-        // Re-parent the pivot back to this object so that the overall structure is maintained.
-=======
         // Now parent the pivot under this object so hierarchy stays neat.
->>>>>>> Stashed changes
         pivot.transform.SetParent(transform, true);
 
         // Attach PlayerDetection to the "Triangle" inside VisionCone, if not already present.

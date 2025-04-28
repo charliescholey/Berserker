@@ -11,6 +11,8 @@ public class StealthManager : MonoBehaviour
 
     private ExpManager expManager;
 
+    private string returnLevelName;
+    private string stratLevelName;
 
     private void Awake()
     {
@@ -25,8 +27,10 @@ public class StealthManager : MonoBehaviour
         }
     }
 
-    public void LoadAndActivateScene(string sceneName)
+    public void LoadAndActivateScene(string sceneName, string returnLevelName)
     {
+        this.returnLevelName = returnLevelName;
+        stratLevelName = sceneName;
         StartCoroutine(LoadAndActivateSceneCoroutine(sceneName));
     }
 
@@ -60,13 +64,21 @@ public class StealthManager : MonoBehaviour
         StartCoroutine(UnloadStrategyAndEnablePlayerCoroutine());
     }
 
+    public void ReturnToWorldMap()
+    {
+        if(SceneManager.GetActiveScene().name != stratLevelName){
+            StartCoroutine(ReturnToWorldMapCoroutine());
+        }
+        
+    }
+
     private IEnumerator UnloadStrategyAndEnablePlayerCoroutine()
     {
         Debug.Log("Starting unload process for 'Strategy'");
 
-        if (SceneManager.GetActiveScene().name == "Strategy")
+        if (SceneManager.GetActiveScene().name == stratLevelName)
         {
-            Scene initialScene = SceneManager.GetSceneByName("DemoLevel");
+            Scene initialScene = SceneManager.GetSceneByName(returnLevelName);
             if (initialScene.IsValid() && initialScene.isLoaded)
             {
                 SceneManager.SetActiveScene(initialScene);
@@ -77,18 +89,19 @@ public class StealthManager : MonoBehaviour
                 Debug.LogError("Initial scene not found or not loaded!");
                 yield break;
             }
+            SceneManager.UnloadSceneAsync(stratLevelName);
         }
 
         Debug.Log("Active scene is now: " + SceneManager.GetActiveScene().name);
 
-        Scene strategyScene = SceneManager.GetSceneByName("Strategy");
+        Scene strategyScene = SceneManager.GetSceneByName(stratLevelName);
         if (!strategyScene.isLoaded)
         {
             Debug.LogError("Strategy scene is not loaded!");
             yield break;
         }
 
-        AsyncOperation unloadOperation = SceneManager.UnloadSceneAsync("Strategy");
+        AsyncOperation unloadOperation = SceneManager.UnloadSceneAsync(stratLevelName);
         if (unloadOperation == null)
         {
             Debug.LogError("UnloadSceneAsync returned null.");
@@ -112,7 +125,14 @@ public class StealthManager : MonoBehaviour
         {
             Debug.LogError("Player reference not set in StealthManager!");
         }
-        expManager.AddExp(25);
+        expManager.AddExp(100);
+    }
+
+    private IEnumerator ReturnToWorldMapCoroutine()
+    {
+        expManager.AddExp(150);
+        SceneManager.LoadScene("Levels/Scenes/WorldMap", LoadSceneMode.Single);
+        yield return null; // Ensure the coroutine yields at least once
     }
 
     public void OnDeath()

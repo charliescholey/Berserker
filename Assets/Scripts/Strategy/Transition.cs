@@ -17,19 +17,18 @@ public class Transition : MonoBehaviour
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject); // Optional: Keep this instance across scenes
+        //DontDestroyOnLoad(gameObject); // Optional: Keep this instance across scenes
     }
 
     public void onKill(){
         Debug.Log("enemy killed");
-        SaveFileManager.CurrentPlayerData.exp += 100;
-        SaveFileManager.CurrentPlayerData.gold += 50;
         StealthManager.Instance.UnloadStrategyAndEnablePlayer();
     }
     public void onDeath()
     {
         Debug.Log("died");
         Destroy(StealthManager.Instance);
-        SceneManager.LoadScene(SaveFileManager.currentLevelName, LoadSceneMode.Single);
+        SaveFileManager.CurrentPlayerData.RemoveGold(100);
+        SceneManager.LoadScene("Levels/Scenes/WorldMap", LoadSceneMode.Single);
     }
 }

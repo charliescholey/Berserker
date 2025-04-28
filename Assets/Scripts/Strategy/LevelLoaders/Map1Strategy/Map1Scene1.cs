@@ -38,6 +38,8 @@ public class Map1Scene1 : MonoBehaviour
         walls.AddRange(generateBox(new Vector2Int(0, -2), new Vector2Int(0, -5)));
 
         map.setWalls(walls.ToArray());
+
+        level.enable();
     }
 
 

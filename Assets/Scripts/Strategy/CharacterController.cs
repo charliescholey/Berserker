@@ -11,6 +11,10 @@ public class CharacterData
     public int baseAttack;
     public int baseDefense;
     public int baseMovementRange;
+    public int maxHealth;
+    public int maxAttack;
+    public int maxDefense;
+    public int maxMovementRange;
     public string uniqueAbility;
     public int[] actionIndices; // References to actions in the database
     public string spritePath;
@@ -28,17 +32,11 @@ public class CharacterDatabase
  * NOTE: this class should not be used for gameplay design. Ideally,
  * this class only contains player information and the rest is
  * handled by the GameManager.
-
- * Functionality to add:
- * - track when turn has been completed
- * - set player sprite
- * - set player stats (from JSON eventually)
- * - attacking & all other actions
  */
 public class CharacterController : OrderedCharacter
 {
     #region Constants
-    private const string DATA_PATH = "Data/characters";
+    private const string DATA_PATH = "Data/characters"; 
     private const string SAVE_FILENAME = "character_data.json";
     #endregion
 
@@ -66,6 +64,10 @@ public class CharacterController : OrderedCharacter
     public int baseMovementRange { get; private set; }
     public string uniqueAbility { get; private set; }
     public string spritePath { get; private set; }
+    public int maxHealth { get; private set; }
+    public int maxAttack { get; private set; }
+    public int maxDefense { get; private set; }
+    public int maxMovementRange { get; private set; }
     #endregion
 
     void Awake()
@@ -75,7 +77,7 @@ public class CharacterController : OrderedCharacter
         {
             SaveFilePath = Path.Combine(Application.persistentDataPath, SAVE_FILENAME);
         }
-        LoadTestData();
+        LoadCharacterDatabase();
     }
 
     #region Spawning
@@ -134,7 +136,7 @@ public class CharacterController : OrderedCharacter
 
     public override void moveToCell(Vector2Int cell)
     {
-        if(!boardManager.checkCell(cell))
+        if (!boardManager.checkCell(cell))
         {
             return;
         }
@@ -289,8 +291,7 @@ public class CharacterController : OrderedCharacter
     {
         Debug.Log($"{gameObject.name} died.");
         gameObject.SetActive(false);
-
-        // Remove from players array
+        // Remove from the GameManager's player list
         GameManager gm = FindObjectOfType<GameManager>();
         if (gm != null)
         {
@@ -314,7 +315,6 @@ public class CharacterController : OrderedCharacter
             LoadCharacterDatabase();
         }
 
-        // Update existing character or add new one
         int existingIndex = s_CharacterDatabase.characters.FindIndex(c => c.characterName == data.characterName);
         if (existingIndex >= 0)
         {
@@ -326,6 +326,10 @@ public class CharacterController : OrderedCharacter
         }
 
         string json = JsonUtility.ToJson(s_CharacterDatabase, true);
+        if (SaveFilePath == null)
+        {
+            SaveFilePath = Path.Combine(Application.persistentDataPath, SAVE_FILENAME);
+        }
         File.WriteAllText(SaveFilePath, json);
         Debug.Log($"Character database saved to {SaveFilePath}");
     }
@@ -341,42 +345,49 @@ public class CharacterController : OrderedCharacter
             baseMovementRange = this.baseMovementRange,
             uniqueAbility = this.uniqueAbility,
             actionIndices = GetActionIndices(),
-            spritePath = this.spritePath
+            spritePath = this.spritePath,
+            maxHealth = this.maxHealth,
+            maxAttack = this.maxAttack,
+            maxDefense = this.maxDefense,
+            maxMovementRange = this.maxMovementRange,
         };
 
         SaveCharacterData(data);
     }
-
     private static void LoadCharacterDatabase()
     {
         if (s_IsDatabaseLoaded) return;
 
-        if (!File.Exists(SaveFilePath))
+        string userSavePath = Path.Combine(Application.persistentDataPath, SAVE_FILENAME);
+
+        if (File.Exists(userSavePath))
         {
-            s_CharacterDatabase = new CharacterDatabase();
-            s_IsDatabaseLoaded = true;
-            return;
+            // If a user save file exists, load it
+            string json = File.ReadAllText(userSavePath);
+            s_CharacterDatabase = JsonUtility.FromJson<CharacterDatabase>(json);
+            Debug.Log($"Loaded character database from user save: {userSavePath}");
+        }
+        else
+        {
+            // If no user save file exists, load the default database
+            LoadDefaultCharacterDatabase();
+            Debug.Log($"Loaded default character database from resources: {DATA_PATH}");
         }
 
-        string json = File.ReadAllText(SaveFilePath);
-        s_CharacterDatabase = JsonUtility.FromJson<CharacterDatabase>(json);
         s_IsDatabaseLoaded = true;
     }
 
-    private static void LoadTestData()
+    public static void LoadDefaultCharacterDatabase()
     {
-        if (s_IsDatabaseLoaded) return;
-
+        // Load the default character database from Resources
         TextAsset jsonFile = Resources.Load<TextAsset>(DATA_PATH);
         if (jsonFile == null)
         {
-            Debug.LogError($"Failed to load test character data from {DATA_PATH}");
+            Debug.LogError($"Failed to load character data from {DATA_PATH}");
             return;
         }
-
         s_CharacterDatabase = JsonUtility.FromJson<CharacterDatabase>(jsonFile.text);
-        s_IsDatabaseLoaded = true;
-        Debug.Log($"Test character database loaded with {s_CharacterDatabase.characters.Count} characters");
+        Debug.Log($"Loaded default character database from resources: {DATA_PATH}");
     }
 
     public void LoadCharacterData(string characterName, ActionDatabase actionDatabase)
@@ -393,9 +404,6 @@ public class CharacterController : OrderedCharacter
             Debug.LogError($"Character data not found for: {characterName}");
             return;
         }
-
-
-
 
         // Apply character data
         this.characterName = data.characterName;
@@ -439,18 +447,19 @@ public class CharacterController : OrderedCharacter
                     Debug.LogWarning($"Failed to resolve action at index: {idx}");
                 }
             }
-            actions.Add(actionDatabase.GetActionByIndex(3)); // Add pass action at end of list
+            actions.Add(actionDatabase.GetActionByIndex(3)); 
         }
-
-        // Log Character Actions
-        /*Debug.Log($"Actions for {characterName}:");
-        foreach (Action action in actions)
-        {
-            Debug.Log($"- {action.actionName}");
-        }
-
-        Debug.Log($"Character data loaded for: {characterName}");*/
     }
+
+    public static List<CharacterData> GetAllCharacters()
+    {
+        if (!s_IsDatabaseLoaded)
+        {
+            LoadCharacterDatabase();
+        }
+        return s_CharacterDatabase.characters;
+    }
+
 
     private int[] GetActionIndices()
     {

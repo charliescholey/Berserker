@@ -5,52 +5,69 @@
             "baseHealth": 100,
             "baseAttack": 15,
             "baseDefense": 10,
-            "baseMovementRange": 3,
+            "baseMovementRange": 2,
+            "maxHealth": 150,
+            "maxAttack": 40,
+            "maxDefense": 20,
+            "maxMovementRange": 4,
             "currentHealth": 100,
             "characterClass": "Warrior",
             "uniqueAbility": "Berserker Rage",
             "actionIndices": [
                 0,
-                1
+                2
             ],
             "spritePath": "tilemap_packed_105"
         },
         {
             "characterName": "Mage",
-            "baseHealth": 80,
+            "baseHealth": 40,
             "baseAttack": 20,
             "baseDefense": 5,
             "baseMovementRange": 2,
-            "currentHealth": 80,
+            "maxHealth": 70,
+            "maxAttack": 50,
+            "maxDefense": 10,
+            "maxMovementRange": 5,
+            "currentHealth": 40,
             "characterClass": "Mage",
             "uniqueAbility": "Arcane Burst",
             "actionIndices": [
-                1,
+                0,
                 2
             ],
-            "spritePath": "tilemap_packed_186"
+            "spritePath": "tilemap_packed_51"
         },
         {
             "characterName": "Rogue",
-            "baseHealth": 90,
+            "baseHealth": 70,
             "baseAttack": 18,
             "baseDefense": 7,
-            "baseMovementRange": 2,
-            "currentHealth": 90,
+            "baseMovementRange": 3,
+            "maxHealth": 120,
+            "maxAttack": 30,
+            "maxDefense": 15,
+            "maxMovementRange": 6,
+            "currentHealth": 70,
             "characterClass": "Rogue",
             "uniqueAbility": "Stealth",
             "actionIndices": [
-                0
+                0,
+                2
             ],
             "spritePath": "tilemap_packed_267"
         },
         {
             "characterName": "Paladin",
-            "baseHealth": 95,
+            "baseHealth": 80,
             "baseAttack": 12,
             "baseDefense": 15,
-            "baseMovementRange": 3,
-            "currentHealth": 95,
+            "baseMovementRange": 1,
+            "maxHealth": 100,
+            "maxAttack": 15,
+            "maxDefense": 30,
+            "maxMovementRange": 3,
+            "currentHealth": 80,
             "characterClass": "Paladin",
             "uniqueAbility": "Divine Shield",
             "actionIndices": [

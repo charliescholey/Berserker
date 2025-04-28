@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine.EventSystems;
 
 /**
@@ -57,7 +58,7 @@ public class GameManager : MonoBehaviour
 
     }
 
-    void Start() {
+    public void enable() {
         players[0].spawn(boardManager, boardManager.spawnLocations[0], "Warrior", actionDatabase);
         players[1].spawn(boardManager, boardManager.spawnLocations[1], "Mage", actionDatabase);
         players[2].spawn(boardManager, boardManager.spawnLocations[2], "Rogue", actionDatabase);
@@ -86,6 +87,10 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (boardManager == null)
+        {
+            return;
+        }
 
         OrderedCharacter[] characters = players.Cast<OrderedCharacter>().Concat(enemies.Cast<OrderedCharacter>()).ToArray();
         boardManager.setPlayers(characters);
@@ -96,6 +101,7 @@ public class GameManager : MonoBehaviour
         Vector3 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if (Input.GetMouseButtonDown(0))
         {
+            actionBTNManager.destroy();
             if (hasSelected && !IsPointerOverUIElement())
             {
                 //if a player is selected, move them to the clicked cell
@@ -105,9 +111,6 @@ public class GameManager : MonoBehaviour
                 hasSelected = false;
                 player.setSelected(false);
                 player = null;
-
-                actionBTNManager.destroy();
-
             }
             else
             {

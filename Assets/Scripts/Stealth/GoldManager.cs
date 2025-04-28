@@ -9,6 +9,7 @@ public class GoldManager : MonoBehaviour
     // Add gold and update the UI
     public void AddGold(int amount)
     {
+        SaveFileManager.CurrentPlayerData.AddGold(amount);
         currentGold += amount;
         UpdateGoldUI();
     }

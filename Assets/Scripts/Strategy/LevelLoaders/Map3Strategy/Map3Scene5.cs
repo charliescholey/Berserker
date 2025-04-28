@@ -49,6 +49,8 @@ public class Map3Scene5 : MonoBehaviour
 
 
         map.setWalls(walls.ToArray());
+
+        level.enable();
     }
 
 
