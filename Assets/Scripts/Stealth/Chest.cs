@@ -36,8 +36,8 @@ public class Chest : MonoBehaviour
             isOpened = true;
             openedChestCount += 1;
             if (SaveFileManager.currentLevelName == "DemoLevel" && openedChestCount == 3){
-                SaveFileManager.CurrentPlayerData.gold += goldManager.currentGold;
-                SaveFileManager.CurrentPlayerData.exp += expManager.currentExp;
+                SaveFileManager.CurrentPlayerData.AddGold( goldManager.currentGold );
+                SaveFileManager.CurrentPlayerData.AddXP( expManager.currentExp );
                 
                 string json = JsonUtility.ToJson(SaveFileManager.CurrentPlayerData, true);
                 File.WriteAllText(SaveFileManager.saveFilePath, json);

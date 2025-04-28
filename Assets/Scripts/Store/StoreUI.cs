@@ -67,13 +67,13 @@ public class StoreUI : MonoBehaviour
 
     public void PurchaseCharacter() {
         // Check if you have funds to purchase character
-        if(SaveFileManager.CurrentPlayerData.gold < selected.GetCost()) {
+        if(SaveFileManager.CurrentPlayerData.GetGold() < selected.GetCost()) {
             Debug.Log("Not enough funds");
             return;
         }
         
         // Purchase character
-        SaveFileManager.CurrentPlayerData.gold -= selected.GetCost();
+        SaveFileManager.CurrentPlayerData.RemoveGold( selected.GetCost());
 
         /* TODO: Add character to available characters */
         /* TODO: Update characters displayed */

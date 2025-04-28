@@ -76,12 +76,12 @@ public class SkillsManager : MonoBehaviour
     {
         var data  = SaveFileManager.CurrentPlayerData;
         int skillCost = 300; // change
-        if( data.exp < skillCost ) {
+        if( data.GetXP() < skillCost ) {
             return;
         }
 
         if(! data.UnlockedSkillIndices.Contains( _unlockedMap[btn] )) {
-            data.exp -= skillCost;
+            data.RemoveXP(skillCost);
             FindFirstObjectByType<PlayerDataUIUpdater>().Refresh();
             data.UnlockedSkillIndices.Add( _unlockedMap[btn] );
         }
