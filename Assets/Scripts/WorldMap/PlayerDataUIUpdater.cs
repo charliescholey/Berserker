@@ -23,10 +23,9 @@ public class PlayerDataUIUpdater : MonoBehaviour
     }
     void Start()
     {
-        Refresh();
     }
 
-    public void Refresh()
+    void Update()
     {
         if (SaveFileManager.CurrentPlayerData != null)
         {

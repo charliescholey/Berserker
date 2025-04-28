@@ -82,7 +82,6 @@ public class SkillsManager : MonoBehaviour
 
         if(! data.UnlockedSkillIndices.Contains( _unlockedMap[btn] )) {
             data.RemoveXP(skillCost);
-            FindFirstObjectByType<PlayerDataUIUpdater>().Refresh();
             data.UnlockedSkillIndices.Add( _unlockedMap[btn] );
         }
         Highlight(btn, true);
