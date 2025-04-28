@@ -81,6 +81,7 @@ public class StealthManager : MonoBehaviour
                 Debug.LogError("Initial scene not found or not loaded!");
                 yield break;
             }
+            SceneManager.UnloadSceneAsync(stratLevelName);
         }
 
         Debug.Log("Active scene is now: " + SceneManager.GetActiveScene().name);

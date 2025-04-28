@@ -17,14 +17,11 @@ public class Transition : MonoBehaviour
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject); // Optional: Keep this instance across scenes
+        //DontDestroyOnLoad(gameObject); // Optional: Keep this instance across scenes
     }
 
     public void onKill(){
         Debug.Log("enemy killed");
-        SaveFileManager.CurrentPlayerData.AddXP(100);
-        SaveFileManager.CurrentPlayerData.AddGold(50);
-
         StealthManager.Instance.UnloadStrategyAndEnablePlayer();
     }
     public void onDeath()

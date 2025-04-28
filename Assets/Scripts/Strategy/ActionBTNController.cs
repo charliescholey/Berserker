@@ -16,7 +16,7 @@ public class ActionBTNController : MonoBehaviour, IPointerEnterHandler, IPointer
     public TileHighlighter th;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void OnEnable()
     {
         this.textMeshPro = GetComponent<TextMeshProUGUI>();
         Button button = GetComponent<Button>();
