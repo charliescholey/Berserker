@@ -4,23 +4,52 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 [System.Serializable]
-public class PassiveSkill {
-    public string skillName;
-    public int attAdd;
-    public float attMult;
-    public int hpAdd;
-    public float hpMult;
-    public string description;
-}
-
-[System.Serializable]
 public class PlayerData {
-    public int gold;
-    public int exp;
-    public int stageReached;
+    [SerializeField] private int gold;
+    [SerializeField] private int exp;
+    [SerializeField] private int stageReached;
 
-    public List<PassiveSkill> passiveSkills = new List<PassiveSkill>();
+    public PlayerData(int gold, int exp, int stageReached, List<int> UnlockedSkillIndices) {
+        this.gold = gold;
+        this.exp = exp;
+        this.stageReached = stageReached;
+        this.UnlockedSkillIndices = UnlockedSkillIndices;
+    }
+
     public List<int> UnlockedSkillIndices = new List<int>();
+
+    public void AddGold(int n)
+    {
+        gold += n;
+        SaveFileManager.SaveData(); 
+    }
+
+    public void RemoveGold(int n)
+    {
+        gold -= n;
+        SaveFileManager.SaveData(); 
+    }
+
+    public void AddXP(int n)
+    {
+        exp += n;
+        SaveFileManager.SaveData(); 
+    }
+
+    public void RemoveXP(int n)
+    {
+        exp -= n;
+        SaveFileManager.SaveData(); 
+    }
+
+    public int GetGold() {
+        return gold;
+    }
+
+    public int GetXP() {
+        return exp;
+    }
+
 }
 
 public class SaveFileManager : MonoBehaviour {
@@ -48,16 +77,15 @@ public class SaveFileManager : MonoBehaviour {
     }
 
     public void StartNewGame() {
-        CurrentPlayerData = new PlayerData {
-            gold = 0,
-            exp = 0,
-            stageReached = 1,
-            passiveSkills = new List<PassiveSkill>(), 
-            UnlockedSkillIndices = new List<int> {0, 2}
-        };
-        string json = JsonUtility.ToJson(CurrentPlayerData, true);
-        File.WriteAllText(saveFilePath, json);
-        Debug.Log("New game started. Player data saved:\n" + json);
+        CurrentPlayerData = new PlayerData(100, 0, 1, new List<int> {0, 2});
+        SaveData();
         SceneManager.LoadScene("WorldMap");
     }
+
+    public static void SaveData() {
+        string json = JsonUtility.ToJson(CurrentPlayerData, true);
+        File.WriteAllText(saveFilePath, json);
+        Debug.Log("Player data saved:\n" + json);
+    }
+
 }
