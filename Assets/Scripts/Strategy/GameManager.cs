@@ -86,6 +86,11 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (boardManager == null)
+        {
+            Debug.LogError("BoardManager is gone.");
+            return;
+        }
 
         OrderedCharacter[] characters = players.Cast<OrderedCharacter>().Concat(enemies.Cast<OrderedCharacter>()).ToArray();
         boardManager.setPlayers(characters);

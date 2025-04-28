@@ -22,9 +22,6 @@ public class Transition : MonoBehaviour
 
     public void onKill(){
         Debug.Log("enemy killed");
-        SaveFileManager.CurrentPlayerData.AddXP(100);
-        SaveFileManager.CurrentPlayerData.AddGold(50);
-
         StealthManager.Instance.UnloadStrategyAndEnablePlayer();
     }
     public void onDeath()

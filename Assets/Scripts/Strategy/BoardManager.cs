@@ -84,6 +84,11 @@ public class BoardManager : MonoBehaviour
     //Given a click, return the cell that was clicked
     public Vector2Int clickToCell(Vector3 click)
     {
+        if(gameTilemap == null)
+        {
+            Debug.LogError("GameTilemap is not assigned.");
+            return Vector2Int.zero;
+        }
         Vector3Int cell = gameTilemap.WorldToCell(click);
         return new Vector2Int((int) cell.x, (int) cell.y);
     }
