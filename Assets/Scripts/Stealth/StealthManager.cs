@@ -64,6 +64,14 @@ public class StealthManager : MonoBehaviour
         StartCoroutine(UnloadStrategyAndEnablePlayerCoroutine());
     }
 
+    public void ReturnToWorldMap()
+    {
+        if(SceneManager.GetActiveScene().name != stratLevelName){
+            StartCoroutine(ReturnToWorldMapCoroutine());
+        }
+        
+    }
+
     private IEnumerator UnloadStrategyAndEnablePlayerCoroutine()
     {
         Debug.Log("Starting unload process for 'Strategy'");
@@ -118,6 +126,13 @@ public class StealthManager : MonoBehaviour
             Debug.LogError("Player reference not set in StealthManager!");
         }
         expManager.AddExp(100);
+    }
+
+    private IEnumerator ReturnToWorldMapCoroutine()
+    {
+        expManager.AddExp(150);
+        SceneManager.LoadScene("Levels/Scenes/WorldMap", LoadSceneMode.Single);
+        yield return null; // Ensure the coroutine yields at least once
     }
 
     public void OnDeath()
