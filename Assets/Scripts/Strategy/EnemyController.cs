@@ -40,7 +40,7 @@ public class EnemyController : OrderedCharacter
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        hp = 999;
+        hp = 30;
         baseAttack = 50;
     }
        public override void TakeDamage(int damage)
@@ -56,7 +56,7 @@ public class EnemyController : OrderedCharacter
      {
         // to deal with dying, again not sure how we are dealing with it
         Debug.Log($"{gameObject.name} died.");
-        SaveFileManager.CurrentPlayerData.exp += 150; // give 10 XP on enemy death
+        //SaveFileManager.CurrentPlayerData.exp += 150; // give 10 XP on enemy death
         Destroy(gameObject);
     }
 }

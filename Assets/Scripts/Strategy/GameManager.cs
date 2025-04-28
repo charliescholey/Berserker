@@ -96,6 +96,7 @@ public class GameManager : MonoBehaviour
         Vector3 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if (Input.GetMouseButtonDown(0))
         {
+            actionBTNManager.destroy();
             if (hasSelected && !IsPointerOverUIElement())
             {
                 //if a player is selected, move them to the clicked cell
@@ -105,9 +106,6 @@ public class GameManager : MonoBehaviour
                 hasSelected = false;
                 player.setSelected(false);
                 player = null;
-
-                actionBTNManager.destroy();
-
             }
             else
             {

@@ -9,6 +9,7 @@ public class PlayerDetection : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         string levelName = SceneManager.GetActiveScene().name;
+        string currLevel = SceneManager.GetActiveScene().name;
         if (collision.CompareTag("player"))
         {
             Debug.Log("Player has been spotted by enemy character!");
@@ -26,7 +27,7 @@ public class PlayerDetection : MonoBehaviour
                 current = current.parent;
             }
             
-            StealthManager.Instance.LoadAndActivateScene(levelName);
+            StealthManager.Instance.LoadAndActivateScene(levelName, currLevel);
         }
 
         Debug.Log("Hit Cone!");
