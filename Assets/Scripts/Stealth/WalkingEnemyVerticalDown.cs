@@ -1,8 +1,8 @@
 using System.Linq;
 using UnityEngine;
 
-public class WalkingEnemyController : MonoBehaviour {
-
+public class WalkingEnemyVerticalDown : MonoBehaviour
+{
     // Movement parameters.
     [SerializeField] float moveSpeed = 2f;
     // Distance the enemy moves in each phase before turning.
@@ -75,7 +75,7 @@ public class WalkingEnemyController : MonoBehaviour {
     void Update() {
         switch (currentState) {
             case State.Moving:
-                pivot.transform.Translate(0, moveSpeed * Time.deltaTime, 0);
+                pivot.transform.Translate(0, -moveSpeed * Time.deltaTime, 0);
                 if (Vector3.Distance(pivot.transform.position, phaseStart) >= moveDistance) {
                     targetRotation = movingForward ? flippedRotation : initialRotation;
                     currentState = State.Rotating;

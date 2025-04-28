@@ -1,7 +1,7 @@
 using System.Linq;
 using UnityEngine;
 
-public class WalkingEnemyHorizontal : MonoBehaviour {
+public class WalkingEnemyHorizontalLeft : MonoBehaviour {
     // will be found at runtime, no need to assign in Inspector
     GameObject visionCone;
     
@@ -75,7 +75,7 @@ public class WalkingEnemyHorizontal : MonoBehaviour {
     void Update() {
         switch (currentState) {
             case State.Moving:
-                pivot.transform.Translate(moveSpeed * Time.deltaTime, 0, 0);
+                pivot.transform.Translate(-moveSpeed * Time.deltaTime, 0, 0);
                 if (Vector3.Distance(pivot.transform.position, phaseStart) >= moveDistance) {
                     targetRotation = movingForward ? flippedRotation : initialRotation;
                     currentState = State.Rotating;

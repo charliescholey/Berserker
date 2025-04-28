@@ -68,11 +68,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5642722650408903956, guid: bac3706d54bf1e1469a24b36ac947510, type: 3}
       propertyPath: m_Size.x
-      value: 0.76323605
+      value: 0.76
       objectReference: {fileID: 0}
     - target: {fileID: 5642722650408903956, guid: bac3706d54bf1e1469a24b36ac947510, type: 3}
       propertyPath: m_Size.y
-      value: 0.8195653
+      value: 0.82
       objectReference: {fileID: 0}
     - target: {fileID: 5642722650408903956, guid: bac3706d54bf1e1469a24b36ac947510, type: 3}
       propertyPath: m_Enabled
@@ -84,7 +84,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5642722650408903956, guid: bac3706d54bf1e1469a24b36ac947510, type: 3}
       propertyPath: m_Offset.y
+<<<<<<< Updated upstream
       value: 0.0014486313
+=======
+      value: -0.595
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 8691593780646075786, guid: bac3706d54bf1e1469a24b36ac947510, type: 3}
       propertyPath: m_LocalPosition.x

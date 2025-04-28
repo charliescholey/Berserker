@@ -21,6 +21,7 @@ public class PlayerDetection : MonoBehaviour
                 }
                 current = current.parent;
             }
+            Debug.Log("Loading level");
             
             StealthManager.Instance.LoadAndActivateScene("Strategy");
         }
