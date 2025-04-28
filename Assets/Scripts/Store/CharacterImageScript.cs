@@ -14,14 +14,15 @@ public class CharacterImageScript : MonoBehaviour
     public int characterIndex;
     [System.NonSerialized]
     public CharacterData character;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+
     void Start()
     {
         LoadCharacters();
         if (summaryList.Count > 0)
         {
-            character = summaryList[0]; // Access the first character in the array
-            this.gameObject.GetComponent<Image>().color = Color.white; // Set the color to white
+            character = summaryList[0]; 
+            this.gameObject.GetComponent<Image>().color = Color.white; 
             this.gameObject.GetComponent<Button>().onClick.AddListener(delegate { onClick(); });
         }
         else
@@ -51,7 +52,7 @@ public class CharacterImageScript : MonoBehaviour
         if (characterIndex >= 0 && characterIndex < summaryList.Count)
         {
             Debug.Log("Clicked on character: " + characterIndex);
-            StoreUI.Instance.SelectCharacter(summaryList[characterIndex]); // Access the character by index
+            StoreUI.Instance.SelectCharacter(summaryList[characterIndex]);
         }
         else
         {

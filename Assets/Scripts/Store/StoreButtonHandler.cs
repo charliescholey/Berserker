@@ -1,9 +1,9 @@
 using UnityEngine;
-using UnityEngine.UI;  // You need this for Button
+using UnityEngine.UI; 
 
 public class StoreButtonHandler : MonoBehaviour
 {
-    [Range(0, 3)]   // Capital R
+    [Range(0, 3)] 
     public int buttonIndex;
 
     void Start()
@@ -11,7 +11,7 @@ public class StoreButtonHandler : MonoBehaviour
         Button button = GetComponent<Button>();
         if (button != null)
         {
-            button.onClick.AddListener(OnClick);  // Link the function properly
+            button.onClick.AddListener(OnClick);  
         }
         else
         {
