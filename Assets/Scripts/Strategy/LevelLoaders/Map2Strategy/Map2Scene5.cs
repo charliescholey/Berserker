@@ -93,6 +93,8 @@ public class Map2Scene5 : MonoBehaviour
 
 
         map.setWalls(walls.ToArray());
+
+        level.enable();
     }
 
 
