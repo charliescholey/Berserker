@@ -194,7 +194,12 @@ public class CharacterController : OrderedCharacter
 
     public override void TakeDamage(int damage)
     {
-        hp -= damage;
+        int actualDamage = damage - baseDefense;
+        if (actualDamage < 0)
+        {
+            actualDamage = 0;
+        }
+        hp -= actualDamage;
 
         if (hp <= 0)
         {
@@ -233,7 +238,12 @@ public class CharacterController : OrderedCharacter
                 if (enemy != null) {
                     if(enemy.GetType() != this.GetType()){ 
                         //deal damage
-                        enemy.TakeDamage(action.power);
+                        if(action.type == Action.MoveType.MELEE){
+                            enemy.TakeDamage(this.baseAttack);
+                        }else{
+                            enemy.TakeDamage(action.power);
+                        }
+                        
                         FindFirstObjectByType<MusicScript>().playSoundByName("GunShot");
                         Debug.Log($"{gameObject.name} dealt {action.power} damage to {enemy.gameObject.name}");
                     }   
