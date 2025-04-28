@@ -34,14 +34,14 @@ public class RotateEnemy : MonoBehaviour {
         
         // Create a pivot at the enemy sprite's current position (the intended rotation centre)
         pivot = new GameObject("CharacterPivot");
-        pivot.transform.position = enemySprite.transform.position;
+        pivot.transform.position = new Vector3(enemySprite.transform.position.x + 0.5f, enemySprite.transform.position.y -0.5f, -1f);
         
         // Re-parent the enemy sprite and the vision cone to the pivot, preserving world positions.
         enemySprite.transform.SetParent(pivot.transform, true);
         visionCone.transform.SetParent(pivot.transform, true);
         
         // Reset the enemy sprite's local position so that the pivot is exactly at its centre.
-        enemySprite.transform.localPosition = Vector3.zero;
+        //enemySprite.transform.localPosition = Vector3.zero;
         
         // Re-parent the pivot back to this object so that the overall structure is maintained.
         pivot.transform.SetParent(transform, true);
