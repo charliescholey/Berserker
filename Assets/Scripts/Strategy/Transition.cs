@@ -17,7 +17,7 @@ public class Transition : MonoBehaviour
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject); // Optional: Keep this instance across scenes
+        //DontDestroyOnLoad(gameObject); // Optional: Keep this instance across scenes
     }
 
     public void onKill(){

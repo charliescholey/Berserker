@@ -31,7 +31,7 @@ public class BoardManager : MonoBehaviour
     private Dictionary<Vector2Int, bool> walls = new Dictionary<Vector2Int, bool>();
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void OnEnable()
     {
         cellSize = gameTilemap.cellSize.x;
     }

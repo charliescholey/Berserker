@@ -39,6 +39,9 @@ public class Map1Scene2 : MonoBehaviour
         walls.AddRange(generateBox(new Vector2Int(-1,0), new Vector2Int(-1,-1)));
 
         map.setWalls(walls.ToArray());
+
+        level.enable();
+
     }
 
 
