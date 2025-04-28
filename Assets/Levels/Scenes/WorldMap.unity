@@ -2553,7 +2553,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 701026356}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!20 &701026358
 Camera:
   m_ObjectHideFlags: 0
@@ -13413,7 +13413,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 8352146939863863506}
         m_TargetAssemblyTypeName: CustomizeBattalion, Assembly-CSharp
         m_MethodName: UpdateCharacterAbility
         m_Mode: 1
@@ -13537,7 +13537,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 8352146939863863506}
         m_TargetAssemblyTypeName: CustomizeBattalion, Assembly-CSharp
         m_MethodName: UpdateCharacterAbility
         m_Mode: 1
