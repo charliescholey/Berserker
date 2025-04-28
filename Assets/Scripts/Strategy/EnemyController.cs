@@ -56,7 +56,7 @@ public class EnemyController : OrderedCharacter
      {
         // to deal with dying, again not sure how we are dealing with it
         Debug.Log($"{gameObject.name} died.");
-        SaveFileManager.CurrentPlayerData.exp += 150; // give 10 XP on enemy death
+        SaveFileManager.CurrentPlayerData.AddXP(150); // give 10 XP on enemy death
         Destroy(gameObject);
     }
 }

@@ -166,7 +166,7 @@ public class StoreUI : MonoBehaviour
     public void PurchaseHealth()
     {
         if (selected == null) { Debug.LogError("selected is null!"); return; }
-        int gold = SaveFileManager.CurrentPlayerData.gold;
+        int gold = SaveFileManager.CurrentPlayerData.GetGold();
         if (gold < 10)
         {
             Debug.LogError("Not enough gold to purchase character!");
@@ -175,7 +175,7 @@ public class StoreUI : MonoBehaviour
         if (selected.baseHealth >= selected.maxHealth) { Debug.LogError("Cannot purchase health, already at max!"); return; }
         selected.baseHealth++;
         UpdateSelectedCharacter();
-        gold -= 10;
+        SaveFileManager.CurrentPlayerData.RemoveGold(10);
         SaveSelectedCharacter();
     }
 
@@ -183,7 +183,7 @@ public class StoreUI : MonoBehaviour
     {
         if (selected == null) { Debug.LogError("selected is null!"); return; }
         if (selected.baseAttack >= selected.maxAttack) { Debug.LogError("Cannot purchase attack, already at max!"); return; }
-        int gold = SaveFileManager.CurrentPlayerData.gold;
+        int gold = SaveFileManager.CurrentPlayerData.GetGold();
         if (gold < 15)
         {
             Debug.LogError("Not enough gold to purchase character!");
@@ -192,7 +192,7 @@ public class StoreUI : MonoBehaviour
 
         selected.baseAttack++;
         UpdateSelectedCharacter();
-        gold -= 15;
+        SaveFileManager.CurrentPlayerData.RemoveGold(15);
         SaveSelectedCharacter();
     }
 
@@ -200,7 +200,7 @@ public class StoreUI : MonoBehaviour
     {
         if (selected == null) { Debug.LogError("selected is null!"); return; }
         if (selected.baseDefense >= selected.maxDefense) { Debug.LogError("Cannot purchase defense, already at max!"); return; }
-        int gold = SaveFileManager.CurrentPlayerData.gold;
+        int gold = SaveFileManager.CurrentPlayerData.GetGold();
         if (gold < 15)
         {
             Debug.LogError("Not enough gold to purchase character!");
@@ -208,14 +208,15 @@ public class StoreUI : MonoBehaviour
         }
         selected.baseDefense++;
         UpdateSelectedCharacter();
-        gold -= 15;
+        SaveFileManager.CurrentPlayerData.RemoveGold(15);
+        Debug.Log(SaveFileManager.CurrentPlayerData.GetGold().ToString());
         SaveSelectedCharacter();
     }
     public void PurchaseMovement()
     {
         if (selected == null) { Debug.LogError("selected is null!"); return; }
         if (selected.baseMovementRange >= selected.maxMovementRange) { Debug.LogError("Cannot purchase movement, already at max!"); return; }
-        int gold = SaveFileManager.CurrentPlayerData.gold;
+        int gold = SaveFileManager.CurrentPlayerData.GetGold();
         if (gold < 20)
         {
             Debug.LogError("Not enough gold to purchase character!");
@@ -223,7 +224,7 @@ public class StoreUI : MonoBehaviour
         }
         selected.baseMovementRange++;
         UpdateSelectedCharacter();
-        gold -= 20;
+        SaveFileManager.CurrentPlayerData.RemoveGold(20);
         SaveSelectedCharacter();
     }
 }
