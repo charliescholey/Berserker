@@ -26,7 +26,7 @@ public class StoreUI : MonoBehaviour
     [SerializeField] TMP_Text Defense;
     [SerializeField] TMP_Text Movement;
 
-    // private CharacterSummaryList summaryList;
+    
     private List<CharacterData> summaryList;
 
     CharacterData selected;
@@ -38,7 +38,6 @@ public class StoreUI : MonoBehaviour
     void Start()
     {
         Instance = this;
-        // Load the JSON file from Resources
         LoadCharacters();
     }
 
@@ -50,7 +49,7 @@ public class StoreUI : MonoBehaviour
         if (characterDataList == null || characterDataList.Count == 0)
         {
             Debug.LogError("No characters found!");
-                    summaryList = new List<CharacterData>(); // Initialize as an empty list to avoid null issues
+                    summaryList = new List<CharacterData>(); 
 
             return;
         }
@@ -72,7 +71,6 @@ public class StoreUI : MonoBehaviour
                 Debug.LogError("No characters available in summaryList.");
                 return;
             }
-            // SelectCharacter(this.transform.Find("Character Image (1)").GetComponent<CharacterImageScript>().character);
             SelectCharacter(summaryList[0]);
             UpdateSelectedCharacter();
             init = false;
@@ -91,9 +89,6 @@ public class StoreUI : MonoBehaviour
         if (characterCost == null) { Debug.LogError("characterCost is null!"); return; }
 
         Debug.Log("Updating selected character: " + selected.characterName);
-        // characterImage.color = selected.getColor();
-        // Debug.Log("cost:" + selected.getCost());
-        // characterCost.text = "Buy          " + selected.getCost();
 
         // Show stats as "base / max"
         Health.text = $"{selected.baseHealth} / {selected.maxHealth}";
@@ -103,7 +98,6 @@ public class StoreUI : MonoBehaviour
 
         characterName.text = selected.characterName;
 
-        // Load the correct sprite from the packed sprite sheet
         Sprite[] sprites = Resources.LoadAll<Sprite>("Sprites/CharacterSprites/tilemap_packed");
 
         Sprite found = null;
@@ -122,7 +116,7 @@ public class StoreUI : MonoBehaviour
         else
         {
             Debug.LogWarning($"Sprite '{selected.spritePath}' not found in tilemap_packed.png");
-            characterImage.sprite = null; // Or set a default/fallback sprite
+            characterImage.sprite = null; 
         }
     }
 
@@ -134,7 +128,6 @@ public class StoreUI : MonoBehaviour
             return;
         }
 
-        // Create a new CharacterData from selected CharacterSummary
         CharacterData data = new CharacterData
         {
             characterName = selected.characterName,
@@ -151,27 +144,11 @@ public class StoreUI : MonoBehaviour
             actionIndices = selected.actionIndices,
         };
 
-        // Print all properties to the debug log
-        Debug.Log($"Character Data: \n" +
-          $"Name: {data.characterName}\n" +
-          $"Base Health: {data.baseHealth}\n" +
-          $"Base Attack: {data.baseAttack}\n" +
-          $"Base Defense: {data.baseDefense}\n" +
-          $"Base Movement Range: {data.baseMovementRange}\n" +
-          $"Unique Ability: {data.uniqueAbility}\n" +
-          $"Max Health: {data.maxHealth}\n" +
-          $"Max Attack: {data.maxAttack}\n" +
-          $"Max Defense: {data.maxDefense}\n" +
-          $"Max Movement Range: {data.maxMovementRange}\n" +
-          $"Sprite Path: {data.spritePath}\n" +
-          $"Action Indices: {string.Join(", ", data.actionIndices)}");
 
         CharacterController.SaveCharacterData(data);
         Debug.Log($"Saved character: {data.characterName}");
     }
 
-
-    // Update is called once per frame
     public void SelectCharacter(CharacterData character)
     {
         selected = character;

@@ -15,7 +15,7 @@
             "uniqueAbility": "Berserker Rage",
             "actionIndices": [
                 0,
-                1
+                2
             ],
             "spritePath": "tilemap_packed_105"
         },
@@ -33,7 +33,7 @@
             "characterClass": "Mage",
             "uniqueAbility": "Arcane Burst",
             "actionIndices": [
-                1,
+                0,
                 2
             ],
             "spritePath": "tilemap_packed_51"
@@ -52,7 +52,8 @@
             "characterClass": "Rogue",
             "uniqueAbility": "Stealth",
             "actionIndices": [
-                0
+                0,
+                2
             ],
             "spritePath": "tilemap_packed_267"
         },

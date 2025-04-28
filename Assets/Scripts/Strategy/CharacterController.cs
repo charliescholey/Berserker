@@ -32,12 +32,6 @@ public class CharacterDatabase
  * NOTE: this class should not be used for gameplay design. Ideally,
  * this class only contains player information and the rest is
  * handled by the GameManager.
-
- * Functionality to add:
- * - track when turn has been completed
- * - set player sprite
- * - set player stats (from JSON eventually)
- * - attacking & all other actions
  */
 public class CharacterController : OrderedCharacter
 {
@@ -297,8 +291,7 @@ public class CharacterController : OrderedCharacter
     {
         Debug.Log($"{gameObject.name} died.");
         gameObject.SetActive(false);
-
-        // Remove from players array
+        // Remove from the GameManager's player list
         GameManager gm = FindObjectOfType<GameManager>();
         if (gm != null)
         {
@@ -322,7 +315,6 @@ public class CharacterController : OrderedCharacter
             LoadCharacterDatabase();
         }
 
-        // Update existing character or add new one
         int existingIndex = s_CharacterDatabase.characters.FindIndex(c => c.characterName == data.characterName);
         if (existingIndex >= 0)
         {
@@ -377,14 +369,8 @@ public class CharacterController : OrderedCharacter
         }
         else
         {
-            // Otherwise load the default version from Resources
-            TextAsset jsonFile = Resources.Load<TextAsset>(DATA_PATH);
-            if (jsonFile == null)
-            {
-                Debug.LogError($"Failed to load character data from {DATA_PATH}");
-                return;
-            }
-            s_CharacterDatabase = JsonUtility.FromJson<CharacterDatabase>(jsonFile.text);
+            // If no user save file exists, load the default database
+            LoadDefaultCharacterDatabase();
             Debug.Log($"Loaded default character database from resources: {DATA_PATH}");
         }
 
@@ -393,7 +379,7 @@ public class CharacterController : OrderedCharacter
 
     public static void LoadDefaultCharacterDatabase()
     {
-        // Otherwise load the default version from Resources
+        // Load the default character database from Resources
         TextAsset jsonFile = Resources.Load<TextAsset>(DATA_PATH);
         if (jsonFile == null)
         {
@@ -418,9 +404,6 @@ public class CharacterController : OrderedCharacter
             Debug.LogError($"Character data not found for: {characterName}");
             return;
         }
-
-
-
 
         // Apply character data
         this.characterName = data.characterName;
@@ -464,17 +447,8 @@ public class CharacterController : OrderedCharacter
                     Debug.LogWarning($"Failed to resolve action at index: {idx}");
                 }
             }
-            actions.Add(actionDatabase.GetActionByIndex(3)); // Add pass action at end of list
+            actions.Add(actionDatabase.GetActionByIndex(3)); 
         }
-
-        // Log Character Actions
-        /*Debug.Log($"Actions for {characterName}:");
-        foreach (Action action in actions)
-        {
-            Debug.Log($"- {action.actionName}");
-        }
-
-        Debug.Log($"Character data loaded for: {characterName}");*/
     }
 
     public static List<CharacterData> GetAllCharacters()
