@@ -27,29 +27,41 @@ EditorBuildSettings:
     path: Assets/Levels/Scenes/StealthScenes/Map1.unity
     guid: 6ef52e3362f8448629d7b7a3d26aae2f
   - enabled: 1
-    path: Assets/Levels/Scenes/m1/1p1.unity
+    path: Assets/Levels/Scenes/Map 1 strategy scenes/Strategy scene 1.1.unity
     guid: 8e2226c04a9ccfb42abcc2ffe33d3722
   - enabled: 1
-    path: Assets/Levels/Scenes/m1/1p2.unity
+    path: Assets/Levels/Scenes/Map 1 strategy scenes/Strategy scene 2.1.unity
     guid: d26f05206cfbd0f4e9e566e80bbb582a
   - enabled: 1
-    path: Assets/Levels/Scenes/m1/1p3.unity
+    path: Assets/Levels/Scenes/Map 1 strategy scenes/Strategy scene 3.1.unity
     guid: 5eec3187095619445b4ec487f8fe9d76
   - enabled: 1
-    path: Assets/Levels/Scenes/m1/1p4.unity
+    path: Assets/Levels/Scenes/Map 1 strategy scenes/Strategy scene 4.1.unity
     guid: 39e843bd0114fbf4884108ccbe1a5317
   - enabled: 1
-    path: Assets/Levels/Scenes/m1/1p5.unity
+    path: Assets/Levels/Scenes/Map 1 strategy scenes/Strategy scene 5.1.unity
     guid: 8be92b73467c2014f9b4318c43b87f3a
-  - enabled: 1
-    path: Assets/Levels/Scenes/m2/2p1.unity
-    guid: e6b31257a92561e47975d4dfa54c35ee
   - enabled: 1
     path: Assets/Levels/Scenes/StealthScenes/Map2.unity
     guid: 01963562c0bae4c4f93ddbdbf39ecb01
   - enabled: 1
     path: Assets/Levels/Scenes/StealthScenes/Map3.unity
     guid: e2a61affa32b34c62958c9d2267d307a
+  - enabled: 1
+    path: Assets/Levels/Scenes/m2/2p1.unity
+    guid: e6b31257a92561e47975d4dfa54c35ee
+  - enabled: 1
+    path: Assets/Levels/Scenes/m2/2p2.unity
+    guid: a8101405b3c03bf49b0eb71d5a36bd67
+  - enabled: 1
+    path: Assets/Levels/Scenes/m2/2p3.unity
+    guid: 5c2da97335b28c3459dbd7dc94b7fc45
+  - enabled: 1
+    path: Assets/Levels/Scenes/m2/2p4.unity
+    guid: 1f82684245b10de45bee2c949c713e54
+  - enabled: 1
+    path: Assets/Levels/Scenes/m2/2p5.unity
+    guid: 0faa6073ebc07cd408d98862e8a02f39
   - enabled: 1
     path: Assets/Levels/Scenes/m3/3p1.unity
     guid: bb2518d01bbeb3d478fbeb775b00258b
@@ -66,17 +78,20 @@ EditorBuildSettings:
     path: Assets/Levels/Scenes/m3/3p5.unity
     guid: faf5e9945fa882f479abdd932d1d49bb
   - enabled: 1
-    path: Assets/Levels/Scenes/m2/2p2.unity
-    guid: a8101405b3c03bf49b0eb71d5a36bd67
+    path: Assets/Levels/Scenes/m1/1p1.unity
+    guid: 45eb27a319b9447249347339a793ebb5
   - enabled: 1
-    path: Assets/Levels/Scenes/m2/2p3.unity
-    guid: 5c2da97335b28c3459dbd7dc94b7fc45
+    path: Assets/Levels/Scenes/m1/1p2.unity
+    guid: 7037c877ac7314cfeaecd97fe8320c0e
   - enabled: 1
-    path: Assets/Levels/Scenes/m2/2p5.unity
-    guid: 0faa6073ebc07cd408d98862e8a02f39
+    path: Assets/Levels/Scenes/m1/1p3.unity
+    guid: 6c6820e15f95147ab9fdf0f20e7ae064
   - enabled: 1
-    path: Assets/Levels/Scenes/m2/2p4.unity
-    guid: 1f82684245b10de45bee2c949c713e54
+    path: Assets/Levels/Scenes/m1/1p4.unity
+    guid: fea29ff7a04f3497a92123e61cd97b9d
+  - enabled: 1
+    path: Assets/Levels/Scenes/m1/1p5.unity
+    guid: 5b8c6aabf04914e938f50079585914aa
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

@@ -34,6 +34,22 @@ public class StealthManager : MonoBehaviour
         StartCoroutine(LoadAndActivateSceneCoroutine(sceneName));
     }
 
+    // hides stealth objects during strategy, then brings them back when we go back into stealth
+    private void SetSceneRootsActive(string sceneName, bool active)
+    {
+        var scene = SceneManager.GetSceneByName(sceneName);
+        if (!scene.IsValid()) return;
+
+        foreach (var root in scene.GetRootGameObjects())
+        {
+            // keep the StealthManager itself alive
+            if (root.GetComponent<StealthManager>() != null) 
+                continue;
+
+            root.SetActive(active);
+        }
+    }
+
     private IEnumerator LoadAndActivateSceneCoroutine(string sceneName)
     {
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
@@ -53,6 +69,8 @@ public class StealthManager : MonoBehaviour
         {
             Debug.LogError("Player reference not set in StealthManager!");
         }
+
+        SetSceneRootsActive(returnLevelName, false);
 
         Scene newScene = SceneManager.GetSceneByName(sceneName);
         SceneManager.SetActiveScene(newScene);
@@ -74,6 +92,8 @@ public class StealthManager : MonoBehaviour
 
     private IEnumerator UnloadStrategyAndEnablePlayerCoroutine()
     {
+        SetSceneRootsActive(returnLevelName, true);
+
         Debug.Log("Starting unload process for 'Strategy'");
 
         if (SceneManager.GetActiveScene().name == stratLevelName)
@@ -126,6 +146,8 @@ public class StealthManager : MonoBehaviour
             Debug.LogError("Player reference not set in StealthManager!");
         }
         expManager.AddExp(100);
+
+        
     }
 
     private IEnumerator ReturnToWorldMapCoroutine()
